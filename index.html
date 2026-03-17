@@ -7,283 +7,81 @@
 <style>
 body {
   margin:0;
-  font-family: 'Segoe UI', sans-serif;
-  background:#0b1220;
+  font-family:'Segoe UI', sans-serif;
+  background:linear-gradient(135deg,#050816,#020617);
   color:white;
+  text-align:center;
 }
 
-.container {
-  display:flex;
-}
-
-/* Sidebar */
-.sidebar {
-  width:220px;
-  background:#111827;
-  height:100vh;
-  padding:15px;
-}
-
-.sidebar h2 {
-  background: linear-gradient(90deg,#00f7ff,#00ff88);
+/* Logo */
+.logo {
+  font-size:32px;
+  font-weight:bold;
+  margin-bottom:10px;
+  background:linear-gradient(90deg,#00f7ff,#00ff88);
   -webkit-background-clip:text;
   -webkit-text-fill-color:transparent;
 }
 
-.sidebar button {
-  width:100%;
-  margin:5px 0;
-  padding:10px;
-  background:#1f2937;
-  color:white;
-  border:none;
-  cursor:pointer;
+/* Hero */
+.hero {
+  padding:100px 20px;
 }
 
-/* Main */
-.main {
-  flex:1;
-  padding:20px;
+.tagline {
+  font-size:18px;
+  color:#9ca3af;
+  margin-bottom:20px;
 }
 
-/* Cards */
-.card {
-  background:#111827;
-  padding:15px;
-  margin-bottom:15px;
-  border-radius:10px;
-  box-shadow:0 0 10px rgba(0,247,255,0.1);
-}
-
-h2 { color:#00f7ff; }
-
-/* Inputs */
-input, textarea {
-  width:100%;
-  padding:10px;
-  margin:8px 0;
-  background:#1f2937;
-  border:none;
-  color:white;
-}
-
-/* Buttons */
-button.main-btn {
-  background: linear-gradient(90deg,#00f7ff,#00ff88);
-  color:black;
-  padding:10px;
-  border:none;
-  cursor:pointer;
-  width:100%;
-}
-
-/* Progress */
-.progress {
-  height:10px;
-  background:#222;
-  border-radius:10px;
-}
-
-.bar {
-  height:100%;
-  width:0%;
+button {
+  padding:14px 26px;
   background:linear-gradient(90deg,#00f7ff,#00ff88);
+  border:none;
+  font-weight:bold;
+  cursor:pointer;
+  border-radius:8px;
+}
+
+button:hover {
+  opacity:0.9;
+}
+
+/* Features */
+.features {
+  margin-top:50px;
+}
+
+.feature {
+  margin:15px;
+  color:#9ca3af;
 }
 </style>
 </head>
 
 <body>
 
-<div class="container">
+<div class="hero">
 
-<!-- Sidebar -->
-<div class="sidebar">
-<h2>🚀 CareerPlanner AI</h2>
+<div class="logo">📘📈 CareerPlanner AI</div>
 
-<button onclick="show('dashboard')">Dashboard</button>
-<button onclick="show('planner')">AI Planner</button>
-<button onclick="show('tracker')">Tracker</button>
-<button onclick="show('notes')">Notes</button>
+<p class="tagline">
+Your AI-powered path to a better career
+</p>
 
-</div>
+<button onclick="window.location='index.html'">
+Start Planning 🚀
+</button>
 
-<!-- Main -->
-<div class="main">
+<div class="features">
 
-<!-- Dashboard -->
-<div id="dashboard" class="card">
-<h2>📊 Dashboard</h2>
-
-<div class="progress">
-<div class="bar" id="bar"></div>
-</div>
-
-<p id="percent">Progress: 0%</p>
-
-<button onclick="share()">🔗 Share My Plan</button>
-
-<h3>📊 Weekly Progress</h3>
-<p id="weekly">0%</p>
-
-</div>
-
-<!-- Planner -->
-<div id="planner" class="card" style="display:none;">
-<h2>🤖 AI Planner</h2>
-
-<input id="role" placeholder="Your role">
-<input id="goal" placeholder="Your goal (e.g. Dubai 2028)">
-<textarea id="skills" placeholder="Your skills"></textarea>
-
-<button class="main-btn" onclick="generate()">Generate Roadmap</button>
-
-<h3>📅 Daily Plan</h3>
-<button onclick="dailyPlan()">Generate Today's Plan</button>
-
-<div id="output"></div>
-<div id="daily"></div>
-
-</div>
-
-<!-- Tracker -->
-<div id="tracker" class="card" style="display:none;">
-<h2>📈 Tracker</h2>
-
-<label><input type="checkbox" onchange="update()"> BA</label>
-<label><input type="checkbox" onchange="update()"> SQL</label>
-<label><input type="checkbox" onchange="update()"> Power BI</label>
-<label><input type="checkbox" onchange="update()"> Salesforce</label>
-<label><input type="checkbox" onchange="update()"> AI</label>
-<label><input type="checkbox" onchange="update()"> Cloud</label>
-<label><input type="checkbox" onchange="update()"> Cybersecurity</label>
-
-</div>
-
-<!-- Notes -->
-<div id="notes" class="card" style="display:none;">
-<h2>📝 Notes</h2>
-<textarea id="noteBox"></textarea>
-</div>
+<p class="feature">✔ Get personalized career roadmap</p>
+<p class="feature">✔ Track your progress</p>
+<p class="feature">✔ Build skills for global opportunities</p>
 
 </div>
 
 </div>
-
-<script>
-
-// Navigation
-function show(section){
-["dashboard","planner","tracker","notes"].forEach(id=>{
-document.getElementById(id).style.display="none";
-});
-document.getElementById(section).style.display="block";
-}
-
-// AI Roadmap
-async function generate(){
-
-let role = document.getElementById("role").value;
-let goal = document.getElementById("goal").value;
-let skills = document.getElementById("skills").value;
-
-let prompt = `
-I am a ${role}.
-Goal: ${goal}.
-Skills: ${skills}.
-
-Give roadmap, timeline, and best courses.
-`;
-
-let res = await fetch("https://api.openai.com/v1/chat/completions",{
-method:"POST",
-headers:{
-"Content-Type":"application/json",
-"Authorization":"Bearer YOUR_API_KEY"
-},
-body: JSON.stringify({
-model:"gpt-4o-mini",
-messages:[{role:"user", content:prompt}]
-})
-});
-
-let data = await res.json();
-
-document.getElementById("output").innerText =
-data.choices[0].message.content;
-}
-
-// Daily Plan
-async function dailyPlan(){
-
-let goal = document.getElementById("goal").value;
-
-let prompt = `
-My goal is ${goal}.
-Give me a simple 2-hour study plan for today.
-`;
-
-let res = await fetch("https://api.openai.com/v1/chat/completions",{
-method:"POST",
-headers:{
-"Content-Type":"application/json",
-"Authorization":"Bearer YOUR_API_KEY"
-},
-body: JSON.stringify({
-model:"gpt-4o-mini",
-messages:[{role:"user", content:prompt}]
-})
-});
-
-let data = await res.json();
-
-document.getElementById("daily").innerText =
-data.choices[0].message.content;
-}
-
-// Progress
-function update(){
-let total = document.querySelectorAll("input[type=checkbox]").length;
-let checked = document.querySelectorAll("input[type=checkbox]:checked").length;
-
-let percent = Math.round((checked/total)*100);
-
-document.getElementById("bar").style.width = percent+"%";
-document.getElementById("percent").innerText = "Progress: "+percent+"%";
-document.getElementById("weekly").innerText = percent+"% completed";
-
-localStorage.setItem("progress", percent);
-}
-
-// Share
-function share(){
-let text = document.getElementById("output").innerText;
-navigator.clipboard.writeText(text);
-alert("Copied! Share with friends 🚀");
-}
-
-// Load
-window.onload = function(){
-
-let p = localStorage.getItem("progress");
-if(p){
-document.getElementById("bar").style.width = p+"%";
-document.getElementById("percent").innerText = "Progress: "+p+"%";
-document.getElementById("weekly").innerText = p+"% completed";
-}
-
-let note = localStorage.getItem("notes");
-if(note){
-document.getElementById("noteBox").value = note;
-}
-
-document.getElementById("noteBox").oninput = ()=>{
-localStorage.setItem("notes",
-document.getElementById("noteBox").value);
-};
-
-}
-
-</script>
 
 </body>
 </html>
