@@ -4,40 +4,35 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>CareerPlanner AI</title>
 
-<link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#00f7ff">
-
 <style>
 body {
   margin:0;
   font-family:'Segoe UI', sans-serif;
-  background:#0b1220;
+  background:linear-gradient(135deg,#0b1220,#020617);
   color:white;
 }
 
-.container {
-  display:flex;
-}
+.container { display:flex; }
 
+/* Sidebar */
 .sidebar {
-  width:220px;
+  width:230px;
   background:#111827;
   height:100vh;
   padding:20px;
 }
 
 .logo {
-  font-size:20px;
   font-weight:bold;
+  margin-bottom:20px;
   background:linear-gradient(90deg,#00f7ff,#00ff88);
   -webkit-background-clip:text;
   -webkit-text-fill-color:transparent;
-  margin-bottom:20px;
 }
 
 .sidebar button {
   width:100%;
-  margin:5px 0;
+  margin:6px 0;
   padding:10px;
   background:#1f2937;
   color:white;
@@ -45,10 +40,8 @@ body {
   cursor:pointer;
 }
 
-.main {
-  flex:1;
-  padding:20px;
-}
+/* Main */
+.main { flex:1; padding:20px; }
 
 .card {
   background:#111827;
@@ -56,8 +49,6 @@ body {
   margin-bottom:20px;
   border-radius:10px;
 }
-
-h2 { color:#00f7ff; }
 
 input, textarea {
   width:100%;
@@ -68,25 +59,22 @@ input, textarea {
   color:white;
 }
 
-.main-btn {
+button.main-btn {
   background:linear-gradient(90deg,#00f7ff,#00ff88);
-  color:black;
-  padding:10px;
   border:none;
+  padding:10px;
+  cursor:pointer;
   width:100%;
 }
 
-.progress {
-  height:10px;
-  background:#222;
-}
-
-.bar {
-  height:100%;
-  width:0%;
-  background:linear-gradient(90deg,#00f7ff,#00ff88);
+/* Mobile */
+@media (max-width:768px){
+.container { flex-direction:column; }
+.sidebar { width:100%; height:auto; display:flex; flex-wrap:wrap; }
+.sidebar button { width:45%; margin:5px; }
 }
 </style>
+
 </head>
 
 <body>
@@ -97,47 +85,95 @@ input, textarea {
 <div class="logo">📘📈 CareerPlanner AI</div>
 
 <button onclick="show('dashboard')">Dashboard</button>
-<button onclick="show('planner')">AI Planner</button>
+<button onclick="show('profile')">Profile</button>
+<button onclick="show('cert')">Cert Suggester</button>
+<button onclick="show('roadmap')">Roadmap</button>
+<button onclick="show('compare')">Compare</button>
+<button onclick="show('roi')">ROI</button>
 <button onclick="show('tracker')">Tracker</button>
-<button onclick="show('notes')">Notes</button>
+<button onclick="show('ai')">AI Coach</button>
+
 </div>
 
 <div class="main">
 
+<!-- Dashboard -->
 <div id="dashboard" class="card">
 <h2>Dashboard</h2>
-
-<p>Welcome! Go to AI Planner to start 🚀</p>
-
-<div class="progress">
-<div class="bar" id="bar"></div>
+<p>Welcome! Start with Certification Suggester 🚀</p>
 </div>
 
-<p id="percent">0%</p>
+<!-- Profile -->
+<div id="profile" class="card" style="display:none;">
+<h2>Profile</h2>
+<input id="name" placeholder="Name">
+<input id="exp" placeholder="Experience">
+<input id="goal" placeholder="Goal">
+<button class="main-btn" onclick="saveProfile()">Save</button>
 </div>
 
-<div id="planner" class="card" style="display:none;">
-<h2>AI Planner</h2>
+<!-- Cert -->
+<div id="cert" class="card" style="display:none;">
+<h2>Certification Suggester</h2>
+<input id="field" placeholder="Field">
+<input id="budget" placeholder="Budget">
 
-<input id="goal" placeholder="Your goal">
+<button class="main-btn" onclick="suggest()">Suggest</button>
 
-<button class="main-btn" onclick="generate()">Generate</button>
-
-<div id="output"></div>
+<div id="certOut"></div>
 </div>
 
+<!-- Roadmap -->
+<div id="roadmap" class="card" style="display:none;">
+<h2>Learning Roadmap</h2>
+<button onclick="roadmap()">Generate Plan</button>
+<div id="roadmapOut"></div>
+</div>
+
+<!-- Compare -->
+<div id="compare" class="card" style="display:none;">
+<h2>Comparison</h2>
+<table border="1" width="100%">
+<tr><th>Cert</th><th>Cost</th><th>ROI</th></tr>
+<tr><td>Salesforce</td><td>30k</td><td>High</td></tr>
+<tr><td>Power BI</td><td>10k</td><td>High</td></tr>
+<tr><td>ECBA</td><td>25k</td><td>Medium</td></tr>
+</table>
+</div>
+
+<!-- ROI -->
+<div id="roi" class="card" style="display:none;">
+<h2>ROI Calculator</h2>
+<input id="salary" placeholder="Current Salary">
+<button onclick="calc()">Calculate</button>
+<p id="roiOut"></p>
+</div>
+
+<!-- Tracker -->
 <div id="tracker" class="card" style="display:none;">
 <h2>Tracker</h2>
-
 <label><input type="checkbox" onchange="update()"> SQL</label>
 <label><input type="checkbox" onchange="update()"> Power BI</label>
-<label><input type="checkbox" onchange="update()"> AI</label>
-
+<label><input type="checkbox" onchange="update()"> Salesforce</label>
+<p id="progress">0%</p>
 </div>
 
-<div id="notes" class="card" style="display:none;">
-<h2>Notes</h2>
-<textarea id="noteBox"></textarea>
+<!-- AI -->
+<div id="ai" class="card" style="display:none;">
+<h2>🤖 AI Career Coach</h2>
+
+<h3>Ask anything</h3>
+<input id="question" placeholder="Ask career question">
+<button class="main-btn" onclick="aiChat()">Ask AI</button>
+<div id="aiOut"></div>
+
+<hr>
+
+<h3>Resume Analyzer</h3>
+<textarea id="resume" placeholder="Paste your resume"></textarea>
+<button class="main-btn" onclick="analyze()">Analyze</button>
+<div id="resumeOut"></div>
+
 </div>
 
 </div>
@@ -145,41 +181,77 @@ input, textarea {
 
 <script>
 
-function show(section){
-["dashboard","planner","tracker","notes"].forEach(id=>{
-document.getElementById(id).style.display="none";
-});
-document.getElementById(section).style.display="block";
+// Navigation
+function show(id){
+["dashboard","profile","cert","roadmap","compare","roi","tracker","ai"]
+.forEach(i=>document.getElementById(i).style.display="none");
+document.getElementById(id).style.display="block";
 }
 
-function generate(){
-document.getElementById("output").innerText =
-"1. Learn SQL\n2. Learn Power BI\n3. Build projects";
+// Profile
+function saveProfile(){
+localStorage.setItem("name", document.getElementById("name").value);
+alert("Saved");
 }
 
+// Suggest
+function suggest(){
+let field = document.getElementById("field").value;
+
+if(field.toLowerCase().includes("sales")){
+document.getElementById("certOut").innerHTML =
+"🔥 Salesforce Admin (Top Pick)<br>Also: BA, Power BI";
+}else{
+document.getElementById("certOut").innerHTML =
+"🔥 Business Analyst (Top Pick)<br>Also: Agile, PMP";
+}
+}
+
+// Roadmap
+function roadmap(){
+document.getElementById("roadmapOut").innerText =
+"Week 1-2: Basics\nWeek 3-4: Tools\nWeek 5: Projects\nWeek 6: Apply jobs";
+}
+
+// ROI
+function calc(){
+let sal = document.getElementById("salary").value;
+document.getElementById("roiOut").innerText =
+"Expected Salary: " + (sal*1.5);
+}
+
+// Tracker
 function update(){
 let total = document.querySelectorAll("input[type=checkbox]").length;
 let checked = document.querySelectorAll("input[type=checkbox]:checked").length;
-
-let percent = Math.round((checked/total)*100);
-
-document.getElementById("bar").style.width = percent+"%";
-document.getElementById("percent").innerText = percent+"%";
-
-localStorage.setItem("progress", percent);
+let p = Math.round((checked/total)*100);
+document.getElementById("progress").innerText = p+"%";
+localStorage.setItem("progress", p);
 }
 
-window.onload = function(){
-let p = localStorage.getItem("progress");
-if(p){
-document.getElementById("bar").style.width = p+"%";
-document.getElementById("percent").innerText = p+"%";
+// AI Chat
+function aiChat(){
+let q = document.getElementById("question").value;
+
+let answer = "";
+
+if(q.toLowerCase().includes("salesforce")){
+answer = "Salesforce is best for global jobs. Pair with BA + Power BI.";
 }
+else if(q.toLowerCase().includes("pmp")){
+answer = "PMP is good for management roles.";
+}
+else{
+answer = "Start with BA + Power BI + AI.";
 }
 
-// Service Worker
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('service-worker.js');
+document.getElementById("aiOut").innerText = answer;
+}
+
+// Resume Analyzer
+function analyze(){
+document.getElementById("resumeOut").innerText =
+"Missing Skills: SQL, Power BI\nRecommended: ECBA, AI";
 }
 
 </script>
