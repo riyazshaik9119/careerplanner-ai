@@ -7,1050 +7,929 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="CareerAI">
+<meta name="description" content="AI-powered certification advisor for smarter career decisions">
 <title>CareerPlanner AI</title>
 <link rel="manifest" href="./manifest.json">
-<link rel="apple-touch-icon" href="./icon-192.png">
-<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300;12..96,400;12..96,500;12..96,600;12..96,700&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
-
+<link rel="apple-touch-icon" href="./icons/icon-192.png">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-:root {
-  --white: #ffffff;
-  --bg: #f5f7fc;
-  --bg2: #eef1f9;
-  --surface: #ffffff;
-  --surface2: #f0f3fb;
-  --border: rgba(26,86,219,0.09);
-  --border2: rgba(26,86,219,0.18);
-  --accent: #1a56db;
-  --accent-lt: #e8effd;
-  --accent2: #059669;
-  --accent2-lt: #d1fae5;
-  --gold: #d97706;
-  --gold-lt: #fef3c7;
-  --red: #dc2626;
-  --red-lt: #fee2e2;
-  --text: #0f172a;
-  --text2: #475569;
-  --text3: #94a3b8;
-  --shadow-sm: 0 1px 3px rgba(15,23,42,0.06), 0 1px 2px rgba(15,23,42,0.04);
-  --shadow: 0 4px 16px rgba(15,23,42,0.08), 0 2px 6px rgba(15,23,42,0.04);
-  --shadow-lg: 0 12px 40px rgba(15,23,42,0.12), 0 4px 12px rgba(15,23,42,0.06);
-  --r: 16px;
-  --r-sm: 10px;
-  --r-xs: 7px;
-  --safe-top: env(safe-area-inset-top, 0px);
-  --safe-bottom: env(safe-area-inset-bottom, 0px);
+:root{
+  --white:#fff;--bg:#f5f7fc;--bg2:#eef1f9;--surface:#fff;--surface2:#f0f3fb;
+  --border:rgba(26,86,219,0.09);--border2:rgba(26,86,219,0.18);
+  --accent:#1a56db;--accent-lt:#e8effd;--accent2:#059669;--accent2-lt:#d1fae5;
+  --gold:#d97706;--gold-lt:#fef3c7;--red:#dc2626;--red-lt:#fee2e2;
+  --purple:#7c3aed;--purple-lt:#ede9fe;
+  --text:#0f172a;--text2:#475569;--text3:#94a3b8;
+  --shadow-sm:0 1px 3px rgba(15,23,42,.06),0 1px 2px rgba(15,23,42,.04);
+  --shadow:0 4px 16px rgba(15,23,42,.08),0 2px 6px rgba(15,23,42,.04);
+  --shadow-lg:0 12px 40px rgba(15,23,42,.12),0 4px 12px rgba(15,23,42,.06);
+  --r:16px;--r-sm:10px;--r-xs:7px;
+  --safe-top:env(safe-area-inset-top,0px);--safe-bottom:env(safe-area-inset-bottom,0px);
 }
-
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { height: 100%; -webkit-text-size-adjust: 100%; }
-
-body {
-  font-family: 'Plus Jakarta Sans', sans-serif;
-  background: var(--bg);
-  color: var(--text);
-  height: 100%;
-  overflow: hidden;
-  -webkit-tap-highlight-color: transparent;
-  -webkit-font-smoothing: antialiased;
+[data-theme="dark"]{
+  --white:#1e2533;--bg:#0f1520;--bg2:#151e2d;--surface:#1a2336;--surface2:#202d42;
+  --border:rgba(99,149,255,0.12);--border2:rgba(99,149,255,0.22);
+  --accent-lt:rgba(26,86,219,0.18);--accent2-lt:rgba(5,150,105,0.18);
+  --gold-lt:rgba(217,119,6,0.18);--red-lt:rgba(220,38,38,0.18);--purple-lt:rgba(124,58,237,0.18);
+  --text:#e2e8f6;--text2:#8fa4cc;--text3:#3d506e;
+  --shadow-sm:0 1px 3px rgba(0,0,0,.3);--shadow:0 4px 16px rgba(0,0,0,.4);
 }
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{height:100%;-webkit-text-size-adjust:100%}
+body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(--text);height:100%;overflow:hidden;-webkit-tap-highlight-color:transparent;-webkit-font-smoothing:antialiased}
 
-/* ══════════════════════════════
-   SPLASH SCREEN
-══════════════════════════════ */
-#splash {
-  position: fixed;
-  inset: 0;
-  background: var(--white);
-  z-index: 1000;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 0;
-}
+/* ── SPLASH ── */
+#splash{position:fixed;inset:0;background:var(--white);z-index:1000;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.splash-icon{width:96px;height:96px;border-radius:24px;overflow:hidden;box-shadow:0 20px 60px rgba(26,86,219,.22),0 8px 20px rgba(26,86,219,.12);animation:popIn .6s cubic-bezier(.34,1.56,.64,1) .2s both;margin-bottom:20px}
+.splash-icon img{width:100%;height:100%;object-fit:cover;display:block}
+.splash-name{font-family:'Bricolage Grotesque',sans-serif;font-size:24px;font-weight:700;color:var(--text);letter-spacing:-.5px;animation:fadeUp .5s ease .7s both;margin-bottom:5px}
+.splash-tag{font-size:13px;color:var(--text3);animation:fadeUp .5s ease .85s both;margin-bottom:44px}
+.splash-bar-wrap{width:120px;height:3px;background:var(--bg2);border-radius:2px;overflow:hidden;animation:fadeUp .4s ease 1s both}
+.splash-bar{height:100%;background:linear-gradient(90deg,var(--accent),#60a5fa);animation:prog 1.4s cubic-bezier(.4,0,.2,1) 1s forwards}
+@keyframes popIn{from{opacity:0;transform:scale(.5) translateY(20px)}to{opacity:1;transform:scale(1) translateY(0)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+@keyframes prog{from{width:0}to{width:100%}}
+.splash-pw{position:absolute;bottom:calc(var(--safe-bottom) + 28px);font-size:11px;color:var(--text3);animation:fadeUp .4s ease 1.2s both}
 
-.splash-icon-wrap {
-  width: 100px;
-  height: 100px;
-  border-radius: 26px;
-  overflow: hidden;
-  box-shadow: 0 20px 60px rgba(26,86,219,0.22), 0 8px 20px rgba(26,86,219,0.12);
-  animation: splashIconPop 0.6s cubic-bezier(0.34,1.56,0.64,1) 0.2s both;
-  margin-bottom: 22px;
-}
+/* ── APP ── */
+.app{display:flex;flex-direction:column;height:100vh;height:100dvh;opacity:0;transition:opacity .4s ease}
+.app.visible{opacity:1}
 
-.splash-icon-wrap img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-}
+/* ── ACCESS GATE ── */
+#gate{position:fixed;inset:0;background:var(--bg);z-index:900;display:flex;align-items:center;justify-content:center;padding:24px;display:none}
+.gate-box{background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:32px 28px;max-width:380px;width:100%;box-shadow:var(--shadow-lg);text-align:center}
+.gate-icon{font-size:48px;margin-bottom:16px}
+.gate-title{font-family:'Bricolage Grotesque',sans-serif;font-size:22px;font-weight:700;color:var(--text);margin-bottom:8px}
+.gate-sub{font-size:13px;color:var(--text2);line-height:1.6;margin-bottom:20px}
+.gate-input{width:100%;padding:12px 16px;border:1.5px solid var(--bg2);border-radius:var(--r-sm);font-size:16px;letter-spacing:.2em;text-align:center;font-family:'Plus Jakarta Sans',sans-serif;background:var(--surface);color:var(--text);outline:none;margin-bottom:12px}
+.gate-input:focus{border-color:var(--accent)}
+.gate-hint{font-size:11px;color:var(--text3);margin-top:10px}
 
-@keyframes splashIconPop {
-  from { opacity: 0; transform: scale(0.5) translateY(20px); }
-  to   { opacity: 1; transform: scale(1) translateY(0); }
-}
+/* ── ONBOARDING ── */
+#onboard{position:fixed;inset:0;background:var(--bg);z-index:800;display:none;overflow-y:auto;padding:24px 20px calc(40px + var(--safe-bottom))}
+.ob-step{display:none}.ob-step.active{display:block}
+.ob-prog{display:flex;gap:6px;margin-bottom:28px}
+.ob-dot{height:3px;flex:1;background:var(--bg2);border-radius:2px;transition:background .3s}
+.ob-dot.done{background:var(--accent)}
+.ob-eyebrow{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);margin-bottom:8px}
+.ob-title{font-family:'Bricolage Grotesque',sans-serif;font-size:24px;font-weight:700;color:var(--text);letter-spacing:-.4px;margin-bottom:6px;line-height:1.2}
+.ob-sub{font-size:13px;color:var(--text2);line-height:1.6;margin-bottom:24px}
+.goal-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px}
+.goal-card{background:var(--white);border:1.5px solid var(--border);border-radius:var(--r);padding:16px 14px;cursor:pointer;text-align:center;transition:all .18s;-webkit-tap-highlight-color:transparent}
+.goal-card:active{transform:scale(.97)}
+.goal-card.sel{border-color:var(--accent);background:var(--accent-lt)}
+.goal-card .gc-icon{font-size:28px;margin-bottom:8px}
+.goal-card .gc-title{font-size:13px;font-weight:600;color:var(--text);margin-bottom:2px}
+.goal-card .gc-sub{font-size:11px;color:var(--text3)}
+.goal-card.sel .gc-title{color:var(--accent)}
+.field-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:20px}
+.field-chip{padding:10px 12px;border:1.5px solid var(--border);border-radius:var(--r-sm);cursor:pointer;font-size:12px;font-weight:600;color:var(--text2);background:var(--white);display:flex;align-items:center;gap:7px;transition:all .15s}
+.field-chip:active{transform:scale(.97)}
+.field-chip.sel{background:var(--accent-lt);border-color:var(--accent);color:var(--accent)}
+.field-chip .fc-icon{font-size:16px}
 
-.splash-name {
-  font-family: 'Bricolage Grotesque', sans-serif;
-  font-size: 24px;
-  font-weight: 700;
-  color: var(--text);
-  letter-spacing: -0.5px;
-  animation: splashFade 0.5s ease 0.7s both;
-  margin-bottom: 6px;
-}
+/* ── TOPBAR ── */
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:calc(var(--safe-top) + 12px) 16px 12px;background:var(--white);border-bottom:1px solid var(--border);flex-shrink:0;box-shadow:var(--shadow-sm);position:relative;z-index:10}
+.tb-left{display:flex;align-items:center;gap:9px}
+.tb-icon{width:32px;height:32px;border-radius:9px;overflow:hidden;box-shadow:0 2px 8px rgba(26,86,219,.18);flex-shrink:0}
+.tb-icon img{width:100%;height:100%;object-fit:cover;display:block}
+.tb-title{font-family:'Bricolage Grotesque',sans-serif;font-size:17px;font-weight:700;color:var(--text);letter-spacing:-.3px}
+.tb-right{display:flex;align-items:center;gap:8px}
+.streak-pill{display:flex;align-items:center;gap:4px;padding:5px 10px;background:var(--gold-lt);border-radius:20px;font-size:12px;font-weight:600;color:var(--gold);border:1px solid rgba(217,119,6,.15)}
+.tb-av{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--accent),#60a5fa);display:flex;align-items:center;justify-content:center;font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:12px;color:#fff;cursor:pointer;box-shadow:0 2px 8px rgba(26,86,219,.25);border:none}
+.tb-dark{width:32px;height:32px;border-radius:50%;background:var(--bg2);border:1px solid var(--border);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:15px}
 
-.splash-tagline {
-  font-size: 13px;
-  color: var(--text3);
-  font-weight: 400;
-  animation: splashFade 0.5s ease 0.85s both;
-  margin-bottom: 48px;
-}
-
-@keyframes splashFade { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
-
-.splash-bar-wrap {
-  width: 120px;
-  height: 3px;
-  background: var(--bg2);
-  border-radius: 2px;
-  overflow: hidden;
-  animation: splashFade 0.4s ease 1s both;
-}
-
-.splash-bar {
-  height: 100%;
-  width: 0%;
-  background: linear-gradient(90deg, var(--accent), #60a5fa);
-  border-radius: 2px;
-  animation: splashProgress 1.4s cubic-bezier(0.4,0,0.2,1) 1s forwards;
-}
-
-@keyframes splashProgress { from { width:0% } to { width:100% } }
-
-.splash-powered {
-  position: absolute;
-  bottom: calc(var(--safe-bottom) + 28px);
-  font-size: 11px;
-  color: var(--text3);
-  animation: splashFade 0.4s ease 1.2s both;
-  display: flex;
-  align-items: center;
-  gap: 5px;
-}
-
-.splash-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--accent); opacity: 0.5; }
-
-/* ══════════════════════════════
-   APP SHELL
-══════════════════════════════ */
-.app {
-  display: flex;
-  flex-direction: column;
-  height: 100vh;
-  height: 100dvh;
-  opacity: 0;
-  transition: opacity 0.4s ease;
-}
-.app.visible { opacity: 1; }
-
-/* ── TOP BAR ── */
-.topbar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: calc(var(--safe-top) + 13px) 18px 13px;
-  background: var(--white);
-  border-bottom: 1px solid var(--border);
-  flex-shrink: 0;
-  box-shadow: var(--shadow-sm);
-  position: relative;
-  z-index: 10;
-}
-
-.topbar-left { display: flex; align-items: center; gap: 10px; }
-
-.topbar-icon {
-  width: 34px;
-  height: 34px;
-  border-radius: 9px;
-  overflow: hidden;
-  box-shadow: 0 2px 8px rgba(26,86,219,0.18);
-  flex-shrink: 0;
-}
-.topbar-icon img { width: 100%; height: 100%; object-fit: cover; display: block; }
-
-.topbar-title {
-  font-family: 'Bricolage Grotesque', sans-serif;
-  font-size: 17px;
-  font-weight: 700;
-  color: var(--text);
-  letter-spacing: -0.3px;
-}
-
-.topbar-right { display: flex; align-items: center; gap: 8px; }
-
-.streak-pill {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  padding: 5px 11px;
-  background: var(--gold-lt);
-  border-radius: 20px;
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--gold);
-  border: 1px solid rgba(217,119,6,0.15);
-}
-
-.av-btn {
-  width: 34px;
-  height: 34px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, var(--accent), #60a5fa);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: 'Bricolage Grotesque', sans-serif;
-  font-weight: 700;
-  font-size: 13px;
-  color: #fff;
-  cursor: pointer;
-  box-shadow: 0 2px 8px rgba(26,86,219,0.25);
-  border: none;
-}
-
-/* ── CONTENT ── */
-.content {
-  flex: 1;
-  overflow-y: auto;
-  overflow-x: hidden;
-  -webkit-overflow-scrolling: touch;
-  overscroll-behavior: contain;
-  background: var(--bg);
-}
-
-/* ── PAGES ── */
-.page {
-  display: none;
-  padding: 20px 16px calc(84px + var(--safe-bottom));
-  animation: pageIn 0.28s cubic-bezier(0.4,0,0.2,1);
-}
-.page.active { display: block; }
-@keyframes pageIn { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
+/* ── CONTENT & PAGES ── */
+.content{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;background:var(--bg)}
+.page{display:none;padding:20px 16px calc(84px + var(--safe-bottom));animation:pageIn .28s cubic-bezier(.4,0,.2,1)}
+.page.active{display:block}
+@keyframes pageIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
 
 /* ── BOTTOM NAV ── */
-.bottomnav {
-  display: flex;
-  background: var(--white);
-  border-top: 1px solid var(--border);
-  padding-bottom: var(--safe-bottom);
-  flex-shrink: 0;
-  box-shadow: 0 -4px 20px rgba(15,23,42,0.06);
-}
+.bottomnav{display:flex;background:var(--white);border-top:1px solid var(--border);padding-bottom:var(--safe-bottom);flex-shrink:0;box-shadow:0 -4px 20px rgba(15,23,42,.06)}
+.bn-btn{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:10px 4px 8px;background:none;border:none;cursor:pointer;font-size:10px;font-weight:500;font-family:'Plus Jakarta Sans',sans-serif;color:var(--text3);transition:color .18s;position:relative}
+.bn-btn.active{color:var(--accent)}
+.bn-btn.active::after{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:28px;height:2.5px;background:var(--accent);border-radius:0 0 3px 3px}
+.bn-icon{width:24px;height:24px;display:flex;align-items:center;justify-content:center}
+.bn-icon img{width:22px;height:22px;object-fit:contain;opacity:.5;transition:opacity .18s}
+.bn-btn.active .bn-icon img{opacity:1}
+.bn-icon svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 
-.bn-btn {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 3px;
-  padding: 10px 4px 8px;
-  background: none;
-  border: none;
-  cursor: pointer;
-  font-size: 10px;
-  font-weight: 500;
-  font-family: 'Plus Jakarta Sans', sans-serif;
-  color: var(--text3);
-  transition: color 0.18s;
-  position: relative;
-}
-.bn-btn.active { color: var(--accent); }
-.bn-btn.active::after {
-  content: '';
-  position: absolute;
-  top: 0; left: 50%;
-  transform: translateX(-50%);
-  width: 28px; height: 2.5px;
-  background: var(--accent);
-  border-radius: 0 0 3px 3px;
-}
+/* ── TYPOGRAPHY ── */
+.ph{margin-bottom:20px}
+.ph-eye{display:inline-flex;align-items:center;gap:5px;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);margin-bottom:8px;padding:3px 10px;background:var(--accent-lt);border-radius:20px}
+.ph-title{font-family:'Bricolage Grotesque',sans-serif;font-size:22px;font-weight:700;color:var(--text);letter-spacing:-.4px;margin-bottom:5px;line-height:1.2}
+.ph-sub{font-size:13px;color:var(--text2);line-height:1.6}
 
-.bn-icon {
-  width: 24px; height: 24px;
-  display: flex; align-items: center; justify-content: center;
-}
+/* ── HOME ── */
+.greet-tag{display:inline-flex;align-items:center;gap:6px;padding:4px 12px;background:var(--accent-lt);border-radius:20px;font-size:11px;font-weight:600;color:var(--accent);margin-bottom:10px}
+.greet-name{font-family:'Bricolage Grotesque',sans-serif;font-size:26px;font-weight:700;color:var(--text);letter-spacing:-.5px;margin-bottom:4px;line-height:1.15}
+.greet-sub{font-size:13px;color:var(--text2);line-height:1.6;margin-bottom:18px}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px}
+.stat{background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:14px 16px;box-shadow:var(--shadow-sm);position:relative;overflow:hidden}
+.stat::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;border-radius:var(--r) var(--r) 0 0}
+.stat.blue::before{background:linear-gradient(90deg,var(--accent),#60a5fa)}
+.stat.green::before{background:linear-gradient(90deg,var(--accent2),#34d399)}
+.stat.gold::before{background:linear-gradient(90deg,var(--gold),#fbbf24)}
+.stat.purple::before{background:linear-gradient(90deg,var(--purple),#a78bfa)}
+.stat-icon{font-size:18px;margin-bottom:8px}
+.stat-val{font-family:'Bricolage Grotesque',sans-serif;font-size:26px;font-weight:700;color:var(--text);margin-bottom:3px;line-height:1}
+.stat-lbl{font-size:11px;color:var(--text3);font-weight:500}
+.sec-lbl{font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--text3);margin-bottom:12px}
+.qa-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.qa-card{background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:18px 14px 16px;cursor:pointer;transition:transform .18s,box-shadow .18s,border-color .18s;box-shadow:var(--shadow-sm);-webkit-tap-highlight-color:transparent}
+.qa-card:active{transform:scale(.97);box-shadow:none}
+.qa-iw{width:42px;height:42px;border-radius:11px;display:flex;align-items:center;justify-content:center;margin-bottom:12px}
+.qa-iw img{width:32px;height:32px;object-fit:contain}
+.qa-iw.blue{background:var(--accent-lt)}.qa-iw.green{background:var(--accent2-lt)}.qa-iw.gold{background:var(--gold-lt)}.qa-iw.purple{background:var(--purple-lt)}.qa-iw.red{background:var(--red-lt)}.qa-iw.slate{background:var(--bg2)}
+.qa-title{font-family:'Bricolage Grotesque',sans-serif;font-size:13px;font-weight:700;color:var(--text);margin-bottom:3px}
+.qa-sub{font-size:11px;color:var(--text3);line-height:1.4}
 
-/* SVG icons */
-.bn-icon svg { width: 22px; height: 22px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
-.bn-btn.active .bn-icon svg { stroke-width: 2.2; }
+/* ── FORMS ── */
+.fg{display:flex;flex-direction:column;gap:6px;margin-bottom:14px}
+.fg label{font-size:11px;font-weight:700;color:var(--text2);letter-spacing:.04em;text-transform:uppercase}
+input,select,textarea{background:var(--white);border:1.5px solid var(--bg2);border-radius:var(--r-sm);color:var(--text);font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;padding:11px 14px;width:100%;outline:none;transition:border-color .18s,box-shadow .18s;box-shadow:var(--shadow-sm);-webkit-appearance:none}
+input:focus,select:focus,textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(26,86,219,.1)}
+select{background-image:url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L5 5L9 1' stroke='%2394a3b8' stroke-width='1.5' stroke-linecap='round' fill='none'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;padding-right:36px;cursor:pointer}
+textarea{resize:none;min-height:80px;line-height:1.6}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.chip-group{display:flex;flex-wrap:wrap;gap:8px}
+.chip{padding:7px 14px;border:1.5px solid var(--bg2);border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;color:var(--text2);background:var(--white);transition:all .15s;user-select:none;box-shadow:var(--shadow-sm)}
+.chip:active{transform:scale(.97)}
+.chip.sel{background:var(--accent-lt);border-color:var(--accent);color:var(--accent)}
 
-/* ══════════════════════════════
-   PAGE: HOME
-══════════════════════════════ */
-.greeting-section { margin-bottom: 20px; }
+/* ── BUTTONS ── */
+.btn{display:flex;align-items:center;justify-content:center;gap:8px;padding:13px 20px;border-radius:var(--r-sm);font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;font-weight:700;cursor:pointer;border:none;width:100%;transition:all .2s;-webkit-tap-highlight-color:transparent}
+.btn:active{transform:scale(.98)}
+.btn-primary{background:linear-gradient(135deg,#1a56db,#2563eb);color:#fff;box-shadow:0 4px 16px rgba(26,86,219,.3)}
+.btn-ghost{background:var(--white);color:var(--text2);border:1.5px solid var(--bg2);box-shadow:var(--shadow-sm)}
+.btn-sm{padding:9px 16px;font-size:12px;width:auto}
+.btn-danger{background:var(--red-lt);color:var(--red);border:1px solid rgba(220,38,38,.2)}
 
-.greeting-tag {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 4px 12px;
-  background: var(--accent-lt);
-  border-radius: 20px;
-  font-size: 11px;
-  font-weight: 600;
-  color: var(--accent);
-  margin-bottom: 10px;
-  letter-spacing: 0.02em;
-}
+/* ── CERT SEARCH ── */
+.search-wrap{position:relative;margin-bottom:16px}
+.search-wrap input{padding-left:40px;background:var(--white)}
+.search-icon{position:absolute;left:13px;top:50%;transform:translateY(-50%);color:var(--text3);pointer-events:none;font-size:16px}
+.cert-cats{display:flex;gap:7px;overflow-x:auto;padding-bottom:4px;margin-bottom:14px;scrollbar-width:none}
+.cert-cats::-webkit-scrollbar{display:none}
+.cat-pill{padding:6px 14px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap;border:1px solid var(--border);background:var(--white);color:var(--text2);transition:all .15s;flex-shrink:0}
+.cat-pill.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+.cert-grid{display:grid;grid-template-columns:1fr;gap:8px}
+.cert-item{background:var(--white);border:1px solid var(--border);border-radius:var(--r-sm);padding:13px 15px;display:flex;align-items:center;gap:12px;cursor:pointer;transition:all .15s;box-shadow:var(--shadow-sm)}
+.cert-item:active{transform:scale(.98)}
+.cert-item.selected{border-color:var(--accent);background:var(--accent-lt)}
+.ci-icon{width:36px;height:36px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.ci-body{flex:1;min-width:0}
+.ci-name{font-size:13px;font-weight:600;color:var(--text);margin-bottom:2px}
+.ci-meta{font-size:11px;color:var(--text3);display:flex;gap:8px;flex-wrap:wrap}
+.ci-check{width:20px;height:20px;border-radius:50%;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .15s}
+.cert-item.selected .ci-check{background:var(--accent);border-color:var(--accent);color:#fff;font-size:11px}
 
-.greeting-name {
-  font-family: 'Bricolage Grotesque', sans-serif;
-  font-size: 26px;
-  font-weight: 700;
-  color: var(--text);
-  letter-spacing: -0.5px;
-  margin-bottom: 4px;
-  line-height: 1.15;
-}
+/* ── OUTPUT CARDS ── */
+.out-card{background:var(--white);border:1.5px solid var(--border);border-radius:var(--r);padding:18px;margin-bottom:12px;box-shadow:var(--shadow-sm);position:relative;overflow:hidden;transition:transform .18s,box-shadow .18s}
+.out-card.top{border-color:var(--accent)}
+.out-card.top::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--accent),#60a5fa)}
+.oc-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:10px}
+.oc-name{font-family:'Bricolage Grotesque',sans-serif;font-size:15px;font-weight:700;color:var(--text);margin-bottom:2px}
+.oc-prov{font-size:11px;color:var(--text3)}
+.badges{display:flex;gap:5px;flex-wrap:wrap;flex-shrink:0}
+.bdg{font-size:10px;font-weight:700;padding:3px 9px;border-radius:20px;letter-spacing:.04em;text-transform:uppercase}
+.bdg-blue{background:var(--accent-lt);color:var(--accent);border:1px solid rgba(26,86,219,.2)}
+.bdg-green{background:var(--accent2-lt);color:var(--accent2);border:1px solid rgba(5,150,105,.2)}
+.bdg-gold{background:var(--gold-lt);color:var(--gold);border:1px solid rgba(217,119,6,.2)}
+.bdg-gray{background:var(--bg2);color:var(--text3);border:1px solid var(--border)}
+.bdg-purple{background:var(--purple-lt);color:var(--purple);border:1px solid rgba(124,58,237,.2)}
+.oc-body{font-size:13px;color:var(--text2);line-height:1.65;margin-bottom:14px}
+.oc-meta{display:flex;flex-wrap:wrap;gap:14px;font-size:12px;color:var(--text3);padding-top:12px;border-top:1px solid var(--bg2)}
+.oc-meta strong{color:var(--text2);font-weight:600}
+.sbox{background:var(--accent-lt);border:1px solid rgba(26,86,219,.14);border-radius:var(--r-sm);padding:13px 15px;font-size:13px;color:#1e40af;line-height:1.7;margin-bottom:16px}
+[data-theme="dark"] .sbox{color:#93c5fd}
 
-.greeting-sub { font-size: 13px; color: var(--text2); line-height: 1.6; }
+/* ── ROADMAP ── */
+.timeline{position:relative;padding-left:34px}
+.timeline::before{content:'';position:absolute;left:10px;top:13px;bottom:13px;width:2px;background:linear-gradient(to bottom,var(--accent),var(--accent2));opacity:.2;border-radius:1px}
+.t-step{position:relative;margin-bottom:14px}
+.t-dot{position:absolute;left:-27px;top:7px;width:24px;height:24px;border-radius:50%;background:var(--white);border:2px solid var(--accent);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;color:var(--accent);box-shadow:0 2px 8px rgba(26,86,219,.15)}
+.t-card{background:var(--white);border:1.5px solid var(--border);border-radius:var(--r-sm);padding:13px 15px;box-shadow:var(--shadow-sm)}
+.t-week{font-size:10px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--accent);margin-bottom:3px}
+.t-title{font-family:'Bricolage Grotesque',sans-serif;font-size:14px;font-weight:700;color:var(--text);margin-bottom:5px}
+.t-desc{font-size:12px;color:var(--text2);line-height:1.6;margin-bottom:7px}
+.t-foot{font-size:11px;color:var(--text3);display:flex;flex-direction:column;gap:2px}
 
-/* API banner */
-.api-card {
-  background: linear-gradient(135deg, #1a56db 0%, #2563eb 50%, #3b82f6 100%);
-  border-radius: var(--r);
-  padding: 18px 18px 16px;
-  margin-bottom: 18px;
-  box-shadow: 0 6px 24px rgba(26,86,219,0.28);
-  position: relative;
-  overflow: hidden;
-}
-.api-card::before {
-  content: '';
-  position: absolute;
-  top: -30px; right: -30px;
-  width: 100px; height: 100px;
-  background: rgba(255,255,255,0.07);
-  border-radius: 50%;
-}
-.api-card::after {
-  content: '';
-  position: absolute;
-  bottom: -20px; left: 40%;
-  width: 140px; height: 140px;
-  background: rgba(255,255,255,0.04);
-  border-radius: 50%;
-}
-.api-card h4 { font-size: 14px; font-weight: 600; color: #fff; margin-bottom: 4px; position: relative; z-index: 1; }
-.api-card p { font-size: 12px; color: rgba(255,255,255,0.75); line-height: 1.5; margin-bottom: 12px; position: relative; z-index: 1; }
-.api-row { display: flex; gap: 8px; position: relative; z-index: 1; }
-.api-row input { flex: 1; background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.25); border-radius: var(--r-xs); color: #fff; font-family: monospace; font-size: 11px; padding: 9px 12px; outline: none; }
-.api-row input::placeholder { color: rgba(255,255,255,0.5); }
-.api-row input:focus { background: rgba(255,255,255,0.22); border-color: rgba(255,255,255,0.5); }
-.btn-white { padding: 9px 16px; background: #fff; border: none; border-radius: var(--r-xs); font-size: 12px; font-weight: 700; color: var(--accent); cursor: pointer; white-space: nowrap; font-family: 'Plus Jakarta Sans', sans-serif; }
+/* ── COMPARE ── */
+.ctbl-wrap{overflow-x:auto;margin-bottom:14px;border-radius:var(--r-sm);box-shadow:var(--shadow-sm)}
+.ctbl{width:100%;border-collapse:collapse;font-size:12px;min-width:420px;background:var(--white)}
+.ctbl th{text-align:left;padding:10px 12px;background:var(--bg2);color:var(--text2);font-weight:700;font-size:10px;text-transform:uppercase;letter-spacing:.05em;border-bottom:1.5px solid var(--border)}
+.ctbl td{padding:9px 12px;border-bottom:1px solid var(--bg2);color:var(--text);vertical-align:top}
+.ctbl tr:last-child td{border-bottom:none}
+.best-cell{color:var(--accent2);font-weight:700}
+.roi-high{color:var(--accent2);font-weight:700}
+.mini-grid{display:grid;grid-template-columns:1fr;gap:8px;margin-top:12px}
+.mini-c{background:var(--white);border:1px solid var(--border);border-radius:var(--r-sm);padding:11px 13px;box-shadow:var(--shadow-sm)}
+.mini-c-name{font-family:'Bricolage Grotesque',sans-serif;font-size:13px;font-weight:700;color:var(--text);margin-bottom:5px}
+.mini-pro{font-size:12px;color:var(--accent2);margin-bottom:2px;font-weight:500}
+.mini-con{font-size:12px;color:var(--red);font-weight:500}
 
-/* Stats */
-.stats { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
+/* ── ROI ── */
+.roi-result{background:var(--white);border:1.5px solid var(--border);border-radius:var(--r);padding:20px 16px;margin-top:16px;box-shadow:var(--shadow);position:relative;overflow:hidden}
+.roi-result::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--accent2),#34d399)}
+.roi-lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--text3);margin-bottom:4px}
+.roi-num{font-family:'Bricolage Grotesque',sans-serif;font-size:34px;font-weight:700;color:var(--accent2);margin-bottom:6px;line-height:1}
+.roi-sub{font-size:13px;color:var(--text2);line-height:1.6;margin-bottom:14px}
+.roi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.roi-box{background:var(--bg);border:1px solid var(--border);border-radius:var(--r-xs);padding:10px;text-align:center}
+.roi-box-val{font-family:'Bricolage Grotesque',sans-serif;font-size:15px;font-weight:700;color:var(--gold);margin-bottom:3px}
+.roi-box-lbl{font-size:10px;color:var(--text3)}
 
-.stat-card {
-  background: var(--white);
-  border: 1px solid var(--border);
-  border-radius: var(--r);
-  padding: 16px 16px 14px;
-  box-shadow: var(--shadow-sm);
-  position: relative;
-  overflow: hidden;
-}
-.stat-card::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 3px;
-  border-radius: var(--r) var(--r) 0 0;
-}
-.stat-card.blue::before { background: linear-gradient(90deg, var(--accent), #60a5fa); }
-.stat-card.green::before { background: linear-gradient(90deg, var(--accent2), #34d399); }
-.stat-card.gold::before { background: linear-gradient(90deg, var(--gold), #fbbf24); }
-.stat-card.slate::before { background: linear-gradient(90deg, #64748b, #94a3b8); }
+/* ── TRACKER ── */
+.tr-card{background:var(--white);border:1.5px solid var(--border);border-radius:var(--r);padding:16px;margin-bottom:12px;box-shadow:var(--shadow-sm)}
+.tr-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.tr-name{font-family:'Bricolage Grotesque',sans-serif;font-size:14px;font-weight:700;color:var(--text)}
+.tr-pct{font-family:'Bricolage Grotesque',sans-serif;font-size:20px;font-weight:700;color:var(--accent2)}
+.prog-track{height:6px;background:var(--bg2);border-radius:3px;margin-bottom:12px;overflow:hidden}
+.prog-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--accent),var(--accent2));transition:width .6s cubic-bezier(.4,0,.2,1)}
+.ms-list{display:flex;flex-direction:column;gap:5px}
+.ms-item{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--text2);padding:6px 8px;border-radius:var(--r-xs);cursor:pointer;-webkit-tap-highlight-color:transparent}
+.ms-item input[type=checkbox]{width:16px;height:16px;accent-color:var(--accent2);flex-shrink:0;cursor:pointer}
+.ms-item.done{color:var(--text3);text-decoration:line-through}
+.tr-foot{margin-top:10px;padding-top:10px;border-top:1px solid var(--bg2);display:flex;justify-content:space-between;font-size:11px;color:var(--text3)}
+.tr-del{color:var(--red);cursor:pointer;font-weight:600}
+.cd-row{font-size:12px;font-weight:600;margin-bottom:10px}
 
-.stat-icon { font-size: 18px; margin-bottom: 10px; line-height: 1; }
-.stat-val {
-  font-family: 'Bricolage Grotesque', sans-serif;
-  font-size: 26px;
-  font-weight: 700;
-  color: var(--text);
-  margin-bottom: 3px;
-  line-height: 1;
-}
-.stat-lbl { font-size: 11px; color: var(--text3); font-weight: 500; }
+/* ── CHAT ── */
+.chat-outer{display:flex;flex-direction:column;height:calc(100dvh - 200px);min-height:300px}
+.chat-msgs{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:10px;padding-bottom:8px;-webkit-overflow-scrolling:touch}
+.msg{display:flex;gap:8px;align-items:flex-start}
+.msg-av{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0}
+.msg-av.user{background:linear-gradient(135deg,var(--accent),#60a5fa);color:#fff;box-shadow:0 2px 8px rgba(26,86,219,.2)}
+.msg-av.ai{background:linear-gradient(135deg,var(--accent2),#34d399);color:#fff;box-shadow:0 2px 8px rgba(5,150,105,.2)}
+.msg-bubble{border-radius:14px;padding:11px 14px;font-size:13px;line-height:1.6;max-width:82%}
+.msg-bubble.ai-msg{background:var(--white);color:var(--text2);border:1px solid var(--border);box-shadow:var(--shadow-sm)}
+.msg-bubble.u{background:var(--accent);color:#fff}
+.chat-ir{display:flex;gap:8px;padding-top:12px;border-top:1px solid var(--bg2);margin-top:8px}
+.chat-ir input{flex:1;border-radius:22px;padding:11px 16px;font-size:13px}
+.chat-send{padding:11px 18px;background:var(--accent);border:none;cursor:pointer;color:#fff;font-size:13px;font-weight:700;font-family:'Plus Jakarta Sans',sans-serif;border-radius:22px;white-space:nowrap;box-shadow:0 3px 12px rgba(26,86,219,.28)}
 
-/* Quick actions */
-.section-label {
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.07em;
-  text-transform: uppercase;
-  color: var(--text3);
-  margin-bottom: 12px;
-}
+/* ── RESUME ── */
+.upload-zone{border:2px dashed var(--border2);border-radius:var(--r);padding:32px 20px;text-align:center;cursor:pointer;transition:all .2s;margin-bottom:16px;background:var(--bg)}
+.upload-zone:hover,.upload-zone.drag{border-color:var(--accent);background:var(--accent-lt)}
+.upload-zone .uz-icon{font-size:40px;margin-bottom:10px}
+.upload-zone .uz-title{font-size:14px;font-weight:600;color:var(--text);margin-bottom:4px}
+.upload-zone .uz-sub{font-size:12px;color:var(--text3)}
+.upload-zone input[type=file]{display:none}
+.file-preview{background:var(--accent-lt);border:1px solid rgba(26,86,219,.2);border-radius:var(--r-sm);padding:12px 14px;display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.fp-icon{font-size:24px;flex-shrink:0}
+.fp-name{font-size:13px;font-weight:600;color:var(--accent);flex:1}
+.fp-remove{font-size:18px;cursor:pointer;color:var(--text3)}
 
-.qa-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+/* ── PROFILE HERO ── */
+.profile-hero{display:flex;align-items:center;gap:14px;padding:18px;background:linear-gradient(135deg,#1a56db,#2563eb);border-radius:var(--r);margin-bottom:18px;box-shadow:0 6px 24px rgba(26,86,219,.28)}
+.p-av-lg{width:56px;height:56px;border-radius:50%;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:20px;color:#fff;flex-shrink:0;border:2px solid rgba(255,255,255,.3)}
+.p-hero-name{font-family:'Bricolage Grotesque',sans-serif;font-size:18px;font-weight:700;color:#fff;margin-bottom:3px}
+.p-hero-role{font-size:12px;color:rgba(255,255,255,.7)}
+.p-hero-bdg{display:inline-flex;align-items:center;gap:4px;margin-top:7px;padding:3px 10px;background:rgba(255,255,255,.18);border-radius:20px;font-size:10px;color:rgba(255,255,255,.9);font-weight:600}
 
-.qa-card {
-  background: var(--white);
-  border: 1px solid var(--border);
-  border-radius: var(--r);
-  padding: 18px 14px 16px;
-  cursor: pointer;
-  transition: transform 0.18s, box-shadow 0.18s, border-color 0.18s;
-  box-shadow: var(--shadow-sm);
-  -webkit-tap-highlight-color: transparent;
-}
-.qa-card:active { transform: scale(0.97); box-shadow: none; }
-.qa-card:hover { border-color: var(--border2); box-shadow: var(--shadow); }
+/* ── SHARE ── */
+.share-card{background:linear-gradient(135deg,var(--accent),#2563eb);border-radius:var(--r);padding:18px;margin-bottom:14px;box-shadow:0 6px 20px rgba(26,86,219,.25)}
+.share-card h4{font-size:14px;font-weight:700;color:#fff;margin-bottom:5px}
+.share-card p{font-size:12px;color:rgba(255,255,255,.8);line-height:1.5;margin-bottom:12px}
+.share-row{display:flex;gap:8px;flex-wrap:wrap}
+.share-btn{padding:9px 16px;background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.3);border-radius:var(--r-xs);font-size:12px;font-weight:600;color:#fff;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;transition:background .15s}
+.share-btn:hover{background:rgba(255,255,255,.3)}
 
-.qa-icon-wrap {
-  width: 40px; height: 40px;
-  border-radius: 11px;
-  display: flex; align-items: center; justify-content: center;
-  margin-bottom: 12px;
-  font-size: 20px;
-}
-.qa-icon-wrap.blue { background: var(--accent-lt); }
-.qa-icon-wrap.green { background: var(--accent2-lt); }
-.qa-icon-wrap.gold { background: var(--gold-lt); }
-.qa-icon-wrap.slate { background: var(--bg2); }
-.qa-icon-wrap.red { background: var(--red-lt); }
-.qa-icon-wrap.purple { background: #f3e8ff; }
+/* ── MISC ── */
+.divider{height:1px;background:var(--bg2);margin:18px 0}
+.empty-state{text-align:center;padding:44px 20px;color:var(--text3)}
+.empty-state .es-icon{font-size:40px;margin-bottom:12px}
+.empty-state .es-title{font-size:14px;font-weight:600;color:var(--text2);margin-bottom:6px}
+.empty-state .es-sub{font-size:12px;line-height:1.6}
+.loading{display:flex;flex-direction:column;align-items:center;padding:40px 20px;gap:12px}
+.spin{width:32px;height:32px;border:3px solid var(--bg2);border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.spin-txt{font-size:13px;color:var(--text3);font-weight:500}
+.err{background:var(--red-lt);border:1px solid rgba(220,38,38,.2);border-radius:var(--r-sm);padding:12px 14px;font-size:13px;color:var(--red);margin-top:10px}
+.toast{position:fixed;bottom:calc(72px + var(--safe-bottom) + 10px);left:50%;transform:translateX(-50%) translateY(16px);background:var(--text);border-radius:22px;padding:9px 18px;font-size:12px;color:#fff;opacity:0;transition:all .28s cubic-bezier(.4,0,.2,1);z-index:999;white-space:nowrap;pointer-events:none;box-shadow:var(--shadow-lg)}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+::-webkit-scrollbar{width:3px}
+::-webkit-scrollbar-thumb{background:var(--bg2);border-radius:2px}
+@media(max-width:380px){.grid2{grid-template-columns:1fr}.goal-grid{grid-template-columns:1fr}.qa-grid{grid-template-columns:1fr}}
 
-.qa-title {
-  font-family: 'Bricolage Grotesque', sans-serif;
-  font-size: 13px;
-  font-weight: 700;
-  color: var(--text);
-  margin-bottom: 3px;
-  letter-spacing: -0.1px;
-}
-.qa-sub { font-size: 11px; color: var(--text3); line-height: 1.4; }
+/* ── NOTIFICATIONS PAGE ── */
+.notif-header{background:linear-gradient(135deg,#1a56db,#7c3aed);border-radius:var(--r);padding:20px 18px;margin-bottom:18px;box-shadow:0 6px 24px rgba(26,86,219,.28);position:relative;overflow:hidden}
+.notif-header::before{content:'';position:absolute;top:-30px;right:-30px;width:120px;height:120px;background:rgba(255,255,255,.07);border-radius:50%}
+.notif-header::after{content:'';position:absolute;bottom:-20px;left:30%;width:100px;height:100px;background:rgba(255,255,255,.04);border-radius:50%}
+.nh-title{font-family:'Bricolage Grotesque',sans-serif;font-size:20px;font-weight:700;color:#fff;margin-bottom:4px;position:relative;z-index:1}
+.nh-sub{font-size:12px;color:rgba(255,255,255,.75);position:relative;z-index:1}
+.nh-stats{display:flex;gap:14px;margin-top:14px;position:relative;z-index:1}
+.nh-stat{background:rgba(255,255,255,.15);border-radius:var(--r-xs);padding:8px 12px;text-align:center;backdrop-filter:blur(4px)}
+.nh-stat-val{font-family:'Bricolage Grotesque',sans-serif;font-size:18px;font-weight:700;color:#fff}
+.nh-stat-lbl{font-size:10px;color:rgba(255,255,255,.7)}
+.notif-section{margin-bottom:18px}
+.notif-section-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--text3);margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.notif-card{background:var(--white);border:1.5px solid var(--border);border-radius:var(--r);padding:16px 18px;margin-bottom:10px;box-shadow:var(--shadow-sm)}
+.notif-row{display:flex;align-items:center;gap:12px;margin-bottom:0}
+.notif-row.has-sub{margin-bottom:8px}
+.nr-icon{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.nr-body{flex:1;min-width:0}
+.nr-title{font-size:13px;font-weight:600;color:var(--text);margin-bottom:1px}
+.nr-desc{font-size:11px;color:var(--text3);line-height:1.4}
+.toggle-wrap{position:relative;display:inline-block;width:44px;height:24px;flex-shrink:0}
+.toggle-wrap input{opacity:0;width:0;height:0;position:absolute}
+.toggle-track{position:absolute;inset:0;border-radius:12px;cursor:pointer;transition:.25s}
+.toggle-track.on{background:var(--accent)}
+.toggle-track.off{background:var(--bg2)}
+.toggle-thumb{position:absolute;width:18px;height:18px;background:#fff;border-radius:50%;top:3px;transition:.25s;box-shadow:0 1px 4px rgba(0,0,0,.2)}
+.toggle-thumb.on{left:23px}
+.toggle-thumb.off{left:3px}
+.time-presets{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}
+.time-preset{padding:7px 14px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;border:1.5px solid var(--border);background:var(--white);color:var(--text2);transition:all .15s;-webkit-tap-highlight-color:transparent}
+.time-preset.active{background:var(--accent-lt);border-color:var(--accent);color:var(--accent)}
+.time-preset:active{transform:scale(.97)}
+.custom-time-row{display:flex;align-items:center;gap:10px;margin-top:10px}
+.custom-time-row label{font-size:12px;color:var(--text2);font-weight:500;white-space:nowrap}
+.custom-time-row input[type=time]{width:130px;padding:8px 12px;font-size:14px}
+.notif-enable-btn{background:linear-gradient(135deg,#1a56db,#7c3aed);color:#fff;box-shadow:0 4px 16px rgba(26,86,219,.3)}
+.exam-notif-list{display:flex;flex-direction:column;gap:7px;margin-top:8px}
+.enl-item{display:flex;align-items:center;gap:8px;padding:8px 10px;background:var(--bg);border-radius:var(--r-xs);font-size:12px;color:var(--text2)}
+.enl-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.permission-banner{background:var(--gold-lt);border:1px solid rgba(217,119,6,.25);border-radius:var(--r-sm);padding:12px 14px;margin-bottom:14px;font-size:13px;color:var(--gold);display:flex;align-items:flex-start;gap:8px;line-height:1.5}
 
-/* ══════════════════════════════
-   PAGE HEADERS
-══════════════════════════════ */
-.ph { margin-bottom: 20px; }
-.ph-eye {
-  display: inline-flex; align-items: center; gap: 6px;
-  font-size: 10px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
-  color: var(--accent); margin-bottom: 8px;
-  padding: 3px 10px; background: var(--accent-lt); border-radius: 20px;
-}
-.ph-title {
-  font-family: 'Bricolage Grotesque', sans-serif;
-  font-size: 22px; font-weight: 700; color: var(--text);
-  letter-spacing: -0.4px; margin-bottom: 5px; line-height: 1.2;
-}
-.ph-sub { font-size: 13px; color: var(--text2); line-height: 1.6; }
-
-/* ══════════════════════════════
-   FORMS
-══════════════════════════════ */
-.fg { display: flex; flex-direction: column; gap: 6px; margin-bottom: 14px; }
-.fg label {
-  font-size: 11px; font-weight: 700; color: var(--text2);
-  letter-spacing: 0.04em; text-transform: uppercase;
-}
-
-input, select, textarea {
-  background: var(--white);
-  border: 1.5px solid var(--bg2);
-  border-radius: var(--r-sm);
-  color: var(--text);
-  font-family: 'Plus Jakarta Sans', sans-serif;
-  font-size: 14px;
-  padding: 11px 14px;
-  width: 100%;
-  outline: none;
-  transition: border-color 0.18s, box-shadow 0.18s;
-  box-shadow: var(--shadow-sm);
-  -webkit-appearance: none;
-}
-input:focus, select:focus, textarea:focus {
-  border-color: var(--accent);
-  box-shadow: 0 0 0 3px rgba(26,86,219,0.1);
-}
-select {
-  background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L5 5L9 1' stroke='%2394a3b8' stroke-width='1.5' stroke-linecap='round' fill='none'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 14px center;
-  padding-right: 36px;
-  cursor: pointer;
-}
-select option { font-family: 'Plus Jakarta Sans', sans-serif; }
-textarea { resize: none; min-height: 80px; line-height: 1.6; }
-
-/* Chips */
-.chip-group { display: flex; flex-wrap: wrap; gap: 8px; }
-.chip {
-  padding: 7px 14px;
-  border: 1.5px solid var(--bg2);
-  border-radius: 20px;
-  font-size: 12px; font-weight: 600;
-  cursor: pointer; color: var(--text2);
-  background: var(--white);
-  transition: all 0.15s;
-  user-select: none;
-  box-shadow: var(--shadow-sm);
-}
-.chip:active { transform: scale(0.97); }
-.chip.sel {
-  background: var(--accent-lt);
-  border-color: var(--accent);
-  color: var(--accent);
-}
-
-/* Buttons */
-.btn {
-  display: flex; align-items: center; justify-content: center; gap: 8px;
-  padding: 14px 20px;
-  border-radius: var(--r-sm);
-  font-family: 'Plus Jakarta Sans', sans-serif;
-  font-size: 14px; font-weight: 700;
-  cursor: pointer; border: none; width: 100%;
-  transition: all 0.2s;
-  letter-spacing: 0.01em;
-  -webkit-tap-highlight-color: transparent;
-}
-.btn:active { transform: scale(0.98); }
-
-.btn-primary {
-  background: linear-gradient(135deg, #1a56db 0%, #2563eb 100%);
-  color: #fff;
-  box-shadow: 0 4px 16px rgba(26,86,219,0.3), 0 1px 4px rgba(26,86,219,0.2);
-}
-.btn-primary:active { box-shadow: 0 2px 8px rgba(26,86,219,0.2); }
-
-.btn-ghost {
-  background: var(--white);
-  color: var(--text2);
-  border: 1.5px solid var(--bg2);
-  box-shadow: var(--shadow-sm);
-}
-
-.btn-sm { padding: 9px 16px; font-size: 12px; width: auto; }
-
-/* Divider */
-.divider { height: 1px; background: var(--bg2); margin: 18px 0; }
-
-/* ══════════════════════════════
-   OUTPUT CARDS
-══════════════════════════════ */
-.out-card {
-  background: var(--white);
-  border: 1.5px solid var(--border);
-  border-radius: var(--r);
-  padding: 18px;
-  margin-bottom: 12px;
-  box-shadow: var(--shadow-sm);
-  position: relative;
-  overflow: hidden;
-  transition: transform 0.18s, box-shadow 0.18s;
-}
-.out-card:hover { transform: translateY(-1px); box-shadow: var(--shadow); }
-.out-card.top { border-color: var(--accent); }
-.out-card.top::before {
-  content: '';
-  position: absolute; top:0; left:0; right:0; height:3px;
-  background: linear-gradient(90deg, var(--accent), #60a5fa);
-}
-
-.oc-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; margin-bottom: 10px; }
-.oc-name { font-family: 'Bricolage Grotesque', sans-serif; font-size: 15px; font-weight: 700; color: var(--text); margin-bottom: 2px; }
-.oc-prov { font-size: 11px; color: var(--text3); }
-.badges { display: flex; gap: 5px; flex-wrap: wrap; flex-shrink: 0; }
-
-.bdg {
-  font-size: 10px; font-weight: 700; padding: 3px 9px;
-  border-radius: 20px; letter-spacing: 0.04em; text-transform: uppercase;
-}
-.bdg-blue { background: var(--accent-lt); color: var(--accent); border: 1px solid rgba(26,86,219,0.2); }
-.bdg-green { background: var(--accent2-lt); color: var(--accent2); border: 1px solid rgba(5,150,105,0.2); }
-.bdg-gold { background: var(--gold-lt); color: var(--gold); border: 1px solid rgba(217,119,6,0.2); }
-.bdg-gray { background: var(--bg2); color: var(--text3); border: 1px solid var(--border); }
-
-.oc-body { font-size: 13px; color: var(--text2); line-height: 1.65; margin-bottom: 14px; }
-.oc-meta {
-  display: flex; flex-wrap: wrap; gap: 14px;
-  font-size: 12px; color: var(--text3);
-  padding-top: 12px; border-top: 1px solid var(--bg2);
-}
-.oc-meta strong { color: var(--text2); font-weight: 600; }
-
-/* Summary box */
-.sbox {
-  background: var(--accent-lt);
-  border: 1px solid rgba(26,86,219,0.14);
-  border-radius: var(--r-sm);
-  padding: 14px 16px;
-  font-size: 13px; color: #1e40af;
-  line-height: 1.7; margin-bottom: 18px;
-}
-
-/* ══════════════════════════════
-   ROADMAP
-══════════════════════════════ */
-.timeline { position: relative; padding-left: 36px; }
-.timeline::before {
-  content: ''; position: absolute;
-  left: 11px; top: 14px; bottom: 14px;
-  width: 2px;
-  background: linear-gradient(to bottom, var(--accent), var(--accent2));
-  opacity: 0.2; border-radius: 1px;
-}
-.t-step { position: relative; margin-bottom: 14px; }
-.t-dot {
-  position: absolute; left: -28px; top: 7px;
-  width: 24px; height: 24px; border-radius: 50%;
-  background: var(--white); border: 2px solid var(--accent);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 10px; font-weight: 800; color: var(--accent);
-  box-shadow: 0 2px 8px rgba(26,86,219,0.15);
-}
-.t-card {
-  background: var(--white); border: 1.5px solid var(--border);
-  border-radius: var(--r-sm); padding: 14px 16px;
-  box-shadow: var(--shadow-sm);
-}
-.t-week { font-size: 10px; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; color: var(--accent); margin-bottom: 4px; }
-.t-title { font-family: 'Bricolage Grotesque', sans-serif; font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 5px; }
-.t-desc { font-size: 12px; color: var(--text2); line-height: 1.6; margin-bottom: 8px; }
-.t-foot { display: flex; flex-direction: column; gap: 3px; font-size: 11px; color: var(--text3); }
-
-/* ══════════════════════════════
-   COMPARE
-══════════════════════════════ */
-.ctbl-wrap { overflow-x: auto; margin-bottom: 14px; border-radius: var(--r-sm); box-shadow: var(--shadow-sm); }
-.ctbl { width: 100%; border-collapse: collapse; font-size: 12px; min-width: 420px; background: var(--white); }
-.ctbl th {
-  text-align: left; padding: 10px 12px;
-  background: var(--bg2); color: var(--text2);
-  font-weight: 700; font-size: 10px; text-transform: uppercase; letter-spacing: .05em;
-  border-bottom: 1.5px solid var(--border);
-}
-.ctbl td { padding: 10px 12px; border-bottom: 1px solid var(--bg2); color: var(--text); vertical-align: top; }
-.ctbl tr:last-child td { border-bottom: none; }
-.ctbl tr:hover td { background: var(--bg); }
-.best-cell { color: var(--accent2); font-weight: 700; }
-.roi-high { color: var(--accent2); font-weight: 700; }
-
-/* Mini cards */
-.mini-grid { display: grid; grid-template-columns: 1fr; gap: 8px; margin-top: 14px; }
-.mini-c { background: var(--white); border: 1px solid var(--border); border-radius: var(--r-sm); padding: 12px 14px; box-shadow: var(--shadow-sm); }
-.mini-c-name { font-family: 'Bricolage Grotesque', sans-serif; font-size: 13px; font-weight: 700; color: var(--text); margin-bottom: 6px; }
-.mini-pro { font-size: 12px; color: var(--accent2); margin-bottom: 3px; font-weight: 500; }
-.mini-con { font-size: 12px; color: var(--red); font-weight: 500; }
-
-/* ══════════════════════════════
-   ROI CALCULATOR
-══════════════════════════════ */
-.roi-result {
-  background: var(--white);
-  border: 1.5px solid var(--border);
-  border-radius: var(--r);
-  padding: 22px 18px;
-  margin-top: 16px;
-  box-shadow: var(--shadow);
-  position: relative;
-  overflow: hidden;
-}
-.roi-result::before {
-  content: '';
-  position: absolute; top:0; left:0; right:0; height:3px;
-  background: linear-gradient(90deg, var(--accent2), #34d399);
-}
-.roi-lbl { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; color: var(--text3); margin-bottom: 4px; }
-.roi-num { font-family: 'Bricolage Grotesque', sans-serif; font-size: 36px; font-weight: 700; color: var(--accent2); margin-bottom: 6px; line-height: 1; }
-.roi-sub { font-size: 13px; color: var(--text2); line-height: 1.6; margin-bottom: 16px; }
-.roi-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; }
-.roi-box { background: var(--bg); border: 1px solid var(--border); border-radius: var(--r-xs); padding: 11px 10px; text-align: center; }
-.roi-box-val { font-family: 'Bricolage Grotesque', sans-serif; font-size: 16px; font-weight: 700; color: var(--gold); margin-bottom: 3px; }
-.roi-box-lbl { font-size: 10px; color: var(--text3); font-weight: 500; }
-
-/* ══════════════════════════════
-   TRACKER
-══════════════════════════════ */
-.tr-card {
-  background: var(--white); border: 1.5px solid var(--border);
-  border-radius: var(--r); padding: 18px; margin-bottom: 12px;
-  box-shadow: var(--shadow-sm);
-}
-.tr-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
-.tr-name { font-family: 'Bricolage Grotesque', sans-serif; font-size: 14px; font-weight: 700; color: var(--text); }
-.tr-pct { font-family: 'Bricolage Grotesque', sans-serif; font-size: 22px; font-weight: 700; color: var(--accent2); }
-.prog-track { height: 6px; background: var(--bg2); border-radius: 3px; margin-bottom: 14px; overflow: hidden; }
-.prog-fill { height: 100%; border-radius: 3px; background: linear-gradient(90deg, var(--accent), var(--accent2)); transition: width .6s cubic-bezier(.4,0,.2,1); }
-.ms-list { display: flex; flex-direction: column; gap: 5px; }
-.ms-item {
-  display: flex; align-items: center; gap: 10px;
-  font-size: 13px; color: var(--text2);
-  padding: 7px 9px; border-radius: var(--r-xs);
-  cursor: pointer; transition: background .15s;
-}
-.ms-item:active { background: var(--bg); }
-.ms-item input[type=checkbox] { width: 16px; height: 16px; accent-color: var(--accent2); flex-shrink: 0; cursor: pointer; }
-.ms-item.done { color: var(--text3); text-decoration: line-through; }
-.tr-foot { margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--bg2); display: flex; justify-content: space-between; font-size: 11px; color: var(--text3); }
-.tr-del { color: var(--red); cursor: pointer; font-weight: 600; }
-.countdown-row { font-size: 12px; font-weight: 600; margin-bottom: 10px; }
-
-/* ══════════════════════════════
-   CHAT
-══════════════════════════════ */
-.chat-outer { display: flex; flex-direction: column; height: calc(100dvh - 200px); min-height: 300px; }
-.chat-msgs { flex:1; overflow-y:auto; display:flex; flex-direction:column; gap:10px; padding-bottom:8px; -webkit-overflow-scrolling:touch; }
-.msg { display:flex; gap:8px; align-items:flex-start; }
-.msg-av { width:30px; height:30px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:700; flex-shrink:0; }
-.msg-av.user { background: linear-gradient(135deg, var(--accent), #60a5fa); color:#fff; box-shadow:0 2px 8px rgba(26,86,219,0.2); }
-.msg-av.ai { background: linear-gradient(135deg, var(--accent2), #34d399); color:#fff; box-shadow:0 2px 8px rgba(5,150,105,0.2); }
-.msg-bubble { border-radius: 14px; padding:11px 14px; font-size:13px; line-height:1.6; max-width:82%; }
-.msg-bubble.ai-msg { background: var(--white); color: var(--text2); border:1px solid var(--border); box-shadow: var(--shadow-sm); }
-.msg-bubble.u { background: var(--accent); color:#fff; }
-.chat-input-row { display:flex; gap:8px; padding-top:12px; border-top:1px solid var(--bg2); margin-top:8px; }
-.chat-input-row input { flex:1; border-radius:22px; padding:11px 16px; font-size:13px; }
-.chat-send { padding:11px 18px; background: var(--accent); border:none; cursor:pointer; color:#fff; font-size:13px; font-weight:700; font-family:'Plus Jakarta Sans',sans-serif; border-radius:22px; white-space:nowrap; box-shadow:0 3px 12px rgba(26,86,219,0.28); }
-
-/* ══════════════════════════════
-   LOADING & ERROR
-══════════════════════════════ */
-.loading { display:flex; flex-direction:column; align-items:center; padding:40px 20px; gap:12px; }
-.spin { width:32px; height:32px; border:3px solid var(--bg2); border-top-color:var(--accent); border-radius:50%; animation:spin .7s linear infinite; }
-@keyframes spin { to { transform:rotate(360deg); } }
-.spin-txt { font-size:13px; color:var(--text3); font-weight:500; }
-.err { background:var(--red-lt); border:1px solid rgba(220,38,38,0.2); border-radius:var(--r-sm); padding:13px 15px; font-size:13px; color:var(--red); margin-top:10px; }
-
-/* ══════════════════════════════
-   PROFILE
-══════════════════════════════ */
-.profile-hero { display:flex; align-items:center; gap:14px; padding:18px; background: linear-gradient(135deg, #1a56db, #2563eb); border-radius:var(--r); margin-bottom:18px; box-shadow: 0 6px 24px rgba(26,86,219,0.28); }
-.profile-av { width:56px; height:56px; border-radius:50%; background:rgba(255,255,255,0.2); display:flex; align-items:center; justify-content:center; font-family:'Bricolage Grotesque',sans-serif; font-weight:700; font-size:20px; color:#fff; flex-shrink:0; border:2px solid rgba(255,255,255,0.3); }
-.profile-hero-name { font-family:'Bricolage Grotesque',sans-serif; font-size:18px; font-weight:700; color:#fff; margin-bottom:3px; }
-.profile-hero-role { font-size:12px; color:rgba(255,255,255,0.7); }
-.profile-hero-badge { display:inline-flex; align-items:center; gap:4px; margin-top:7px; padding:3px 10px; background:rgba(255,255,255,0.18); border-radius:20px; font-size:10px; color:rgba(255,255,255,0.9); font-weight:600; }
-
-/* Toast */
-.toast { position:fixed; bottom:calc(72px + var(--safe-bottom) + 10px); left:50%; transform:translateX(-50%) translateY(16px); background:var(--text); border-radius:22px; padding:9px 18px; font-size:12px; color:#fff; opacity:0; transition:all .28s cubic-bezier(.4,0,.2,1); z-index:999; white-space:nowrap; pointer-events:none; box-shadow:var(--shadow-lg); }
-.toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
-
-/* Install banner */
-.install-card { background:linear-gradient(135deg,#059669,#10b981); border-radius:var(--r); padding:16px 18px; margin-bottom:16px; display:none; box-shadow:0 6px 20px rgba(5,150,105,0.25); }
-.install-card h4 { font-size:14px; font-weight:700; color:#fff; margin-bottom:4px; }
-.install-card p { font-size:12px; color:rgba(255,255,255,0.8); line-height:1.5; margin-bottom:12px; }
-
-/* Scrollbar */
-::-webkit-scrollbar { width:3px; }
-::-webkit-scrollbar-thumb { background:var(--bg2); border-radius:2px; }
 </style>
 </head>
 <body>
 
-<!-- ═══════════════════════════
-     SPLASH SCREEN
-═══════════════════════════ -->
+<!-- SPLASH -->
 <div id="splash">
-  <div class="splash-icon-wrap">
-    <img src="./icon-512.png" alt="CareerPlanner AI">
-  </div>
+  <div class="splash-icon"><img src="./icons/icon-512.png" alt="CareerPlanner AI"></div>
   <div class="splash-name">CareerPlanner AI</div>
-  <div class="splash-tagline">Your AI-powered career advisor</div>
+  <div class="splash-tag">Your AI-powered career advisor</div>
   <div class="splash-bar-wrap"><div class="splash-bar"></div></div>
-  <div class="splash-powered">
-    <div class="splash-dot"></div>
-    Powered by Claude · Built for Riyaz Shaik
+  <div class="splash-pw">Powered by Claude · Free to use</div>
+</div>
+
+<!-- ACCESS GATE -->
+<div id="gate">
+  <div class="gate-box">
+    <div class="gate-icon">🔐</div>
+    <div class="gate-title">Beta Access</div>
+    <div class="gate-sub">CareerPlanner AI is currently in beta testing. Enter the access code shared by Riyaz to continue.</div>
+    <input class="gate-input" id="gate-input" type="password" placeholder="••••••••" maxlength="20" onkeydown="if(event.key==='Enter')checkGate()">
+    <button class="btn btn-primary" onclick="checkGate()">Enter →</button>
+    <div class="gate-hint">Contact Riyaz Shaik on LinkedIn or WhatsApp for access</div>
   </div>
 </div>
 
-<!-- ═══════════════════════════
-     APP
-═══════════════════════════ -->
+<!-- ONBOARDING -->
+<div id="onboard">
+  <div class="ob-prog">
+    <div class="ob-dot done" id="ob-d1"></div>
+    <div class="ob-dot" id="ob-d2"></div>
+    <div class="ob-dot" id="ob-d3"></div>
+  </div>
+
+  <!-- Step 1: Goal -->
+  <div class="ob-step active" id="ob-1">
+    <div class="ob-eyebrow">Step 1 of 3</div>
+    <div class="ob-title">What's your main career goal?</div>
+    <div class="ob-sub">This helps us personalise every recommendation for you.</div>
+    <div class="goal-grid" id="ob-goals">
+      <div class="goal-card" onclick="selGoal(this,'promotion')"><div class="gc-icon">🚀</div><div class="gc-title">Get Promoted</div><div class="gc-sub">Move up faster</div></div>
+      <div class="goal-card" onclick="selGoal(this,'salary')"><div class="gc-icon">💰</div><div class="gc-title">Higher Salary</div><div class="gc-sub">Boost my CTC</div></div>
+      <div class="goal-card" onclick="selGoal(this,'switch')"><div class="gc-icon">🔀</div><div class="gc-title">Switch Careers</div><div class="gc-sub">Change my field</div></div>
+      <div class="goal-card" onclick="selGoal(this,'global')"><div class="gc-icon">🌍</div><div class="gc-title">Work Globally</div><div class="gc-sub">International roles</div></div>
+      <div class="goal-card" onclick="selGoal(this,'skills')"><div class="gc-icon">📚</div><div class="gc-title">Learn New Skills</div><div class="gc-sub">Stay relevant</div></div>
+      <div class="goal-card" onclick="selGoal(this,'freelance')"><div class="gc-icon">💼</div><div class="gc-title">Go Freelance</div><div class="gc-sub">Work independently</div></div>
+    </div>
+    <button class="btn btn-primary" id="ob-next1" onclick="obNext(2)" disabled style="opacity:.4">Continue →</button>
+  </div>
+
+  <!-- Step 2: Field -->
+  <div class="ob-step" id="ob-2">
+    <div class="ob-eyebrow">Step 2 of 3</div>
+    <div class="ob-title">What's your field?</div>
+    <div class="ob-sub">Pick the one that best matches your current or target industry.</div>
+    <div class="field-grid" id="ob-fields">
+      <div class="field-chip" onclick="selField(this,'sales')"><span class="fc-icon">🤝</span>Sales & CRM</div>
+      <div class="field-chip" onclick="selField(this,'tech')"><span class="fc-icon">💻</span>Software / IT</div>
+      <div class="field-chip" onclick="selField(this,'data')"><span class="fc-icon">📊</span>Data & Analytics</div>
+      <div class="field-chip" onclick="selField(this,'cloud')"><span class="fc-icon">☁️</span>Cloud / DevOps</div>
+      <div class="field-chip" onclick="selField(this,'cyber')"><span class="fc-icon">🔐</span>Cybersecurity</div>
+      <div class="field-chip" onclick="selField(this,'marketing')"><span class="fc-icon">📣</span>Marketing</div>
+      <div class="field-chip" onclick="selField(this,'finance')"><span class="fc-icon">💳</span>Finance / Banking</div>
+      <div class="field-chip" onclick="selField(this,'hr')"><span class="fc-icon">👥</span>HR / People Ops</div>
+      <div class="field-chip" onclick="selField(this,'pm')"><span class="fc-icon">📋</span>Project Mgmt</div>
+      <div class="field-chip" onclick="selField(this,'design')"><span class="fc-icon">🎨</span>Design / UX</div>
+      <div class="field-chip" onclick="selField(this,'business')"><span class="fc-icon">🏢</span>Business / Ops</div>
+      <div class="field-chip" onclick="selField(this,'other')"><span class="fc-icon">✨</span>Other</div>
+    </div>
+    <button class="btn btn-primary" id="ob-next2" onclick="obNext(3)" disabled style="opacity:.4">Continue →</button>
+  </div>
+
+  <!-- Step 3: Experience -->
+  <div class="ob-step" id="ob-3">
+    <div class="ob-eyebrow">Step 3 of 3</div>
+    <div class="ob-title">Your experience & name</div>
+    <div class="ob-sub">Last step — so we can personalise your roadmap and salary benchmarks.</div>
+    <div class="fg"><label>Your Name</label><input id="ob-name" placeholder="e.g. Riyaz Shaik" autocomplete="name"></div>
+    <div class="fg"><label>Years of Experience</label>
+      <select id="ob-exp">
+        <option value="">Select...</option>
+        <option value="0-1">0–1 years (fresh start)</option>
+        <option value="1-3">1–3 years</option>
+        <option value="3-7">3–7 years</option>
+        <option value="7+">7+ years (senior)</option>
+      </select>
+    </div>
+    <div class="fg"><label>Country</label>
+      <select id="ob-country">
+        <option value="India">🇮🇳 India</option>
+        <option value="UAE">🇦🇪 UAE / Gulf</option>
+        <option value="UK">🇬🇧 United Kingdom</option>
+        <option value="Canada">🇨🇦 Canada</option>
+        <option value="USA">🇺🇸 United States</option>
+        <option value="Singapore">🇸🇬 Singapore</option>
+        <option value="Australia">🇦🇺 Australia</option>
+        <option value="Other">🌍 Other</option>
+      </select>
+    </div>
+    <button class="btn btn-primary" onclick="finishOnboard()">Start Planning 🚀</button>
+  </div>
+</div>
+
+<!-- MAIN APP -->
 <div class="app" id="app">
 
-  <!-- TOP BAR -->
   <div class="topbar">
-    <div class="topbar-left">
-      <div class="topbar-icon"><img src="./icon-192.png" alt="CareerPlanner AI"></div>
-      <div class="topbar-title">CareerPlanner AI</div>
+    <div class="tb-left">
+      <div class="tb-icon"><img src="./icons/icon-192.png" alt=""></div>
+      <div class="tb-title">CareerPlanner AI</div>
     </div>
-    <div class="topbar-right">
+    <div class="tb-right">
       <div class="streak-pill" id="streak-pill">🔥 0</div>
-      <button class="av-btn" id="top-av" onclick="showPage('profile')">RS</button>
+      <button class="tb-dark" onclick="toggleDark()" id="dark-btn">🌙</button>
+      <button class="tb-av" id="top-av" onclick="showPage('profile')">?</button>
     </div>
   </div>
 
-  <!-- CONTENT -->
   <div class="content" id="content">
 
-    <!-- ══ HOME ══ -->
+    <!-- HOME -->
     <div class="page active" id="page-home">
-      <div class="greeting-section">
-        <div class="greeting-tag">✦ Welcome back</div>
-        <div class="greeting-name" id="greet-name">Hello, Riyaz 👋</div>
-        <div class="greeting-sub">Ready to level up your career today?</div>
-      </div>
-
-      <div id="install-card" class="install-card">
-        <h4>📲 Install App</h4>
-        <p>Add to home screen for instant access — works offline too!</p>
-        <button class="btn-white" onclick="installApp()" style="padding:9px 18px;border-radius:8px;font-size:12px;font-weight:700;background:#fff;border:none;cursor:pointer;color:#059669">Install Now →</button>
-      </div>
-
-      <div id="api-card-el" class="api-card">
-        <h4>🔑 Connect AI — One Time Setup</h4>
-        <p>Enter your Anthropic API key to unlock all AI features. Free key at console.anthropic.com</p>
-        <div class="api-row">
-          <input id="api-input" type="password" placeholder="sk-ant-api03-..." autocomplete="off">
-          <button class="btn-white" onclick="saveKey()">Save →</button>
-        </div>
-      </div>
+      <div class="greet-tag">✦ Welcome back</div>
+      <div class="greet-name" id="greet-name">Hello there 👋</div>
+      <div class="greet-sub" id="greet-sub">Ready to level up your career today?</div>
 
       <div class="stats">
-        <div class="stat-card blue">
-          <div class="stat-icon">🎯</div>
-          <div class="stat-val" id="d-tracked">0</div>
-          <div class="stat-lbl">Certs Tracked</div>
-        </div>
-        <div class="stat-card green">
-          <div class="stat-icon">📈</div>
-          <div class="stat-val" id="d-progress">0%</div>
-          <div class="stat-lbl">Avg Progress</div>
-        </div>
-        <div class="stat-card gold">
-          <div class="stat-icon">✅</div>
-          <div class="stat-val" id="d-ms">0</div>
-          <div class="stat-lbl">Milestones Done</div>
-        </div>
-        <div class="stat-card slate">
-          <div class="stat-icon">🔥</div>
-          <div class="stat-val" id="d-streak">0</div>
-          <div class="stat-lbl">Day Streak</div>
-        </div>
+        <div class="stat blue"><div class="stat-icon">🎯</div><div class="stat-val" id="d-tracked">0</div><div class="stat-lbl">Certs Tracked</div></div>
+        <div class="stat green"><div class="stat-icon">📈</div><div class="stat-val" id="d-progress">0%</div><div class="stat-lbl">Avg Progress</div></div>
+        <div class="stat gold"><div class="stat-icon">✅</div><div class="stat-val" id="d-ms">0</div><div class="stat-lbl">Milestones Done</div></div>
+        <div class="stat purple"><div class="stat-icon">🔥</div><div class="stat-val" id="d-streak">0</div><div class="stat-lbl">Day Streak</div></div>
       </div>
 
-      <div class="section-label">All Features</div>
+      <div class="sec-lbl">All Features</div>
       <div class="qa-grid">
-        <div class="qa-card" onclick="showPage('suggest')">
-          <div class="qa-icon-wrap blue">🔍</div>
-          <div class="qa-title">Cert Suggester</div>
-          <div class="qa-sub">AI picks for your profile</div>
-        </div>
-        <div class="qa-card" onclick="showPage('roadmap')">
-          <div class="qa-icon-wrap green">🗺️</div>
-          <div class="qa-title">Roadmap</div>
-          <div class="qa-sub">Week-by-week study plan</div>
-        </div>
-        <div class="qa-card" onclick="showPage('compare')">
-          <div class="qa-icon-wrap gold">⚖️</div>
-          <div class="qa-title">Compare</div>
-          <div class="qa-sub">Cost, ROI & fit</div>
-        </div>
-        <div class="qa-card" onclick="showPage('roi')">
-          <div class="qa-icon-wrap purple">💰</div>
-          <div class="qa-title">ROI Calc</div>
-          <div class="qa-sub">See your salary boost</div>
-        </div>
-        <div class="qa-card" onclick="showPage('tracker')">
-          <div class="qa-icon-wrap green">✅</div>
-          <div class="qa-title">Tracker</div>
-          <div class="qa-sub">Milestone progress</div>
-        </div>
-        <div class="qa-card" onclick="showPage('ai')">
-          <div class="qa-icon-wrap slate">🤖</div>
-          <div class="qa-title">AI Coach</div>
-          <div class="qa-sub">Ask anything</div>
-        </div>
+        <div class="qa-card" onclick="showPage('suggest')"><div class="qa-iw blue"><img src="./icons/target.png" alt=""></div><div class="qa-title">Cert Suggester</div><div class="qa-sub">AI picks for your profile</div></div>
+        <div class="qa-card" onclick="showPage('roadmap')"><div class="qa-iw green"><img src="./icons/compass.png" alt=""></div><div class="qa-title">Roadmap</div><div class="qa-sub">Week-by-week plan</div></div>
+        <div class="qa-card" onclick="showPage('compare')"><div class="qa-iw gold"><img src="./icons/chart.png" alt=""></div><div class="qa-title">Compare</div><div class="qa-sub">Cost, ROI & fit</div></div>
+        <div class="qa-card" onclick="showPage('roi')"><div class="qa-iw purple"><img src="./icons/checklist.png" alt=""></div><div class="qa-title">ROI Calc</div><div class="qa-sub">See your salary boost</div></div>
+        <div class="qa-card" onclick="showPage('tracker')"><div class="qa-iw green"><img src="./icons/flag.png" alt=""></div><div class="qa-title">Tracker</div><div class="qa-sub">Milestone progress</div></div>
+        <div class="qa-card" onclick="showPage('ai')"><div class="qa-iw slate"><img src="./icons/brain.png" alt=""></div><div class="qa-title">AI Coach</div><div class="qa-sub">Ask anything</div></div>
+        <div class="qa-card" onclick="showPage('resume')"><div class="qa-iw red"><span style="font-size:26px">📄</span></div><div class="qa-title">Resume Analyser</div><div class="qa-sub">Upload & get gaps</div></div>
+        <div class="qa-card" onclick="showPage('library')"><div class="qa-iw slate"><span style="font-size:26px">📚</span></div><div class="qa-title">Cert Library</div><div class="qa-sub">Browse 60+ certs</div></div>
       </div>
     </div>
 
-    <!-- ══ SUGGEST ══ -->
+    <!-- SUGGEST -->
     <div class="page" id="page-suggest">
-      <div class="ph"><div class="ph-eye">AI Feature</div><div class="ph-title">Cert Suggester</div><div class="ph-sub">AI recommends the best certifications for your exact profile and goals</div></div>
-      <div class="fg"><label>Field</label><select id="s-field"><option selected>Marketing / Sales</option><option>Business / Management</option><option>Software / IT</option><option>Data & Analytics</option><option>Finance</option></select></div>
-      <div class="fg"><label>Experience</label><select id="s-exp"><option>0–1 yrs</option><option>1–3 yrs</option><option>3–7 yrs</option><option selected>7+ yrs (senior)</option></select></div>
-      <div class="fg"><label>Budget</label><select id="s-budget"><option>Free / under ₹5k</option><option>₹5k–20k</option><option selected>₹20k–60k</option><option>₹60k+</option></select></div>
-      <div class="fg"><label>Goals</label>
+      <div class="ph"><div class="ph-eye">AI Feature</div><div class="ph-title">Cert Suggester</div><div class="ph-sub">AI recommends the best certifications matched to your exact profile</div></div>
+      <div class="fg"><label>Field</label>
+        <select id="s-field"><option>Marketing / Sales</option><option>Software / IT</option><option>Data & Analytics</option><option>Cloud / DevOps</option><option>Cybersecurity</option><option>Project Management</option><option>Finance / Banking</option><option>HR / People Ops</option><option>Marketing / Growth</option><option>Business / Operations</option><option>Design / UX</option></select>
+      </div>
+      <div class="grid2">
+        <div class="fg"><label>Experience</label><select id="s-exp"><option>0–1 yrs</option><option>1–3 yrs</option><option>3–7 yrs</option><option selected>7+ yrs</option></select></div>
+        <div class="fg"><label>Budget</label><select id="s-budget"><option>Free only</option><option>Under ₹10k</option><option selected>₹10k–50k</option><option>₹50k+</option></select></div>
+      </div>
+      <div class="fg"><label>Goals (pick all that apply)</label>
         <div class="chip-group" id="s-goals">
-          <span class="chip sel" onclick="tog(this)">Higher salary</span>
-          <span class="chip sel" onclick="tog(this)">Work globally</span>
-          <span class="chip sel" onclick="tog(this)">Management role</span>
-          <span class="chip" onclick="tog(this)">Promotion</span>
-          <span class="chip" onclick="tog(this)">Switch careers</span>
-          <span class="chip" onclick="tog(this)">Consulting</span>
-          <span class="chip" onclick="tog(this)">Freelancing</span>
+          <span class="chip sel" onclick="tog(this)">Higher salary</span><span class="chip sel" onclick="tog(this)">Work globally</span>
+          <span class="chip sel" onclick="tog(this)">Get promoted</span><span class="chip" onclick="tog(this)">Switch careers</span>
+          <span class="chip" onclick="tog(this)">Start freelancing</span><span class="chip" onclick="tog(this)">Go into management</span>
+          <span class="chip" onclick="tog(this)">Learn AI / Data</span><span class="chip" onclick="tog(this)">Go into cloud/tech</span>
         </div>
       </div>
-      <div class="fg"><label>Your Background</label><textarea id="s-bg">12+ yrs B2B SaaS & Managed IT Sales. Key account management, CRM, business development. 225% of FY2024 target. Hyderabad, India.</textarea></div>
+      <div class="fg"><label>Your Background</label><textarea id="s-bg" placeholder="Brief description of your current role and experience..."></textarea></div>
       <button class="btn btn-primary" onclick="runSuggest()">Get My Recommendations →</button>
       <div id="suggest-out" style="margin-top:18px"></div>
     </div>
 
-    <!-- ══ ROADMAP ══ -->
+    <!-- ROADMAP -->
     <div class="page" id="page-roadmap">
-      <div class="ph"><div class="ph-eye">AI Feature</div><div class="ph-title">Learning Roadmap</div><div class="ph-sub">Personalised week-by-week study plan tailored to your schedule</div></div>
+      <div class="ph"><div class="ph-eye">AI Feature</div><div class="ph-title">Learning Roadmap</div><div class="ph-sub">A personalised week-by-week study plan built for your schedule</div></div>
       <div class="fg"><label>Certification</label>
         <select id="r-cert">
           <option value="">Select a certification...</option>
-          <option>Salesforce Certified Sales Cloud Consultant</option>
-          <option>HubSpot Sales Hub Certification</option>
-          <option>Certified Sales Leadership Professional (CSLP)</option>
-          <option>PMP (Project Management Professional)</option>
-          <option>Google Project Management Certificate</option>
-          <option>AWS Cloud Practitioner</option>
-          <option>Certified Scrum Master (CSM)</option>
-          <option>CFA Level 1</option>
-          <option>Six Sigma Green Belt</option>
+          <optgroup label="☁️ Cloud">
+            <option>AWS Cloud Practitioner</option><option>AWS Solutions Architect Associate</option>
+            <option>Microsoft Azure Fundamentals (AZ-900)</option><option>Google Cloud Associate Engineer</option>
+          </optgroup>
+          <optgroup label="🔐 Cybersecurity">
+            <option>CompTIA Security+</option><option>Certified Ethical Hacker (CEH)</option>
+            <option>CISSP</option><option>CompTIA Network+</option>
+          </optgroup>
+          <optgroup label="📊 Data & Analytics">
+            <option>Google Data Analytics Certificate</option><option>Microsoft Power BI Data Analyst</option>
+            <option>Tableau Desktop Specialist</option><option>IBM Data Science Professional</option>
+          </optgroup>
+          <optgroup label="🤖 AI & Machine Learning">
+            <option>Google AI Essentials</option><option>IBM AI Fundamentals</option>
+            <option>AWS Machine Learning Specialty</option><option>TensorFlow Developer Certificate</option>
+          </optgroup>
+          <optgroup label="🤝 Sales & CRM">
+            <option>Salesforce Certified Administrator</option><option>Salesforce Sales Cloud Consultant</option>
+            <option>HubSpot Sales Hub Certification</option><option>CSLP (Sales Leadership)</option>
+          </optgroup>
+          <optgroup label="📋 Project Management">
+            <option>PMP (Project Management Professional)</option><option>Certified Scrum Master (CSM)</option>
+            <option>Google Project Management Certificate</option><option>PRINCE2 Foundation</option>
+            <option>Jira Administrator</option><option>PMI-ACP (Agile)</option>
+          </optgroup>
+          <optgroup label="📣 Marketing & Growth">
+            <option>Google Analytics 4 (GA4)</option><option>Meta Blueprint Certification</option>
+            <option>HubSpot Marketing Hub</option><option>Google Ads Search Certification</option>
+          </optgroup>
+          <optgroup label="💳 Finance & HR">
+            <option>CFA Level 1</option><option>Six Sigma Green Belt</option>
+            <option>SHRM-CP (HR)</option><option>CIMA Certificate</option>
+          </optgroup>
         </select>
       </div>
-      <div class="fg"><label>Your Level</label><select id="r-level"><option>Complete beginner</option><option>Some knowledge</option><option selected>Intermediate</option><option>Near exam ready</option></select></div>
-      <div class="fg"><label>Hours / Week</label><select id="r-time"><option>2–3 hrs</option><option selected>5–8 hrs</option><option>10+ hrs (intensive)</option></select></div>
+      <div class="grid2">
+        <div class="fg"><label>Your Level</label><select id="r-level"><option>Complete beginner</option><option>Some knowledge</option><option selected>Intermediate</option><option>Near exam ready</option></select></div>
+        <div class="fg"><label>Hours / Week</label><select id="r-time"><option>2–3 hrs</option><option selected>5–8 hrs</option><option>10+ hrs</option></select></div>
+      </div>
+      <div class="fg"><label>Additional Context (optional)</label><textarea id="r-extra" placeholder="e.g. I have 5 years in IT support and want to move into cloud architecture..."></textarea></div>
       <button class="btn btn-primary" onclick="runRoadmap()">Build My Roadmap →</button>
       <div id="roadmap-out" style="margin-top:18px"></div>
     </div>
 
-    <!-- ══ COMPARE ══ -->
+    <!-- LIBRARY -->
+    <div class="page" id="page-library">
+      <div class="ph"><div class="ph-eye">Browse</div><div class="ph-title">Cert Library</div><div class="ph-sub">60+ certifications — tap any to add to your tracker</div></div>
+      <div class="search-wrap">
+        <span class="search-icon">🔍</span>
+        <input id="lib-search" placeholder="Search certifications..." oninput="filterLib()">
+      </div>
+      <div class="cert-cats" id="lib-cats">
+        <div class="cat-pill active" onclick="filterCat('All',this)">All</div>
+        <div class="cat-pill" onclick="filterCat('Cloud',this)">☁️ Cloud</div>
+        <div class="cat-pill" onclick="filterCat('Cyber',this)">🔐 Cyber</div>
+        <div class="cat-pill" onclick="filterCat('Data',this)">📊 Data</div>
+        <div class="cat-pill" onclick="filterCat('AI',this)">🤖 AI</div>
+        <div class="cat-pill" onclick="filterCat('Sales',this)">🤝 Sales</div>
+        <div class="cat-pill" onclick="filterCat('PM',this)">📋 PM</div>
+        <div class="cat-pill" onclick="filterCat('Marketing',this)">📣 Mktg</div>
+        <div class="cat-pill" onclick="filterCat('Finance',this)">💳 Finance</div>
+        <div class="cat-pill" onclick="filterCat('Free',this)">🆓 Free</div>
+      </div>
+      <div class="cert-grid" id="lib-grid"></div>
+    </div>
+
+    <!-- COMPARE -->
     <div class="page" id="page-compare">
       <div class="ph"><div class="ph-eye">AI Feature</div><div class="ph-title">Compare Certs</div><div class="ph-sub">Side-by-side analysis of cost, ROI, difficulty and global reach</div></div>
-      <div class="fg"><label>Select to Compare</label>
+      <div class="fg"><label>Select Certifications to Compare</label>
         <div class="chip-group" id="c-certs">
-          <span class="chip sel" onclick="tog(this)">Salesforce</span>
-          <span class="chip sel" onclick="tog(this)">HubSpot Sales</span>
-          <span class="chip sel" onclick="tog(this)">CSLP</span>
-          <span class="chip" onclick="tog(this)">PMP</span>
-          <span class="chip" onclick="tog(this)">Six Sigma</span>
-          <span class="chip" onclick="tog(this)">Google PM</span>
-          <span class="chip" onclick="tog(this)">AWS</span>
-          <span class="chip" onclick="tog(this)">CFA L1</span>
+          <span class="chip sel" onclick="tog(this)">Salesforce Admin</span><span class="chip sel" onclick="tog(this)">AWS Cloud Practitioner</span>
+          <span class="chip sel" onclick="tog(this)">PMP</span><span class="chip" onclick="tog(this)">CompTIA Security+</span>
+          <span class="chip" onclick="tog(this)">Power BI</span><span class="chip" onclick="tog(this)">Google Analytics</span>
+          <span class="chip" onclick="tog(this)">Six Sigma Green Belt</span><span class="chip" onclick="tog(this)">HubSpot Sales</span>
+          <span class="chip" onclick="tog(this)">CFA Level 1</span><span class="chip" onclick="tog(this)">CSM (Scrum Master)</span>
         </div>
       </div>
-      <div class="fg"><label>Your Context</label><textarea id="c-ctx">12+ yrs B2B SaaS Sales. Key accounts, CRM, 225% FY2024 target. Want globally recognised cert for senior sales leadership or consulting.</textarea></div>
+      <div class="fg"><label>Your Background</label><textarea id="c-ctx" placeholder="Brief description of your role and goals..."></textarea></div>
       <button class="btn btn-primary" onclick="runCompare()">Compare Now →</button>
       <div id="compare-out" style="margin-top:18px"></div>
     </div>
 
-    <!-- ══ ROI ══ -->
+    <!-- ROI -->
     <div class="page" id="page-roi">
-      <div class="ph"><div class="ph-eye">Calculator</div><div class="ph-title">ROI Calculator</div><div class="ph-sub">See the exact CTC impact of getting certified</div></div>
-      <div class="fg"><label>Your Current CTC (₹ LPA)</label><input id="roi-ctc" type="number" inputmode="numeric" placeholder="e.g. 25" value="25"></div>
+      <div class="ph"><div class="ph-eye">Calculator</div><div class="ph-title">ROI Calculator</div><div class="ph-sub">See the exact salary impact of getting certified in your city</div></div>
+      <div class="grid2">
+        <div class="fg"><label>Current CTC / Salary</label><input id="roi-ctc" type="number" inputmode="numeric" placeholder="e.g. 25" value="25"></div>
+        <div class="fg"><label>Currency</label>
+          <select id="roi-currency">
+            <option value="₹" data-mult="1">₹ Indian Rupee (LPA)</option>
+            <option value="AED" data-mult="30">AED Dirham (K/yr)</option>
+            <option value="£" data-mult="90">£ British Pound (K/yr)</option>
+            <option value="$" data-mult="85">$ US Dollar (K/yr)</option>
+            <option value="CAD$" data-mult="65">CAD$ Canadian (K/yr)</option>
+          </select>
+        </div>
+      </div>
       <div class="fg"><label>Certification</label>
         <select id="roi-cert">
           <option value="">Select a certification...</option>
           <option data-boost="35" data-cost="25000" data-months="4">Salesforce Sales Cloud Consultant</option>
+          <option data-boost="40" data-cost="15000" data-months="3">Salesforce Administrator</option>
+          <option data-boost="30" data-cost="20000" data-months="3">AWS Cloud Practitioner</option>
+          <option data-boost="50" data-cost="80000" data-months="8">AWS Solutions Architect</option>
+          <option data-boost="45" data-cost="60000" data-months="6">CISSP (Cybersecurity)</option>
+          <option data-boost="35" data-cost="25000" data-months="3">CompTIA Security+</option>
+          <option data-boost="40" data-cost="150000" data-months="5">PMP</option>
+          <option data-boost="25" data-cost="15000" data-months="6">Google PM Certificate</option>
+          <option data-boost="30" data-cost="10000" data-months="4">Power BI Data Analyst</option>
+          <option data-boost="35" data-cost="8000" data-months="5">Google Data Analytics</option>
           <option data-boost="20" data-cost="5000" data-months="2">HubSpot Sales Hub</option>
           <option data-boost="40" data-cost="60000" data-months="6">CSLP (Sales Leadership)</option>
-          <option data-boost="30" data-cost="150000" data-months="5">PMP</option>
-          <option data-boost="25" data-cost="15000" data-months="6">Google PM Certificate</option>
           <option data-boost="45" data-cost="300000" data-months="18">CFA Level 1</option>
           <option data-boost="50" data-cost="80000" data-months="8">Six Sigma Green Belt</option>
-          <option data-boost="30" data-cost="40000" data-months="3">AWS Cloud Practitioner</option>
+          <option data-boost="0" data-cost="0" data-months="1">Google Analytics (GA4) — Free</option>
+          <option data-boost="0" data-cost="0" data-months="2">IBM AI Fundamentals — Free</option>
         </select>
       </div>
       <button class="btn btn-primary" onclick="calcROI()">Calculate My ROI →</button>
       <div id="roi-out"></div>
     </div>
 
-    <!-- ══ TRACKER ══ -->
+    <!-- TRACKER -->
     <div class="page" id="page-tracker">
-      <div class="ph"><div class="ph-eye">Progress</div><div class="ph-title">Cert Tracker</div><div class="ph-sub">AI milestones auto-saved to your device</div></div>
-      <div class="fg"><label>Add Certification</label>
-        <select id="t-cert">
+      <div class="ph"><div class="ph-eye">Progress</div><div class="ph-title">Cert Tracker</div><div class="ph-sub">AI milestones saved to your device — check off as you go</div></div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px">
+        <select id="t-cert" style="flex:1;min-width:200px">
           <option value="">Select cert to track...</option>
-          <option>Salesforce Certified Sales Cloud Consultant</option>
-          <option>HubSpot Sales Hub Certification</option>
-          <option>CSLP</option><option>PMP</option>
-          <option>Certified Scrum Master (CSM)</option>
-          <option>Six Sigma Green Belt</option>
-          <option>AWS Cloud Practitioner</option>
-          <option>Google PM Certificate</option>
+          <option>AWS Cloud Practitioner</option><option>AWS Solutions Architect</option>
+          <option>CompTIA Security+</option><option>CEH (Ethical Hacker)</option>
+          <option>Google Data Analytics Certificate</option><option>Power BI Data Analyst</option>
+          <option>PMP</option><option>Certified Scrum Master (CSM)</option>
+          <option>Salesforce Administrator</option><option>Salesforce Sales Cloud Consultant</option>
+          <option>HubSpot Sales Hub</option><option>CSLP</option>
+          <option>Google Analytics (GA4)</option><option>CFA Level 1</option>
+          <option>Six Sigma Green Belt</option><option>SHRM-CP</option>
+          <option>Jira Administrator</option><option>Google PM Certificate</option>
         </select>
+        <input type="date" id="t-date" style="width:155px" title="Target exam date">
       </div>
-      <div class="fg"><label>Target Exam Date (optional)</label><input type="date" id="t-date"></div>
-      <button class="btn btn-primary" onclick="addTracker()">+ Add Tracker →</button>
+      <button class="btn btn-primary" onclick="addTracker()">+ Add to Tracker →</button>
       <div style="margin-top:18px" id="tracker-out">
-        <div style="text-align:center;padding:44px 0;color:var(--text3)">
-          <div style="font-size:36px;margin-bottom:10px">📋</div>
-          <div style="font-size:13px;font-weight:500">No certifications tracked yet</div>
-          <div style="font-size:12px;margin-top:4px">Add one above to start tracking</div>
-        </div>
+        <div class="empty-state"><div class="es-icon">📋</div><div class="es-title">No certifications tracked yet</div><div class="es-sub">Add one above — AI will generate your milestones automatically</div></div>
       </div>
     </div>
 
-    <!-- ══ AI COACH ══ -->
+    <!-- AI COACH -->
     <div class="page" id="page-ai">
-      <div class="ph"><div class="ph-eye">AI Feature</div><div class="ph-title">AI Career Coach</div><div class="ph-sub">Ask anything about certifications, career strategy or salary</div></div>
+      <div class="ph"><div class="ph-eye">AI Feature</div><div class="ph-title">AI Career Coach</div><div class="ph-sub">Ask anything about certifications, career moves or salary</div></div>
       <div class="chat-outer">
         <div class="chat-msgs" id="chat-msgs">
-          <div class="msg">
-            <div class="msg-av ai">AI</div>
-            <div class="msg-bubble ai-msg">Hi Riyaz! 👋 I'm your personal AI Career Coach. Ask me anything — which cert to do first, how to negotiate your next salary hike, what skills are hottest for SaaS sales leaders in India, or anything else career-related. I'm here to help!</div>
-          </div>
+          <div class="msg"><div class="msg-av ai">AI</div><div class="msg-bubble ai-msg">Hi! 👋 I'm your AI Career Coach. I know your profile and goals. Ask me anything — which cert to do first, how to negotiate salary, what skills are most in demand, or anything else career-related!</div></div>
         </div>
-        <div class="chat-input-row">
+        <div class="chat-ir">
           <input id="chat-q" placeholder="Ask a career question..." onkeydown="if(event.key==='Enter')sendChat()">
           <button class="chat-send" onclick="sendChat()">→</button>
         </div>
       </div>
     </div>
 
-    <!-- ══ PROFILE ══ -->
-    <div class="page" id="page-profile">
-      <div class="profile-hero">
-        <div class="profile-av" id="p-av">RS</div>
-        <div>
-          <div class="profile-hero-name" id="p-hero-name">Riyaz Shaik</div>
-          <div class="profile-hero-role">B2B SaaS Sales · 12 yrs · Hyderabad</div>
-          <div class="profile-hero-badge">⭐ 225% FY2024 Target</div>
-        </div>
+    <!-- RESUME -->
+    <div class="page" id="page-resume">
+      <div class="ph"><div class="ph-eye">AI Feature</div><div class="ph-title">Resume Analyser</div><div class="ph-sub">Upload your resume — AI finds skill gaps and recommends the best certifications to fill them</div></div>
+
+      <div class="upload-zone" id="upload-zone" onclick="document.getElementById('resume-file').click()" ondragover="dragOver(event)" ondrop="dropFile(event)" ondragleave="dragLeave(event)">
+        <input type="file" id="resume-file" accept=".pdf,.doc,.docx,.txt" onchange="handleFile(event)">
+        <div class="uz-icon">📄</div>
+        <div class="uz-title">Tap to upload your resume</div>
+        <div class="uz-sub">PDF, Word, or text file • Max 5MB</div>
       </div>
-      <div class="fg"><label>Full Name</label><input id="p-name" value="Riyaz Shaik"></div>
-      <div class="fg"><label>Field</label><select id="p-field"><option selected>Marketing / Sales</option><option>Business / Management</option><option>Software / IT</option></select></div>
-      <div class="fg"><label>Experience</label><select id="p-exp"><option>0–1 yrs</option><option>1–3 yrs</option><option>3–7 yrs</option><option selected>7+ yrs</option></select></div>
-      <div class="fg"><label>Current CTC (₹ LPA)</label><input id="p-ctc" type="number" inputmode="numeric" value="25"></div>
-      <div class="fg"><label>Target Role</label><input id="p-target" value="VP Sales / Sales Director"></div>
-      <div class="fg"><label>Location</label><input id="p-loc" value="Hyderabad, India"></div>
-      <div class="fg"><label>Professional Bio</label><textarea id="p-bio" style="min-height:90px">12+ years B2B SaaS & Managed IT Sales. Expert in key account management, business development, CRM. 225% of FY2024 target. India & Canada.</textarea></div>
-      <button class="btn btn-primary" onclick="saveProfile()">Save Profile →</button>
-      <div class="divider"></div>
-      <div class="fg"><label>Anthropic API Key</label><input id="api-settings" type="password" placeholder="sk-ant-api03-..." style="font-family:monospace;font-size:12px" autocomplete="off"></div>
-      <button class="btn btn-ghost" onclick="saveKeySettings()">Update API Key</button>
-      <div class="divider"></div>
-      <div style="font-size:12px;color:var(--text3);line-height:1.8;margin-bottom:10px">CareerPlanner AI v2.0 Premium · Data stored on device<br>Powered by Claude AI (Anthropic)</div>
-      <button class="btn btn-ghost" style="color:var(--red)" onclick="if(confirm('Clear all data?')){localStorage.clear();sessionStorage.clear();location.reload()}">Clear All Data</button>
+
+      <div id="file-preview" style="display:none"></div>
+
+      <div class="fg"><label>Or paste your resume text</label><textarea id="resume-txt" style="min-height:120px" placeholder="Paste your resume content here..."></textarea></div>
+      <div class="fg"><label>Target Role (optional)</label><input id="resume-target" placeholder="e.g. Cloud Solutions Architect, Data Analyst, Sales Director..."></div>
+      <button class="btn btn-primary" onclick="analyseResume()">Analyse My Resume →</button>
+      <div id="resume-out" style="margin-top:18px"></div>
     </div>
 
-  </div><!-- /content -->
+    <!-- PROFILE -->
+    <div class="page" id="page-profile">
+      <div class="profile-hero">
+        <div class="p-av-lg" id="p-av">?</div>
+        <div>
+          <div class="p-hero-name" id="p-hero-name">Your Profile</div>
+          <div class="p-hero-role" id="p-hero-role">Complete your profile for better recommendations</div>
+          <div class="p-hero-bdg" id="p-hero-bdg">🎯 Career planning active</div>
+        </div>
+      </div>
 
-  <!-- BOTTOM NAV -->
+      <div class="share-card">
+        <h4>📲 Share with Friends</h4>
+        <p>Invite friends to try CareerPlanner AI. They'll need the beta access code to get in.</p>
+        <div class="share-row">
+          <button class="share-btn" onclick="shareApp('whatsapp')">WhatsApp</button>
+          <button class="share-btn" onclick="shareApp('copy')">Copy Link</button>
+          <button class="share-btn" onclick="shareApp('linkedin')">LinkedIn</button>
+        </div>
+      </div>
+
+      <div class="fg"><label>Full Name</label><input id="p-name" placeholder="Your name"></div>
+      <div class="grid2">
+        <div class="fg"><label>Field</label>
+          <select id="p-field"><option>Marketing / Sales</option><option>Software / IT</option><option>Data & Analytics</option><option>Cloud / DevOps</option><option>Cybersecurity</option><option>Project Mgmt</option><option>Finance</option><option>HR</option><option>Marketing</option><option>Business</option></select>
+        </div>
+        <div class="fg"><label>Experience</label><select id="p-exp"><option>0–1 yrs</option><option>1–3 yrs</option><option>3–7 yrs</option><option selected>7+ yrs</option></select></div>
+      </div>
+      <div class="grid2">
+        <div class="fg"><label>Current Salary</label><input id="p-ctc" type="number" inputmode="numeric" placeholder="e.g. 25"></div>
+        <div class="fg"><label>Country</label>
+          <select id="p-country"><option>India</option><option>UAE</option><option>UK</option><option>Canada</option><option>USA</option><option>Singapore</option><option>Australia</option><option>Other</option></select>
+        </div>
+      </div>
+      <div class="fg"><label>Target Role</label><input id="p-target" placeholder="e.g. Cloud Architect, Data Analyst, VP Sales..."></div>
+      <div class="fg"><label>Professional Bio</label><textarea id="p-bio" style="min-height:90px" placeholder="Brief description of your experience and background..."></textarea></div>
+      <button class="btn btn-primary" onclick="saveProfile()">Save Profile →</button>
+
+      <div class="divider"></div>
+      <div style="font-size:12px;color:var(--text3);line-height:1.8;margin-bottom:12px">
+        CareerPlanner AI v3.0 · All data stored on your device · Powered by Claude AI
+      </div>
+      <button class="btn btn-danger" onclick="if(confirm('Clear all your data?')){localStorage.clear();location.reload()}">Clear All Data</button>
+    </div>
+
+
+    <!-- NOTIFICATIONS PAGE -->
+    <div class="page" id="page-notif">
+      <div class="notif-header">
+        <div class="nh-title">🔔 Notifications</div>
+        <div class="nh-sub">Personalised reminders that keep you on track</div>
+        <div class="nh-stats">
+          <div class="nh-stat"><div class="nh-stat-val" id="nh-active">0</div><div class="nh-stat-lbl">Active</div></div>
+          <div class="nh-stat"><div class="nh-stat-val" id="nh-streak">0</div><div class="nh-stat-lbl">Day Streak</div></div>
+          <div class="nh-stat"><div class="nh-stat-val" id="nh-exams">0</div><div class="nh-stat-lbl">Exams Set</div></div>
+        </div>
+      </div>
+
+      <div id="notif-permission-banner"></div>
+
+      <!-- Master Toggle -->
+      <div class="notif-card">
+        <div class="notif-row">
+          <div class="nr-icon" style="background:var(--accent-lt)">🔔</div>
+          <div class="nr-body">
+            <div class="nr-title">Enable all notifications</div>
+            <div class="nr-desc" id="notif-master-desc">Tap to turn on study reminders</div>
+          </div>
+          <div class="toggle-wrap" onclick="masterToggle()">
+            <div class="toggle-track" id="mt-track"></div>
+            <div class="toggle-thumb" id="mt-thumb"></div>
+          </div>
+        </div>
+      </div>
+
+      <div id="notif-settings-body" style="display:none">
+
+        <!-- Daily Reminder -->
+        <div class="notif-section">
+          <div class="notif-section-title">📚 Daily Study Reminder</div>
+          <div class="notif-card">
+            <div class="notif-row has-sub">
+              <div class="nr-icon" style="background:var(--accent-lt)">📚</div>
+              <div class="nr-body">
+                <div class="nr-title">Daily reminder</div>
+                <div class="nr-desc">Fires every day at your chosen time</div>
+              </div>
+              <div class="toggle-wrap" onclick="toggleKey('daily',this)">
+                <div class="toggle-track" id="tk-daily-track"></div>
+                <div class="toggle-thumb" id="tk-daily-thumb"></div>
+              </div>
+            </div>
+            <div id="daily-time-picker" style="padding-top:12px;border-top:1px solid var(--bg2)">
+              <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--text3);margin-bottom:8px">When should we remind you?</div>
+              <div class="time-presets">
+                <div class="time-preset" onclick="setTimePreset('07:00',this)" data-time="07:00">🌅 7:00 AM</div>
+                <div class="time-preset" onclick="setTimePreset('09:00',this)" data-time="09:00">☀️ 9:00 AM</div>
+                <div class="time-preset" onclick="setTimePreset('13:00',this)" data-time="13:00">🌤 1:00 PM</div>
+                <div class="time-preset" onclick="setTimePreset('18:00',this)" data-time="18:00">🌆 6:00 PM</div>
+                <div class="time-preset" onclick="setTimePreset('19:00',this)" data-time="19:00">🌇 7:00 PM</div>
+                <div class="time-preset" onclick="setTimePreset('20:00',this)" data-time="20:00">🌃 8:00 PM</div>
+                <div class="time-preset" onclick="setTimePreset('21:00',this)" data-time="21:00">🌙 9:00 PM</div>
+                <div class="time-preset" onclick="setTimePreset('22:00',this)" data-time="22:00">🌚 10:00 PM</div>
+              </div>
+              <div class="custom-time-row">
+                <label>Custom time:</label>
+                <input type="time" id="custom-time-input" onchange="setCustomTime(this.value)">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Exam Countdowns -->
+        <div class="notif-section">
+          <div class="notif-section-title">⏰ Exam Countdown Alerts</div>
+          <div class="notif-card">
+            <div class="notif-row has-sub">
+              <div class="nr-icon" style="background:var(--red-lt)">⏰</div>
+              <div class="nr-body">
+                <div class="nr-title">Exam countdown alerts</div>
+                <div class="nr-desc">Alerts before your exam dates</div>
+              </div>
+              <div class="toggle-wrap" onclick="toggleKey('examCountdown',this)">
+                <div class="toggle-track" id="tk-examCountdown-track"></div>
+                <div class="toggle-thumb" id="tk-examCountdown-thumb"></div>
+              </div>
+            </div>
+            <div style="padding-top:10px;border-top:1px solid var(--bg2)">
+              <div class="exam-notif-list">
+                <div class="enl-item"><div class="enl-dot" style="background:var(--text3)"></div>7 days before — final prep reminder</div>
+                <div class="enl-item"><div class="enl-dot" style="background:var(--gold)"></div>3 days before — mock test reminder</div>
+                <div class="enl-item"><div class="enl-dot" style="background:var(--red)"></div>1 day before — urgent alert</div>
+                <div class="enl-item"><div class="enl-dot" style="background:var(--accent)"></div>Morning of exam — good luck message</div>
+              </div>
+              <div id="exam-dates-list" style="margin-top:10px"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Weekly Report -->
+        <div class="notif-section">
+          <div class="notif-section-title">📊 Weekly Progress Report</div>
+          <div class="notif-card">
+            <div class="notif-row has-sub">
+              <div class="nr-icon" style="background:var(--accent2-lt)">📊</div>
+              <div class="nr-body">
+                <div class="nr-title">Sunday progress report</div>
+                <div class="nr-desc">Weekly summary — milestones done, overall progress</div>
+              </div>
+              <div class="toggle-wrap" onclick="toggleKey('weeklyReport',this)">
+                <div class="toggle-track" id="tk-weeklyReport-track"></div>
+                <div class="toggle-thumb" id="tk-weeklyReport-thumb"></div>
+              </div>
+            </div>
+            <div style="padding-top:8px;border-top:1px solid var(--bg2)">
+              <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--text3);margin-bottom:6px">Report delivery time</div>
+              <div class="time-presets">
+                <div class="time-preset" onclick="setWeeklyTime('08:00',this)" data-time="08:00">8:00 AM</div>
+                <div class="time-preset" onclick="setWeeklyTime('10:00',this)" data-time="10:00">10:00 AM</div>
+                <div class="time-preset" onclick="setWeeklyTime('12:00',this)" data-time="12:00">12:00 PM</div>
+                <div class="time-preset" onclick="setWeeklyTime('18:00',this)" data-time="18:00">6:00 PM</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Streak & Milestone -->
+        <div class="notif-section">
+          <div class="notif-section-title">🎯 Engagement Alerts</div>
+          <div class="notif-card" style="margin-bottom:8px">
+            <div class="notif-row">
+              <div class="nr-icon" style="background:var(--gold-lt)">🔥</div>
+              <div class="nr-body">
+                <div class="nr-title">Streak saver</div>
+                <div class="nr-desc">Alert at 9 PM if you haven't opened the app</div>
+              </div>
+              <div class="toggle-wrap" onclick="toggleKey('streakReminder',this)">
+                <div class="toggle-track" id="tk-streakReminder-track"></div>
+                <div class="toggle-thumb" id="tk-streakReminder-thumb"></div>
+              </div>
+            </div>
+          </div>
+          <div class="notif-card">
+            <div class="notif-row">
+              <div class="nr-icon" style="background:var(--purple-lt)">🏆</div>
+              <div class="nr-body">
+                <div class="nr-title">Milestone celebrations</div>
+                <div class="nr-desc">Celebrate when you hit 50% and 100% on any cert</div>
+              </div>
+              <div class="toggle-wrap" onclick="toggleKey('milestones',this)">
+                <div class="toggle-track" id="tk-milestones-track"></div>
+                <div class="toggle-thumb" id="tk-milestones-thumb"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Test -->
+        <button class="btn btn-ghost" onclick="testNotification()" style="margin-bottom:10px">
+          Send test notification →
+        </button>
+
+      </div>
+    </div>
+
+  </div>
+
   <nav class="bottomnav">
     <button class="bn-btn active" id="bn-home" onclick="showPage('home')">
-      <span class="bn-icon"><svg viewBox="0 0 24 24"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H5a1 1 0 01-1-1V9.5z"/><path d="M9 21V12h6v9"/></svg></span>
-      Home
+      <span class="bn-icon"><svg viewBox="0 0 24 24"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H5a1 1 0 01-1-1V9.5z"/><path d="M9 21V12h6v9"/></svg></span>Home
     </button>
     <button class="bn-btn" id="bn-suggest" onclick="showPage('suggest')">
-      <span class="bn-icon"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg></span>
-      Suggest
+      <span class="bn-icon"><img src="./icons/target.png" alt=""></span>Suggest
     </button>
     <button class="bn-btn" id="bn-tracker" onclick="showPage('tracker')">
-      <span class="bn-icon"><svg viewBox="0 0 24 24"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg></span>
-      Track
+      <span class="bn-icon"><img src="./icons/flag.png" alt=""></span>Track
     </button>
-    <button class="bn-btn" id="bn-ai" onclick="showPage('ai')">
-      <span class="bn-icon"><svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 100 20A10 10 0 0012 2z"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg></span>
-      Coach
+    <button class="bn-btn" id="bn-notif" onclick="showPage('notif')">
+      <span class="bn-icon" id="bn-notif-icon"><svg viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="22" height="22"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg></span>Alerts
     </button>
     <button class="bn-btn" id="bn-profile" onclick="showPage('profile')">
-      <span class="bn-icon"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>
-      Profile
+      <span class="bn-icon"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>Profile
     </button>
   </nav>
 </div>
@@ -1058,92 +937,204 @@ textarea { resize: none; min-height: 80px; line-height: 1.6; }
 <div class="toast" id="toast"></div>
 
 <script>
-// ── STATE ──
+// ════════════════════════════════
+// STATE
+// ════════════════════════════════
 const S = {
-  apiKey: sessionStorage.getItem('cp_key') || '',
-  trackers: JSON.parse(localStorage.getItem('cp_trackers') || '{}'),
+  accessCode: localStorage.getItem('cp_access') || '',
+  onboarded: localStorage.getItem('cp_onboarded') === '1',
   profile: JSON.parse(localStorage.getItem('cp_profile') || '{}'),
+  trackers: JSON.parse(localStorage.getItem('cp_trackers') || '{}'),
   chat: [],
-  deferredPrompt: null
+  deferredPrompt: null,
+  resumeText: '',
+  libCat: 'All',
+  obGoal: '', obField: '',
+  dark: localStorage.getItem('cp_dark') === '1'
 };
 
-// ── SPLASH → APP ──
+// ════════════════════════════════
+// CERT LIBRARY DATA
+// ════════════════════════════════
+const CERTS = [
+  // Cloud
+  {name:'AWS Cloud Practitioner',cat:'Cloud',icon:'☁️',cost:'₹15–20k',duration:'2–3 mo',difficulty:'Beginner',free:false},
+  {name:'AWS Solutions Architect Associate',cat:'Cloud',icon:'☁️',cost:'₹20–30k',duration:'4–5 mo',difficulty:'Intermediate',free:false},
+  {name:'Azure Fundamentals (AZ-900)',cat:'Cloud',icon:'☁️',cost:'₹12–18k',duration:'1–2 mo',difficulty:'Beginner',free:false},
+  {name:'Azure Administrator (AZ-104)',cat:'Cloud',icon:'☁️',cost:'₹18–25k',duration:'4–5 mo',difficulty:'Intermediate',free:false},
+  {name:'Google Cloud Associate Engineer',cat:'Cloud',icon:'☁️',cost:'₹15–22k',duration:'3–4 mo',difficulty:'Intermediate',free:false},
+  {name:'Google Cloud Digital Leader',cat:'Cloud',icon:'☁️',cost:'₹10–15k',duration:'1–2 mo',difficulty:'Beginner',free:false},
+  // Cybersecurity
+  {name:'CompTIA Security+',cat:'Cyber',icon:'🔐',cost:'₹25–35k',duration:'3–4 mo',difficulty:'Intermediate',free:false},
+  {name:'Certified Ethical Hacker (CEH)',cat:'Cyber',icon:'🔐',cost:'₹40–60k',duration:'4–5 mo',difficulty:'Intermediate',free:false},
+  {name:'CISSP',cat:'Cyber',icon:'🔐',cost:'₹50–70k',duration:'6–8 mo',difficulty:'Advanced',free:false},
+  {name:'CompTIA Network+',cat:'Cyber',icon:'🔐',cost:'₹20–28k',duration:'3–4 mo',difficulty:'Beginner',free:false},
+  {name:'CompTIA CySA+',cat:'Cyber',icon:'🔐',cost:'₹28–38k',duration:'4–5 mo',difficulty:'Intermediate',free:false},
+  // Data
+  {name:'Google Data Analytics Certificate',cat:'Data',icon:'📊',cost:'Free–₹3k',duration:'4–6 mo',difficulty:'Beginner',free:true},
+  {name:'Microsoft Power BI Data Analyst',cat:'Data',icon:'📊',cost:'₹8–12k',duration:'3–4 mo',difficulty:'Beginner',free:false},
+  {name:'Tableau Desktop Specialist',cat:'Data',icon:'📊',cost:'₹18–25k',duration:'2–3 mo',difficulty:'Beginner',free:false},
+  {name:'IBM Data Science Professional',cat:'Data',icon:'📊',cost:'Free–₹5k',duration:'5–6 mo',difficulty:'Intermediate',free:true},
+  {name:'Microsoft Excel Expert (MOS)',cat:'Data',icon:'📊',cost:'₹5–8k',duration:'1–2 mo',difficulty:'Beginner',free:false},
+  // AI
+  {name:'Google AI Essentials',cat:'AI',icon:'🤖',cost:'Free',duration:'1 mo',difficulty:'Beginner',free:true},
+  {name:'IBM AI Fundamentals',cat:'AI',icon:'🤖',cost:'Free',duration:'2 mo',difficulty:'Beginner',free:true},
+  {name:'AWS Machine Learning Specialty',cat:'AI',icon:'🤖',cost:'₹30–40k',duration:'6–8 mo',difficulty:'Advanced',free:false},
+  {name:'TensorFlow Developer Certificate',cat:'AI',icon:'🤖',cost:'₹8–12k',duration:'4–5 mo',difficulty:'Intermediate',free:false},
+  {name:'Microsoft AI Fundamentals (AI-900)',cat:'AI',icon:'🤖',cost:'₹8–12k',duration:'1–2 mo',difficulty:'Beginner',free:false},
+  // Sales
+  {name:'Salesforce Administrator (SCA)',cat:'Sales',icon:'🤝',cost:'₹12–20k',duration:'2–3 mo',difficulty:'Beginner',free:false},
+  {name:'Salesforce Sales Cloud Consultant',cat:'Sales',icon:'🤝',cost:'₹20–30k',duration:'3–4 mo',difficulty:'Intermediate',free:false},
+  {name:'HubSpot Sales Hub',cat:'Sales',icon:'🤝',cost:'Free',duration:'1–2 mo',difficulty:'Beginner',free:true},
+  {name:'HubSpot CRM Certificate',cat:'Sales',icon:'🤝',cost:'Free',duration:'1 mo',difficulty:'Beginner',free:true},
+  {name:'CSLP (Sales Leadership)',cat:'Sales',icon:'🤝',cost:'₹50–70k',duration:'5–6 mo',difficulty:'Advanced',free:false},
+  {name:'Salesforce Marketing Cloud',cat:'Sales',icon:'🤝',cost:'₹18–25k',duration:'3–4 mo',difficulty:'Intermediate',free:false},
+  // PM
+  {name:'PMP',cat:'PM',icon:'📋',cost:'₹1–1.5L',duration:'4–6 mo',difficulty:'Advanced',free:false},
+  {name:'Certified Scrum Master (CSM)',cat:'PM',icon:'📋',cost:'₹20–30k',duration:'2–3 mo',difficulty:'Intermediate',free:false},
+  {name:'Google PM Certificate',cat:'PM',icon:'📋',cost:'Free–₹3k',duration:'5–6 mo',difficulty:'Beginner',free:true},
+  {name:'PRINCE2 Foundation',cat:'PM',icon:'📋',cost:'₹25–35k',duration:'2–3 mo',difficulty:'Intermediate',free:false},
+  {name:'Jira Administrator',cat:'PM',icon:'📋',cost:'₹8–15k',duration:'1–2 mo',difficulty:'Beginner',free:false},
+  {name:'PMI-ACP (Agile)',cat:'PM',icon:'📋',cost:'₹30–45k',duration:'3–4 mo',difficulty:'Intermediate',free:false},
+  {name:'Asana Certified Pro',cat:'PM',icon:'📋',cost:'Free',duration:'1 mo',difficulty:'Beginner',free:true},
+  {name:'Monday.com Certification',cat:'PM',icon:'📋',cost:'Free',duration:'1 mo',difficulty:'Beginner',free:true},
+  // Marketing
+  {name:'Google Analytics 4 (GA4)',cat:'Marketing',icon:'📣',cost:'Free',duration:'1–2 mo',difficulty:'Beginner',free:true},
+  {name:'Meta Blueprint Certification',cat:'Marketing',icon:'📣',cost:'₹8–15k',duration:'2–3 mo',difficulty:'Intermediate',free:false},
+  {name:'HubSpot Marketing Hub',cat:'Marketing',icon:'📣',cost:'Free',duration:'1–2 mo',difficulty:'Beginner',free:true},
+  {name:'Google Ads Search Certification',cat:'Marketing',icon:'📣',cost:'Free',duration:'1 mo',difficulty:'Beginner',free:true},
+  {name:'Hootsuite Social Marketing',cat:'Marketing',icon:'📣',cost:'Free–₹5k',duration:'1 mo',difficulty:'Beginner',free:true},
+  // Finance & HR
+  {name:'CFA Level 1',cat:'Finance',icon:'💳',cost:'₹2.5–3.5L',duration:'12–18 mo',difficulty:'Advanced',free:false},
+  {name:'Six Sigma Green Belt',cat:'Finance',icon:'💳',cost:'₹60–90k',duration:'6–8 mo',difficulty:'Intermediate',free:false},
+  {name:'SHRM-CP (HR)',cat:'Finance',icon:'💳',cost:'₹40–60k',duration:'4–6 mo',difficulty:'Intermediate',free:false},
+  {name:'CIMA Certificate',cat:'Finance',icon:'💳',cost:'₹30–50k',duration:'6–9 mo',difficulty:'Intermediate',free:false},
+  {name:'ACCA (Accounting)',cat:'Finance',icon:'💳',cost:'₹50–80k',duration:'12–24 mo',difficulty:'Advanced',free:false},
+];
+
+// ════════════════════════════════
+// INIT
+// ════════════════════════════════
 window.addEventListener('load', () => {
-  // Hide splash after 2.6s (progress animation completes)
   setTimeout(() => {
-    const splash = document.getElementById('splash');
-    const app = document.getElementById('app');
-    splash.style.transition = 'opacity 0.5s ease';
-    splash.style.opacity = '0';
-    app.classList.add('visible');
-    setTimeout(() => splash.style.display = 'none', 500);
+    document.getElementById('splash').style.cssText = 'opacity:0;transition:opacity .5s ease;pointer-events:none';
+    setTimeout(() => document.getElementById('splash').style.display = 'none', 500);
+
+    if (!S.accessCode) {
+      document.getElementById('gate').style.display = 'flex';
+    } else if (!S.onboarded) {
+      document.getElementById('onboard').style.display = 'block';
+    } else {
+      document.getElementById('app').classList.add('visible');
+      initApp();
+    }
   }, 2600);
 
-  if (S.apiKey) hideBanner();
+  if ('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js').catch(() => {});
+  if (S.dark) applyDark(true);
+  buildLibrary();
+});
+
+window.addEventListener('beforeinstallprompt', e => { e.preventDefault(); S.deferredPrompt = e; });
+
+// ════════════════════════════════
+// ACCESS GATE
+// ════════════════════════════════
+const VALID_CODES = ['careerAI2025', 'riyaz2025', 'betauser', 'career123'];
+function checkGate() {
+  const code = document.getElementById('gate-input').value.trim().toLowerCase();
+  const valid = VALID_CODES.map(c => c.toLowerCase());
+  if (valid.includes(code)) {
+    S.accessCode = code;
+    localStorage.setItem('cp_access', code);
+    document.getElementById('gate').style.display = 'none';
+    if (!S.onboarded) {
+      document.getElementById('onboard').style.display = 'block';
+    } else {
+      document.getElementById('app').classList.add('visible');
+      initApp();
+    }
+  } else {
+    const inp = document.getElementById('gate-input');
+    inp.style.borderColor = '#dc2626';
+    inp.value = '';
+    inp.placeholder = 'Wrong code — try again';
+    setTimeout(() => { inp.style.borderColor = ''; inp.placeholder = '••••••••'; }, 2000);
+  }
+}
+
+// ════════════════════════════════
+// ONBOARDING
+// ════════════════════════════════
+function selGoal(el, val) {
+  document.querySelectorAll('#ob-goals .goal-card').forEach(c => c.classList.remove('sel'));
+  el.classList.add('sel'); S.obGoal = val;
+  document.getElementById('ob-next1').disabled = false;
+  document.getElementById('ob-next1').style.opacity = '1';
+}
+function selField(el, val) {
+  document.querySelectorAll('#ob-fields .field-chip').forEach(c => c.classList.remove('sel'));
+  el.classList.add('sel'); S.obField = val;
+  document.getElementById('ob-next2').disabled = false;
+  document.getElementById('ob-next2').style.opacity = '1';
+}
+function obNext(step) {
+  document.querySelectorAll('.ob-step').forEach(s => s.classList.remove('active'));
+  document.getElementById('ob-' + step).classList.add('active');
+  for (let i = 1; i <= 3; i++) {
+    document.getElementById('ob-d' + i).classList.toggle('done', i < step);
+  }
+}
+function finishOnboard() {
+  const name = document.getElementById('ob-name').value.trim();
+  const exp = document.getElementById('ob-exp').value;
+  const country = document.getElementById('ob-country').value;
+  if (!name) { document.getElementById('ob-name').focus(); return; }
+  S.profile = { name, exp, country, goal: S.obGoal, field: S.obField, bio: '' };
+  localStorage.setItem('cp_profile', JSON.stringify(S.profile));
+  localStorage.setItem('cp_onboarded', '1');
+  S.onboarded = true;
+  document.getElementById('onboard').style.cssText = 'opacity:0;transition:opacity .4s;pointer-events:none';
+  setTimeout(() => { document.getElementById('onboard').style.display = 'none'; }, 400);
+  document.getElementById('app').classList.add('visible');
+  initApp();
+  showToast('Welcome, ' + name + '! 🎉');
+}
+
+// ════════════════════════════════
+// APP INIT
+// ════════════════════════════════
+function initApp() {
   loadProfile();
   updateDashboard();
   updateStreak();
   renderTrackers();
-  handleDeepLink();
-});
-
-// ── SERVICE WORKER ──
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./sw.js').catch(e => console.log('SW:', e));
+  prefillFromProfile();
 }
-
-// ── PWA INSTALL ──
-window.addEventListener('beforeinstallprompt', e => {
-  e.preventDefault(); S.deferredPrompt = e;
-  document.getElementById('install-card').style.display = 'block';
-});
-
-function installApp() {
-  if (!S.deferredPrompt) { showToast('Open in Chrome → tap ⋮ → Add to Home Screen'); return; }
-  S.deferredPrompt.prompt();
-  S.deferredPrompt.userChoice.then(r => {
-    if (r.outcome === 'accepted') { document.getElementById('install-card').style.display = 'none'; showToast('✅ App installed!'); }
-    S.deferredPrompt = null;
-  });
-}
-
-// ── DEEP LINK ──
-function handleDeepLink() { const h = window.location.hash.replace('#',''); if (h) showPage(h); }
-
-// ── TOAST ──
-function showToast(msg) {
-  const t = document.getElementById('toast');
-  t.textContent = msg; t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 3000);
-}
-
-// ── STREAK ──
-function updateStreak() {
-  const today = new Date().toDateString();
-  const last = localStorage.getItem('cp_last');
-  let streak = parseInt(localStorage.getItem('cp_streak') || '0');
-  if (last !== today) {
-    const yesterday = new Date(Date.now() - 86400000).toDateString();
-    streak = last === yesterday ? streak + 1 : 1;
-    localStorage.setItem('cp_streak', streak);
-    localStorage.setItem('cp_last', today);
+function prefillFromProfile() {
+  if (!S.profile.bio) {
+    const bio = `${S.profile.exp || ''} experience in ${S.profile.field || 'my field'}. Goal: ${S.profile.goal || 'career growth'}. Based in ${S.profile.country || 'India'}.`;
+    document.getElementById('s-bg').value = bio;
+    if (document.getElementById('c-ctx')) document.getElementById('c-ctx').value = bio;
   }
-  document.getElementById('d-streak').textContent = streak;
-  document.getElementById('streak-pill').textContent = '🔥 ' + streak;
 }
 
-// ── DASHBOARD ──
-function updateDashboard() {
-  const keys = Object.keys(S.trackers);
-  document.getElementById('d-tracked').textContent = keys.length;
-  if (!keys.length) { document.getElementById('d-progress').textContent = '0%'; document.getElementById('d-ms').textContent = '0'; return; }
-  let total = 0, done = 0;
-  keys.forEach(k => { total += S.trackers[k].milestones.length; done += S.trackers[k].milestones.filter(m => m.done).length; });
-  document.getElementById('d-ms').textContent = done;
-  document.getElementById('d-progress').textContent = total ? Math.round(done / total * 100) + '%' : '0%';
+// ════════════════════════════════
+// DARK MODE
+// ════════════════════════════════
+function applyDark(on) {
+  document.documentElement.setAttribute('data-theme', on ? 'dark' : '');
+  document.getElementById('dark-btn').textContent = on ? '☀️' : '🌙';
+}
+function toggleDark() {
+  S.dark = !S.dark;
+  localStorage.setItem('cp_dark', S.dark ? '1' : '0');
+  applyDark(S.dark);
 }
 
-// ── NAV ──
+// ════════════════════════════════
+// NAVIGATION
+// ════════════════════════════════
 function showPage(id) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   const pg = document.getElementById('page-' + id);
@@ -1156,72 +1147,131 @@ function showPage(id) {
   window.location.hash = id;
 }
 
-// ── API KEY ──
-function saveKey() {
-  const k = document.getElementById('api-input').value.trim();
-  if (!k.startsWith('sk-')) { showToast('⚠️ Key must start with sk-'); return; }
-  S.apiKey = k; sessionStorage.setItem('cp_key', k); hideBanner(); showToast('✅ AI connected!');
-}
-function saveKeySettings() {
-  const k = document.getElementById('api-settings').value.trim();
-  if (!k.startsWith('sk-')) { showToast('⚠️ Invalid key'); return; }
-  S.apiKey = k; sessionStorage.setItem('cp_key', k); showToast('✅ Key updated!');
-}
-function hideBanner() { const b = document.getElementById('api-card-el'); if (b) b.style.display = 'none'; }
-
-// ── PROFILE ──
-function loadProfile() {
-  if (S.profile.name) {
-    document.getElementById('p-name').value = S.profile.name;
-    document.getElementById('p-ctc').value = S.profile.ctc || '25';
-    document.getElementById('p-target').value = S.profile.target || 'VP Sales';
-    document.getElementById('p-loc').value = S.profile.loc || 'Hyderabad';
-    if (S.profile.bio) document.getElementById('p-bio').value = S.profile.bio;
-    updateProfileUI();
+// ════════════════════════════════
+// STREAK & DASHBOARD
+// ════════════════════════════════
+function updateStreak() {
+  const today = new Date().toDateString();
+  const last = localStorage.getItem('cp_last');
+  let streak = parseInt(localStorage.getItem('cp_streak') || '0');
+  if (last !== today) {
+    const yest = new Date(Date.now() - 86400000).toDateString();
+    streak = last === yest ? streak + 1 : 1;
+    localStorage.setItem('cp_streak', streak);
+    localStorage.setItem('cp_last', today);
   }
+  document.getElementById('d-streak').textContent = streak;
+  document.getElementById('streak-pill').textContent = '🔥 ' + streak;
+}
+function updateDashboard() {
+  const keys = Object.keys(S.trackers);
+  document.getElementById('d-tracked').textContent = keys.length;
+  if (!keys.length) { document.getElementById('d-progress').textContent = '0%'; document.getElementById('d-ms').textContent = '0'; return; }
+  let total = 0, done = 0;
+  keys.forEach(k => { total += S.trackers[k].milestones.length; done += S.trackers[k].milestones.filter(m => m.done).length; });
+  document.getElementById('d-ms').textContent = done;
+  document.getElementById('d-progress').textContent = total ? Math.round(done / total * 100) + '%' : '0%';
+}
+
+// ════════════════════════════════
+// PROFILE
+// ════════════════════════════════
+function loadProfile() {
+  if (!S.profile.name) return;
+  const p = S.profile;
+  ['p-name','p-target','p-bio'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el && p[id.replace('p-','')]) el.value = p[id.replace('p-','')];
+  });
+  if (p.name) document.getElementById('p-name').value = p.name;
+  if (p.ctc) document.getElementById('p-ctc').value = p.ctc;
+  if (p.target) document.getElementById('p-target').value = p.target;
+  if (p.bio) document.getElementById('p-bio').value = p.bio;
+  if (p.country) document.getElementById('p-country').value = p.country;
+  updateProfileUI();
 }
 function saveProfile() {
-  S.profile = { name: document.getElementById('p-name').value, ctc: document.getElementById('p-ctc').value, target: document.getElementById('p-target').value, loc: document.getElementById('p-loc').value, bio: document.getElementById('p-bio').value };
+  S.profile = {
+    ...S.profile,
+    name: document.getElementById('p-name').value,
+    ctc: document.getElementById('p-ctc').value,
+    target: document.getElementById('p-target').value,
+    bio: document.getElementById('p-bio').value,
+    country: document.getElementById('p-country').value,
+    field: document.getElementById('p-field').value,
+    exp: document.getElementById('p-exp').value,
+  };
   localStorage.setItem('cp_profile', JSON.stringify(S.profile));
-  updateProfileUI(); showToast('✅ Profile saved!');
+  updateProfileUI();
+  showToast('✅ Profile saved!');
 }
 function updateProfileUI() {
-  const name = S.profile.name || 'Riyaz Shaik';
+  const name = S.profile.name || 'You';
   const ini = name.split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2);
-  ['top-av','p-av'].forEach(id => { const el = document.getElementById(id); if(el) el.textContent = ini; });
-  const phn = document.getElementById('p-hero-name'); if(phn) phn.textContent = name;
-  const gn = document.getElementById('greet-name'); if(gn) gn.textContent = 'Hello, ' + name.split(' ')[0] + ' 👋';
+  ['top-av','p-av'].forEach(id => { const el = document.getElementById(id); if (el) el.textContent = ini; });
+  const phn = document.getElementById('p-hero-name'); if (phn) phn.textContent = name;
+  const phr = document.getElementById('p-hero-role');
+  if (phr) phr.textContent = (S.profile.field || '') + (S.profile.exp ? ' · ' + S.profile.exp : '') + (S.profile.country ? ' · ' + S.profile.country : '');
+  const gn = document.getElementById('greet-name'); if (gn) gn.textContent = 'Hello, ' + name.split(' ')[0] + ' 👋';
+  const gs = document.getElementById('greet-sub');
+  if (gs && S.profile.goal) {
+    const goalMap = { promotion: 'Your next promotion is closer than you think.', salary: 'Every cert gets you closer to your salary goal.', switch: "Let's find the right cert to switch your career.", global: 'The right cert opens global doors.', skills: 'Keep building — skills compound over time.', freelance: 'Certifications build credibility with clients.' };
+    gs.textContent = goalMap[S.profile.goal] || 'Ready to level up your career today?';
+  }
 }
 
-// ── CHIPS ──
-function tog(el) { el.classList.toggle('sel'); }
-function chips(id) { return [...document.querySelectorAll('#' + id + ' .chip.sel')].map(c => c.textContent.trim()).join(', '); }
-
-// ── AI CALL ──
-async function callAI(prompt, outEl, msg = 'Thinking...') {
-  if (!S.apiKey) { outEl.innerHTML = '<div class="err">⚠️ No API key. Add it on the Home page.</div>'; return null; }
-  outEl.innerHTML = `<div class="loading"><div class="spin"></div><div class="spin-txt">${msg}</div></div>`;
+// ════════════════════════════════
+// AI CALL — BACKEND POWERED
+// ════════════════════════════════
+async function callAI(messages, systemPrompt, outEl, loadingMsg = 'Thinking...') {
+  outEl.innerHTML = `<div class="loading"><div class="spin"></div><div class="spin-txt">${loadingMsg}</div></div>`;
   try {
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
+    const res = await fetch('/api/ai', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'x-api-key': S.apiKey, 'anthropic-version': '2023-06-01', 'anthropic-dangerous-direct-browser-access': 'true' },
-      body: JSON.stringify({ model: 'claude-sonnet-4-5', max_tokens: 1500, messages: [{ role: 'user', content: prompt }] })
+      headers: {
+        'Content-Type': 'application/json',
+        'x-access-code': S.accessCode || 'careerAI2025'
+      },
+      body: JSON.stringify({ messages, system: systemPrompt, max_tokens: 1500 })
     });
-    if (!res.ok) { const e = await res.json(); outEl.innerHTML = `<div class="err">Error: ${e.error?.message || 'Check your API key'}</div>`; return null; }
+    if (!res.ok) {
+      const e = await res.json();
+      outEl.innerHTML = `<div class="err">Error: ${e.error || 'Something went wrong. Please try again.'}</div>`;
+      return null;
+    }
     const data = await res.json();
     return data.content.map(b => b.text || '').join('').replace(/```json|```/g, '').trim();
-  } catch (e) { outEl.innerHTML = '<div class="err">Network error. Please check your connection.</div>'; return null; }
+  } catch (e) {
+    outEl.innerHTML = '<div class="err">Network error. Please check your connection and try again.</div>';
+    return null;
+  }
 }
 
-// ── SUGGEST ──
+function getProfileContext() {
+  const p = S.profile;
+  return `User profile: Name: ${p.name || 'User'}, Field: ${p.field || 'not specified'}, Experience: ${p.exp || 'not specified'}, Country: ${p.country || 'India'}, Goal: ${p.goal || 'career growth'}, Target role: ${p.target || 'not specified'}. Bio: ${p.bio || 'not provided'}.`;
+}
+
+// ════════════════════════════════
+// CHIPS & UTILS
+// ════════════════════════════════
+function tog(el) { el.classList.toggle('sel'); }
+function chips(id) { return [...document.querySelectorAll('#' + id + ' .chip.sel')].map(c => c.textContent.trim()).join(', '); }
+function showToast(msg) {
+  const t = document.getElementById('toast'); t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+// ════════════════════════════════
+// CERT SUGGESTER
+// ════════════════════════════════
 async function runSuggest() {
   const out = document.getElementById('suggest-out');
-  const p = `Senior career advisor for India. Recommend 3-4 certifications.
-Profile: ${document.getElementById('s-field').value}, ${document.getElementById('s-exp').value}, Budget: ${document.getElementById('s-budget').value}, Goals: ${chips('s-goals')}.
-Background: ${document.getElementById('s-bg').value}
-Return ONLY valid JSON no markdown:
-{"summary":"2-3 sentence personalised analysis","certifications":[{"name":"Full name","provider":"Org","badge":"Tag","topPick":true,"why":"2 sentences why this fits them","timeToComplete":"X months","avgCost":"₹ range","salaryImpact":"% increase","difficulty":"Beginner/Intermediate/Advanced"}]}`;
-  const raw = await callAI(p, out, 'Matching certifications to your profile...');
+  const prompt = `You are a senior career advisor. ${getProfileContext()}
+User inputs: Field: ${document.getElementById('s-field').value}, Experience: ${document.getElementById('s-exp').value}, Budget: ${document.getElementById('s-budget').value}, Goals: ${chips('s-goals')}, Background: ${document.getElementById('s-bg').value}
+Recommend 3–4 certifications. Return ONLY valid JSON:
+{"summary":"2-3 sentence personalised analysis mentioning their specific background","certifications":[{"name":"Full name","provider":"Org","badge":"Category","topPick":true,"why":"Why this fits them in 2 sentences referencing their specific profile","timeToComplete":"X months","avgCost":"local cost","salaryImpact":"% increase","difficulty":"Beginner/Intermediate/Advanced","free":false}]}`;
+  const raw = await callAI([{ role: 'user', content: prompt }], null, out, 'Matching certifications to your profile...');
   if (!raw) return;
   try {
     const d = JSON.parse(raw);
@@ -1230,48 +1280,54 @@ Return ONLY valid JSON no markdown:
       const db = c.difficulty === 'Beginner' ? 'bdg-green' : c.difficulty === 'Advanced' ? 'bdg-gold' : 'bdg-gray';
       h += `<div class="out-card ${c.topPick ? 'top' : ''}">
         <div class="oc-head"><div><div class="oc-name">${c.name}</div><div class="oc-prov">${c.provider}</div></div>
-        <div class="badges">${c.topPick ? '<span class="bdg bdg-blue">Top Pick</span>' : ''}<span class="bdg ${db}">${c.difficulty}</span></div></div>
+        <div class="badges">${c.topPick ? '<span class="bdg bdg-blue">Top Pick</span>' : ''}${c.free ? '<span class="bdg bdg-green">Free</span>' : ''}<span class="bdg ${db}">${c.difficulty}</span></div></div>
         <div class="oc-body">${c.why}</div>
         <div class="oc-meta"><span>⏱ <strong>${c.timeToComplete}</strong></span><span>💰 <strong>${c.avgCost}</strong></span><span>📈 <strong>${c.salaryImpact}</strong></span></div>
       </div>`;
     });
     out.innerHTML = h;
-  } catch (e) { out.innerHTML = '<div class="err">Could not parse. Please try again.</div>'; }
+  } catch (e) { out.innerHTML = '<div class="err">Could not parse response. Please try again.</div>'; }
 }
 
-// ── ROADMAP ──
+// ════════════════════════════════
+// ROADMAP
+// ════════════════════════════════
 async function runRoadmap() {
   const out = document.getElementById('roadmap-out');
   const cert = document.getElementById('r-cert').value;
   if (!cert) { out.innerHTML = '<div class="err">Please select a certification.</div>'; return; }
-  const p = `Week-by-week roadmap for: ${cert}. Level: ${document.getElementById('r-level').value}. Time: ${document.getElementById('r-time').value}. Background: 12 yrs B2B SaaS sales, Hyderabad.
+  const prompt = `${getProfileContext()}
+Create a week-by-week roadmap for: ${cert}. Level: ${document.getElementById('r-level').value}. Time/week: ${document.getElementById('r-time').value}. Context: ${document.getElementById('r-extra').value || 'none'}.
 Return ONLY valid JSON:
-{"overview":"1-2 sentence overview","totalDuration":"X weeks","steps":[{"week":"Week 1-2","title":"Phase","description":"What to do","resources":"Specific resources","hours":"Hrs"}]}
-5-7 phases.`;
-  const raw = await callAI(p, out, 'Building your roadmap...');
+{"overview":"1-2 sentence personalised overview","totalDuration":"X weeks","prereqs":"Any prerequisites in 1 sentence","steps":[{"week":"Week 1–2","title":"Phase","description":"What to do","resources":"Specific books, courses, platforms","hours":"Total hrs for phase"}]}
+5–7 phases.`;
+  const raw = await callAI([{ role: 'user', content: prompt }], null, out, 'Building your personalised roadmap...');
   if (!raw) return;
   try {
     const d = JSON.parse(raw);
-    let h = `<div class="sbox">${d.overview} <strong>Total: ${d.totalDuration}</strong></div><div class="timeline">`;
+    let h = `<div class="sbox">${d.overview}<br><strong>Total: ${d.totalDuration}</strong>${d.prereqs ? ' · Prerequisites: ' + d.prereqs : ''}</div><div class="timeline">`;
     d.steps.forEach((s, i) => {
-      h += `<div class="t-step"><div class="t-dot">${i + 1}</div>
-        <div class="t-card"><div class="t-week">${s.week}</div><div class="t-title">${s.title}</div>
+      h += `<div class="t-step"><div class="t-dot">${i + 1}</div><div class="t-card">
+        <div class="t-week">${s.week}</div><div class="t-title">${s.title}</div>
         <div class="t-desc">${s.description}</div>
-        <div class="t-foot"><span>📚 ${s.resources}</span><span>⏱ ${s.hours}</span></div></div></div>`;
+        <div class="t-foot"><span>📚 ${s.resources}</span><span>⏱ ${s.hours}</span></div>
+      </div></div>`;
     });
     out.innerHTML = h + '</div>';
-  } catch (e) { out.innerHTML = '<div class="err">Could not parse. Try again.</div>'; }
+  } catch (e) { out.innerHTML = '<div class="err">Could not parse roadmap. Try again.</div>'; }
 }
 
-// ── COMPARE ──
+// ════════════════════════════════
+// COMPARE
+// ════════════════════════════════
 async function runCompare() {
   const out = document.getElementById('compare-out');
   const sel = chips('c-certs');
   if (!sel) { out.innerHTML = '<div class="err">Select at least 2 certifications.</div>'; return; }
-  const p = `Compare for India professional: ${sel}. Background: ${document.getElementById('c-ctx').value}.
+  const prompt = `${getProfileContext()} Compare: ${sel}. Context: ${document.getElementById('c-ctx').value}
 Return ONLY valid JSON:
-{"insight":"2 sentence insight","winner":"short name","certs":[{"name":"short","fullName":"full","cost":"₹","duration":"months","difficulty":"Beginner/Intermediate/Advanced","roiScore":8,"globalRecognition":"High/Medium/Low","bestFor":"1 sentence","pros":"key pro","cons":"key con"}]}`;
-  const raw = await callAI(p, out, 'Comparing certifications...');
+{"insight":"2-3 sentence personalised insight and best pick reasoning","winner":"short name","certs":[{"name":"short","fullName":"full","cost":"local cost","duration":"months","difficulty":"Beginner/Intermediate/Advanced","roiScore":8,"globalRecognition":"High/Medium/Low","bestFor":"1 sentence","pros":"key pro for this person","cons":"key con"}]}`;
+  const raw = await callAI([{ role: 'user', content: prompt }], null, out, 'Comparing certifications...');
   if (!raw) return;
   try {
     const d = JSON.parse(raw);
@@ -1289,53 +1345,111 @@ Return ONLY valid JSON:
   } catch (e) { out.innerHTML = '<div class="err">Could not parse. Try again.</div>'; }
 }
 
-// ── ROI ──
+// ════════════════════════════════
+// ROI CALCULATOR
+// ════════════════════════════════
 function calcROI() {
   const out = document.getElementById('roi-out');
   const ctc = parseFloat(document.getElementById('roi-ctc').value);
   const sel = document.getElementById('roi-cert');
   const opt = sel.options[sel.selectedIndex];
-  if (!ctc || !sel.value) { out.innerHTML = '<div class="err" style="margin-top:14px">Please enter your CTC and select a certification.</div>'; return; }
-  const boost = parseFloat(opt.dataset.boost), cost = parseInt(opt.dataset.cost);
-  const newCtc = (ctc * (1 + boost / 100)).toFixed(1);
-  const gain = ((newCtc - ctc) * 100000).toLocaleString('en-IN');
-  const payback = Math.ceil(cost / ((newCtc - ctc) * 100000 / 12));
+  const currEl = document.getElementById('roi-currency');
+  const curr = currEl.value;
+  if (!ctc || !sel.value) { out.innerHTML = '<div class="err" style="margin-top:14px">Please enter your salary and select a certification.</div>'; return; }
+  const boost = parseFloat(opt.dataset.boost) || 0;
+  const cost = parseInt(opt.dataset.cost) || 0;
+  if (boost === 0) {
+    out.innerHTML = `<div class="roi-result"><div class="roi-lbl">Free Certification</div><div class="roi-num">${curr}${ctc}</div><div class="roi-sub">This certification is <strong>free</strong> — zero cost, zero financial risk. Even a 5–10% salary bump pays back immediately.</div></div>`;
+    return;
+  }
+  const newSal = (ctc * (1 + boost / 100)).toFixed(1);
+  const annualGain = ((newSal - ctc) * (curr === '₹' ? 100000 : 1000)).toLocaleString();
+  const payback = Math.ceil(cost / ((newSal - ctc) * (curr === '₹' ? 100000 : 1000) / 12));
   out.innerHTML = `<div class="roi-result">
-    <div class="roi-lbl">Projected New CTC After Certification</div>
-    <div class="roi-num">₹${newCtc} LPA</div>
-    <div class="roi-sub">Up from ₹${ctc} LPA — a <strong style="color:var(--accent2)">${boost}% salary increase</strong> after completing ${sel.value}</div>
+    <div class="roi-lbl">Projected Salary After Certification</div>
+    <div class="roi-num">${curr}${newSal}${curr === '₹' ? ' LPA' : 'K'}</div>
+    <div class="roi-sub">Up from ${curr}${ctc} — a <strong style="color:var(--accent2)">${boost}% increase</strong> after ${sel.value}</div>
     <div class="roi-grid">
-      <div class="roi-box"><div class="roi-box-val">+₹${gain}</div><div class="roi-box-lbl">Annual Gain</div></div>
-      <div class="roi-box"><div class="roi-box-val">₹${cost.toLocaleString('en-IN')}</div><div class="roi-box-lbl">Cert Cost</div></div>
-      <div class="roi-box"><div class="roi-box-val">${payback} mo</div><div class="roi-box-lbl">Payback Period</div></div>
+      <div class="roi-box"><div class="roi-box-val">+${annualGain}</div><div class="roi-box-lbl">Annual Gain</div></div>
+      <div class="roi-box"><div class="roi-box-val">${cost > 0 ? cost.toLocaleString() : 'Free'}</div><div class="roi-box-lbl">Cert Cost</div></div>
+      <div class="roi-box"><div class="roi-box-val">${cost > 0 ? payback + ' mo' : '0 mo'}</div><div class="roi-box-lbl">Payback Period</div></div>
     </div>
   </div>`;
 }
 
-// ── TRACKER ──
+// ════════════════════════════════
+// CERT LIBRARY
+// ════════════════════════════════
+function buildLibrary(filter = 'All', search = '') {
+  const grid = document.getElementById('lib-grid');
+  let certs = CERTS;
+  if (filter !== 'All') {
+    if (filter === 'Free') certs = certs.filter(c => c.free);
+    else certs = certs.filter(c => c.cat === filter);
+  }
+  if (search) certs = certs.filter(c => c.name.toLowerCase().includes(search.toLowerCase()));
+  if (!certs.length) { grid.innerHTML = '<div class="empty-state"><div class="es-icon">🔍</div><div class="es-title">No certs found</div><div class="es-sub">Try a different search or category</div></div>'; return; }
+  const bgMap = { Cloud: '#e8effd', Cyber: '#fee2e2', Data: '#d1fae5', AI: '#ede9fe', Sales: '#fef3c7', PM: '#f0f3fb', Marketing: '#fce7f3', Finance: '#fef9c3' };
+  grid.innerHTML = certs.map(c => `
+    <div class="cert-item" onclick="addFromLib('${c.name.replace(/'/g,"\\'")}')">
+      <div class="ci-icon" style="background:${bgMap[c.cat]||'#f0f3fb'}">${c.icon}</div>
+      <div class="ci-body">
+        <div class="ci-name">${c.name}</div>
+        <div class="ci-meta"><span>${c.cost}</span><span>${c.duration}</span><span>${c.difficulty}</span>${c.free ? '<span style="color:var(--accent2);font-weight:600">FREE</span>' : ''}</div>
+      </div>
+      <div class="ci-check">+</div>
+    </div>`).join('');
+}
+function filterCat(cat, btn) {
+  S.libCat = cat;
+  document.querySelectorAll('.cat-pill').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  buildLibrary(cat, document.getElementById('lib-search')?.value || '');
+}
+function filterLib() {
+  buildLibrary(S.libCat, document.getElementById('lib-search').value);
+}
+function addFromLib(name) {
+  if (S.trackers[name]) { showToast('Already tracking ' + name.split(' ')[0]); return; }
+  showPage('tracker');
+  document.getElementById('t-cert').value = name;
+  showToast('Select an exam date and tap + Add Tracker');
+}
+
+// ════════════════════════════════
+// TRACKER
+// ════════════════════════════════
 async function addTracker() {
   const cert = document.getElementById('t-cert').value;
   const examDate = document.getElementById('t-date').value;
   if (!cert) { showToast('⚠️ Please select a certification'); return; }
   if (S.trackers[cert]) { showToast('Already tracking this cert!'); return; }
   const out = document.getElementById('tracker-out');
-  const defaults = ['Register and pay for the exam','Complete the official study guide','Watch a full video course','Complete 2 full practice tests','Review and revise weak areas','Final mock exam — aim for 80%+','Book your exam slot','Pass the exam! 🎉'];
-  if (!S.apiKey) { S.trackers[cert] = { milestones: defaults.map(m => ({ label: m, done: false })), examDate }; saveTrackers(); renderTrackers(); return; }
+  const defaults = ['Register and pay for the exam', 'Get the official study guide', 'Complete a full video course', 'Take first practice test', 'Review all weak areas', 'Complete 2 full mock exams (aim 80%+)', 'Book your exam slot', 'Pass the exam! 🎉'];
   out.innerHTML = '<div class="loading"><div class="spin"></div><div class="spin-txt">Loading milestones...</div></div>';
-  const raw = await callAI(`List 7-8 specific milestones for "${cert}" certification. Return ONLY valid JSON: {"milestones":["m1","m2",...]}`, out, 'Loading milestones...');
+  let milestones = defaults;
+  const prompt = `List 7–8 specific, practical milestones for someone pursuing the "${cert}" certification. Return ONLY valid JSON: {"milestones":["m1","m2",...]}`;
   try {
-    const d = JSON.parse(raw || '{}');
-    S.trackers[cert] = { milestones: (d.milestones || defaults).map(m => ({ label: m, done: false })), examDate };
-  } catch { S.trackers[cert] = { milestones: defaults.map(m => ({ label: m, done: false })), examDate }; }
+    const res = await fetch('/api/ai', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'x-access-code': S.accessCode || 'careerAI2025' },
+      body: JSON.stringify({ messages: [{ role: 'user', content: prompt }], max_tokens: 400 })
+    });
+    if (res.ok) {
+      const data = await res.json();
+      const text = data.content.map(b => b.text || '').join('').replace(/```json|```/g, '').trim();
+      const parsed = JSON.parse(text);
+      if (parsed.milestones?.length) milestones = parsed.milestones;
+    }
+  } catch {}
+  S.trackers[cert] = { milestones: milestones.map(m => ({ label: m, done: false })), examDate };
   saveTrackers(); renderTrackers();
 }
-
 function saveTrackers() { localStorage.setItem('cp_trackers', JSON.stringify(S.trackers)); }
-
 function renderTrackers() {
   const out = document.getElementById('tracker-out');
   const keys = Object.keys(S.trackers);
-  if (!keys.length) { out.innerHTML = '<div style="text-align:center;padding:44px 0;color:var(--text3)"><div style="font-size:36px;margin-bottom:10px">📋</div><div style="font-size:13px;font-weight:500">No certifications tracked yet</div></div>'; updateDashboard(); return; }
+  if (!keys.length) { out.innerHTML = '<div class="empty-state"><div class="es-icon">📋</div><div class="es-title">No certifications tracked yet</div><div class="es-sub">Add one above or browse the Cert Library — AI will generate your milestones automatically</div></div>'; updateDashboard(); return; }
   let h = '';
   keys.forEach(name => {
     const tr = S.trackers[name];
@@ -1344,8 +1458,8 @@ function renderTrackers() {
     let cd = '';
     if (tr.examDate) {
       const days = Math.ceil((new Date(tr.examDate) - new Date()) / 86400000);
-      const style = days > 14 ? 'color:var(--accent2)' : days > 0 ? 'color:var(--gold)' : 'color:var(--red)';
-      cd = `<div class="countdown-row" style="${style}">${days > 0 ? `⏰ ${days} days to exam` : days === 0 ? '🔥 Exam is TODAY!' : `✓ Exam was ${Math.abs(days)} days ago`}</div>`;
+      const col = days > 14 ? 'var(--accent2)' : days > 0 ? 'var(--gold)' : 'var(--red)';
+      cd = `<div class="cd-row" style="color:${col}">${days > 0 ? '⏰ ' + days + ' days to exam' : days === 0 ? '🔥 Exam is TODAY!' : '✓ Exam was ' + Math.abs(days) + ' days ago'}</div>`;
     }
     h += `<div class="tr-card"><div class="tr-head"><div class="tr-name">${name}</div><div class="tr-pct">${pct}%</div></div>
       ${cd}<div class="prog-track"><div class="prog-fill" style="width:${pct}%"></div></div>
@@ -1358,40 +1472,596 @@ function renderTrackers() {
   out.innerHTML = h;
   updateDashboard();
 }
-
 function toggleMs(cert, idx, val) { S.trackers[cert].milestones[idx].done = val; saveTrackers(); renderTrackers(); }
-function delTracker(cert) { if (confirm(`Remove "${cert}"?`)) { delete S.trackers[cert]; saveTrackers(); renderTrackers(); } }
+function delTracker(cert) { if (confirm('Remove "' + cert + '"?')) { delete S.trackers[cert]; saveTrackers(); renderTrackers(); } }
 
-// ── CHAT ──
+// ════════════════════════════════
+// AI CHAT
+// ════════════════════════════════
 async function sendChat() {
   const q = document.getElementById('chat-q').value.trim();
   if (!q) return;
   document.getElementById('chat-q').value = '';
   const msgs = document.getElementById('chat-msgs');
-  const ini = (S.profile.name || 'Riyaz').split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);
+  const ini = (S.profile.name || 'U').split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2);
   msgs.innerHTML += `<div class="msg"><div class="msg-av user">${ini}</div><div class="msg-bubble u">${q}</div></div>`;
   msgs.innerHTML += `<div class="msg" id="ai-t"><div class="msg-av ai">AI</div><div class="msg-bubble ai-msg" style="color:var(--text3)">...</div></div>`;
   msgs.scrollTop = msgs.scrollHeight;
-  if (!S.apiKey) { document.getElementById('ai-t').querySelector('.msg-bubble').textContent = '⚠️ Add your API key on the Home page to use AI Chat.'; return; }
   S.chat.push({ role: 'user', content: q });
-  const sys = `You are an expert career coach for sales professionals in India. User: ${S.profile.name || 'Riyaz'}, background: ${S.profile.bio || '12+ yrs B2B SaaS sales'}. Be concise, direct and actionable. Max 3-4 sentences.`;
+  const sys = `You are an expert career advisor specialising in professional certifications. ${getProfileContext()} Be concise, direct, and actionable. Max 3–4 sentences. Use the user's profile context to personalise your answer.`;
   try {
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
+    const res = await fetch('/api/ai', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'x-api-key': S.apiKey, 'anthropic-version': '2023-06-01', 'anthropic-dangerous-direct-browser-access': 'true' },
-      body: JSON.stringify({ model: 'claude-sonnet-4-5', max_tokens: 400, system: sys, messages: S.chat.slice(-10) })
+      headers: { 'Content-Type': 'application/json', 'x-access-code': S.accessCode || 'careerAI2025' },
+      body: JSON.stringify({ messages: S.chat.slice(-10), system: sys, max_tokens: 400 })
     });
     const data = await res.json();
     const reply = data.content.map(b => b.text || '').join('');
     S.chat.push({ role: 'assistant', content: reply });
     document.getElementById('ai-t').innerHTML = `<div class="msg-av ai">AI</div><div class="msg-bubble ai-msg">${reply}</div>`;
-  } catch { document.getElementById('ai-t').querySelector('.msg-bubble').textContent = 'Network error. Please try again.'; }
+  } catch { document.getElementById('ai-t').querySelector('.msg-bubble').textContent = 'Network error. Try again.'; }
   msgs.scrollTop = msgs.scrollHeight;
 }
 
-// ── OFFLINE ──
+// ════════════════════════════════
+// RESUME ANALYSER
+// ════════════════════════════════
+function dragOver(e) { e.preventDefault(); document.getElementById('upload-zone').classList.add('drag'); }
+function dragLeave() { document.getElementById('upload-zone').classList.remove('drag'); }
+function dropFile(e) { e.preventDefault(); dragLeave(); const f = e.dataTransfer.files[0]; if (f) processFile(f); }
+function handleFile(e) { const f = e.target.files[0]; if (f) processFile(f); }
+function processFile(file) {
+  document.getElementById('file-preview').style.display = 'flex';
+  document.getElementById('file-preview').innerHTML = `<span class="fp-icon">📄</span><span class="fp-name">${file.name}</span><span class="fp-remove" onclick="clearFile()">✕</span>`;
+  const reader = new FileReader();
+  reader.onload = e => { S.resumeText = e.target.result; document.getElementById('resume-txt').value = S.resumeText.slice(0, 3000); };
+  reader.readAsText(file);
+}
+function clearFile() { S.resumeText = ''; document.getElementById('file-preview').style.display = 'none'; document.getElementById('resume-file').value = ''; }
+async function analyseResume() {
+  const out = document.getElementById('resume-out');
+  const txt = (S.resumeText || document.getElementById('resume-txt').value).trim().slice(0, 3000);
+  if (!txt) { out.innerHTML = '<div class="err">Please upload a resume or paste your resume text first.</div>'; return; }
+  const target = document.getElementById('resume-target').value;
+  const prompt = `Analyse this resume and identify skill gaps. ${target ? 'Target role: ' + target + '.' : ''} Recommend 3 certifications to fill the gaps.
+Resume: ${txt}
+Return ONLY valid JSON:
+{"overallScore":75,"strengths":["strength 1","strength 2","strength 3"],"gaps":["gap 1","gap 2","gap 3"],"summary":"2 sentence assessment","recommendations":[{"cert":"cert name","provider":"org","reason":"Why in 1 sentence referencing actual resume content","priority":"High/Medium","estimatedTime":"X months","cost":"₹ range"}]}`;
+  const raw = await callAI([{ role: 'user', content: prompt }], null, out, 'Analysing your resume...');
+  if (!raw) return;
+  try {
+    const d = JSON.parse(raw);
+    const scoreCol = d.overallScore >= 75 ? 'var(--accent2)' : d.overallScore >= 50 ? 'var(--gold)' : 'var(--red)';
+    let h = `
+    <div class="out-card" style="text-align:center;padding:20px">
+      <div style="font-size:48px;font-weight:700;color:${scoreCol};font-family:'Bricolage Grotesque',sans-serif;margin-bottom:4px">${d.overallScore}<span style="font-size:20px">/100</span></div>
+      <div style="font-size:12px;color:var(--text3);margin-bottom:10px">Resume Score</div>
+      <div style="font-size:13px;color:var(--text2)">${d.summary}</div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px">
+      <div class="out-card" style="padding:14px">
+        <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--accent2);margin-bottom:8px">✓ Strengths</div>
+        ${d.strengths.map(s => `<div style="font-size:12px;color:var(--text2);margin-bottom:4px;display:flex;gap:6px"><span style="color:var(--accent2)">✓</span>${s}</div>`).join('')}
+      </div>
+      <div class="out-card" style="padding:14px">
+        <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--gold);margin-bottom:8px">⚠ Skill Gaps</div>
+        ${d.gaps.map(g => `<div style="font-size:12px;color:var(--text2);margin-bottom:4px;display:flex;gap:6px"><span style="color:var(--gold)">⚠</span>${g}</div>`).join('')}
+      </div>
+    </div>
+    <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--text3);margin-bottom:10px">Recommended Certifications</div>`;
+    d.recommendations.forEach(r => {
+      const pc = r.priority === 'High' ? 'bdg-blue' : 'bdg-gray';
+      h += `<div class="out-card">
+        <div class="oc-head"><div><div class="oc-name">${r.cert}</div><div class="oc-prov">${r.provider}</div></div>
+        <span class="bdg ${pc}">${r.priority} Priority</span></div>
+        <div class="oc-body">${r.reason}</div>
+        <div class="oc-meta"><span>⏱ <strong>${r.estimatedTime}</strong></span><span>💰 <strong>${r.cost}</strong></span></div>
+      </div>`;
+    });
+    out.innerHTML = h;
+  } catch (e) { out.innerHTML = '<div class="err">Could not parse analysis. Please try again.</div>'; }
+}
+
+// ════════════════════════════════
+// SHARE
+// ════════════════════════════════
+function shareApp(platform) {
+  const url = window.location.origin;
+  const msg = `Check out CareerPlanner AI — a free AI-powered app that helps you find the right certifications and build your career roadmap! 🚀\n\nAccess code: careerAI2025\n${url}`;
+  if (platform === 'whatsapp') { window.open('https://wa.me/?text=' + encodeURIComponent(msg)); }
+  else if (platform === 'linkedin') { window.open('https://www.linkedin.com/sharing/share-offsite/?url=' + encodeURIComponent(url)); }
+  else { navigator.clipboard.writeText(msg).then(() => showToast('✅ Link & code copied!')); }
+}
+
+// ════════════════════════════════
+// ONLINE / OFFLINE
+// ════════════════════════════════
 window.addEventListener('online',  () => showToast('✅ Back online'));
-window.addEventListener('offline', () => showToast('📴 You are offline — app still works!'));
+window.addEventListener('offline', () => showToast('📴 Offline — some features need internet'));
 </script>
 </body>
 </html>
+
+<script>
+// ════════════════════════════════════════════════════════
+// NOTIFICATION SYSTEM — injected after main app script
+// ════════════════════════════════════════════════════════
+
+const NOTIF = {
+  permission: Notification.permission,
+  sw: null,
+  settings: JSON.parse(localStorage.getItem('cp_notif_settings') || JSON.stringify({
+    enabled: false,
+    daily: true,
+    dailyTime: '19:00',
+    examCountdown: true,
+    weeklyReport: true,
+    streakReminder: true,
+    milestones: true
+  }))
+};
+
+// ── INIT ──
+async function initNotifications() {
+  if (!('serviceWorker' in navigator) || !('Notification' in window)) return;
+  try {
+    const reg = await navigator.serviceWorker.ready;
+    NOTIF.sw = reg;
+  } catch(e) {}
+  updateNotifUI();
+}
+
+// ── REQUEST PERMISSION ──
+async function requestNotifPermission() {
+  const perm = await Notification.requestPermission();
+  NOTIF.permission = perm;
+  if (perm === 'granted') {
+    NOTIF.settings.enabled = true;
+    saveNotifSettings();
+    scheduleAllNotifications();
+    showToast('🔔 Notifications enabled!');
+    updateNotifUI();
+  } else {
+    showToast('⚠️ Please enable notifications in your browser settings');
+  }
+}
+
+// ── SAVE SETTINGS ──
+function saveNotifSettings() {
+  localStorage.setItem('cp_notif_settings', JSON.stringify(NOTIF.settings));
+}
+
+// ── SCHEDULE ALL ──
+function scheduleAllNotifications() {
+  if (!NOTIF.settings.enabled || NOTIF.permission !== 'granted') return;
+  if (NOTIF.settings.daily) scheduleDailyReminder();
+  if (NOTIF.settings.examCountdown) scheduleExamCountdowns();
+  if (NOTIF.settings.weeklyReport) scheduleWeeklyReport();
+  if (NOTIF.settings.streakReminder) scheduleStreakReminder();
+}
+
+// ── DAILY STUDY REMINDER ──
+function scheduleDailyReminder() {
+  const [h, m] = (NOTIF.settings.dailyTime || '19:00').split(':').map(Number);
+  const now = new Date();
+  const target = new Date();
+  target.setHours(h, m, 0, 0);
+  if (target <= now) target.setDate(target.getDate() + 1);
+  const delay = target - now;
+
+  const trackerKeys = Object.keys(S.trackers);
+  const certName = trackerKeys.length > 0 ? trackerKeys[0].split(' ')[0] : 'your cert';
+  const messages = [
+    `Time to study! Open your ${certName} roadmap and tick off today's tasks. 📚`,
+    `Your ${certName} exam is getting closer. 15 minutes of study today = big results tomorrow!`,
+    `🔥 Don't break your streak! Quick study session for ${certName}?`,
+    `You're making great progress on ${certName}. Keep it up — one step at a time!`
+  ];
+  const body = messages[Math.floor(Math.random() * messages.length)];
+
+  sendToSW('scheduleLocal', {
+    delay,
+    title: 'CareerPlanner AI — Study Time',
+    body,
+    type: 'daily_reminder',
+    tag: 'daily-study'
+  });
+
+  // Also schedule for next 6 days
+  for (let i = 1; i <= 6; i++) {
+    sendToSW('scheduleLocal', {
+      delay: delay + (i * 86400000),
+      title: 'CareerPlanner AI — Study Time',
+      body: messages[i % messages.length],
+      type: 'daily_reminder',
+      tag: 'daily-study'
+    });
+  }
+}
+
+// ── EXAM COUNTDOWN ──
+function scheduleExamCountdowns() {
+  Object.entries(S.trackers).forEach(([name, tr]) => {
+    if (!tr.examDate) return;
+    const examDate = new Date(tr.examDate);
+    const now = new Date();
+    const daysLeft = Math.ceil((examDate - now) / 86400000);
+    const shortName = name.split(' ').slice(0, 2).join(' ');
+
+    [7, 3, 1].forEach(daysAlert => {
+      if (daysLeft >= daysAlert) {
+        const alertDate = new Date(examDate);
+        alertDate.setDate(alertDate.getDate() - daysAlert);
+        alertDate.setHours(9, 0, 0, 0);
+        const delay = alertDate - now;
+        if (delay > 0) {
+          const urgency = daysAlert === 1 ? '🚨 TOMORROW' : daysAlert === 3 ? '⚠️ 3 DAYS LEFT' : '📅 1 WEEK LEFT';
+          sendToSW('scheduleLocal', {
+            delay,
+            title: `${urgency} — ${shortName} Exam`,
+            body: daysAlert === 1
+              ? `Your ${shortName} exam is TOMORROW! Final review time — check your weak areas tonight.`
+              : daysAlert === 3
+              ? `3 days until your ${shortName} exam. Complete your final mock test today!`
+              : `One week until your ${shortName} exam. Stick to your roadmap and you'll be ready.`,
+            type: 'exam_countdown',
+            tag: `exam-${name.replace(/\s/g,'-').slice(0,20)}`
+          });
+        }
+      }
+    });
+
+    // Day of exam
+    if (daysLeft >= 0 && daysLeft <= 30) {
+      const examMorning = new Date(examDate);
+      examMorning.setHours(7, 0, 0, 0);
+      const delay = examMorning - now;
+      if (delay > 0) {
+        sendToSW('scheduleLocal', {
+          delay,
+          title: `🎯 Exam Day — ${shortName}`,
+          body: `Today is your ${shortName} exam! You've prepared for this. Stay calm, trust your prep. You've got this! 💪`,
+          type: 'exam_countdown',
+          tag: `exam-day-${name.replace(/\s/g,'-').slice(0,15)}`
+        });
+      }
+    }
+  });
+}
+
+// ── WEEKLY PROGRESS REPORT ──
+function scheduleWeeklyReport() {
+  const now = new Date();
+  const nextSunday = new Date();
+  nextSunday.setDate(now.getDate() + (7 - now.getDay()));
+  nextSunday.setHours(10, 0, 0, 0);
+  const delay = nextSunday - now;
+
+  const keys = Object.keys(S.trackers);
+  let totalDone = 0, totalMs = 0;
+  keys.forEach(k => {
+    totalMs += S.trackers[k].milestones.length;
+    totalDone += S.trackers[k].milestones.filter(m => m.done).length;
+  });
+  const pct = totalMs ? Math.round(totalDone / totalMs * 100) : 0;
+
+  sendToSW('scheduleLocal', {
+    delay,
+    title: 'CareerPlanner AI — Weekly Report 📊',
+    body: keys.length > 0
+      ? `This week: ${totalDone} milestones done · ${pct}% overall progress · ${keys.length} cert${keys.length > 1 ? 's' : ''} tracked. Keep going!`
+      : `Start your week right — add a certification to track your progress!`,
+    type: 'weekly_report',
+    tag: 'weekly-report'
+  });
+}
+
+// ── STREAK REMINDER ──
+function scheduleStreakReminder() {
+  // Fire at 9pm if user hasn't opened the app that day
+  const now = new Date();
+  const tonight = new Date();
+  tonight.setHours(21, 0, 0, 0);
+  if (tonight <= now) tonight.setDate(tonight.getDate() + 1);
+
+  const lastVisit = localStorage.getItem('cp_last');
+  const today = now.toDateString();
+  if (lastVisit === today) return; // Already active today
+
+  const streak = parseInt(localStorage.getItem('cp_streak') || '0');
+  const body = streak > 3
+    ? `Don't lose your ${streak}-day streak! Open CareerPlanner AI for just 2 minutes to keep it going 🔥`
+    : `Open CareerPlanner AI today to build your study streak! Small daily habits = big career results 🚀`;
+
+  sendToSW('scheduleLocal', {
+    delay: tonight - now,
+    title: streak > 0 ? `🔥 ${streak}-Day Streak at Risk!` : 'CareerPlanner AI — Daily Check-in',
+    body,
+    type: 'streak_reminder',
+    tag: 'streak-reminder'
+  });
+}
+
+// ── MILESTONE CELEBRATION ──
+function checkMilestoneTriggers(certName, pct) {
+  if (!NOTIF.settings.milestones || NOTIF.permission !== 'granted') return;
+  const shortName = certName.split(' ').slice(0, 2).join(' ');
+  if (pct === 50) {
+    setTimeout(() => {
+      new Notification('🎉 Halfway There!', {
+        body: `You're 50% done with your ${shortName} roadmap! You're on track — keep the momentum going!`,
+        icon: './icons/icon-192.png',
+        tag: `milestone-50-${certName.slice(0,20)}`,
+        silent: false
+      });
+    }, 1000);
+  }
+  if (pct === 100) {
+    setTimeout(() => {
+      new Notification('🏆 Roadmap Complete!', {
+        body: `Amazing! You've completed all milestones for ${shortName}. Time to book and ace that exam! 🚀`,
+        icon: './icons/icon-192.png',
+        tag: `milestone-100-${certName.slice(0,20)}`,
+        requireInteraction: true,
+        silent: false
+      });
+    }, 1000);
+  }
+}
+
+// ── SEND TO SERVICE WORKER ──
+function sendToSW(action, payload) {
+  if (!NOTIF.sw) return;
+  NOTIF.sw.active?.postMessage({ action, payload });
+}
+
+// ── UPDATE NOTIFICATION UI ──
+function updateNotifUI() {
+  const panel = document.getElementById('notif-panel');
+  if (!panel) return;
+  const granted = NOTIF.permission === 'granted';
+  const enabled = NOTIF.settings.enabled && granted;
+
+  panel.innerHTML = `
+    <div style="background:var(--white);border:1.5px solid var(--border);border-radius:var(--r);padding:18px;margin-bottom:14px;box-shadow:var(--shadow-sm)">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:${enabled ? '16px' : '0'}">
+        <div>
+          <div style="font-family:'Bricolage Grotesque',sans-serif;font-size:14px;font-weight:700;color:var(--text);margin-bottom:2px">🔔 Push Notifications</div>
+          <div style="font-size:11px;color:var(--text3)">${granted ? (enabled ? 'Active — notifications will fire on schedule' : 'Permitted but disabled') : 'Not yet enabled'}</div>
+        </div>
+        ${granted
+          ? `<label style="position:relative;display:inline-block;width:44px;height:24px;flex-shrink:0">
+              <input type="checkbox" ${enabled ? 'checked' : ''} onchange="toggleNotif(this.checked)" style="opacity:0;width:0;height:0">
+              <span style="position:absolute;inset:0;background:${enabled ? 'var(--accent)' : 'var(--bg2)'};border-radius:12px;cursor:pointer;transition:.3s">
+                <span style="position:absolute;width:18px;height:18px;background:#fff;border-radius:50%;top:3px;left:${enabled ? '23px' : '3px'};transition:.3s;box-shadow:0 1px 4px rgba(0,0,0,.2)"></span>
+              </span>
+            </label>`
+          : `<button class="btn btn-primary btn-sm" onclick="requestNotifPermission()" style="white-space:nowrap">Enable →</button>`
+        }
+      </div>
+      ${enabled ? `
+      <div style="display:flex;flex-direction:column;gap:10px;padding-top:14px;border-top:1px solid var(--bg2)">
+        ${notifRow('daily', '📚 Daily study reminder', 'Fires every day at your chosen time')}
+        ${notifRow('examCountdown', '⏰ Exam countdown alerts', '7 days, 3 days, 1 day & morning of exam')}
+        ${notifRow('weeklyReport', '📊 Weekly progress report', 'Every Sunday morning')}
+        ${notifRow('streakReminder', '🔥 Streak saver', 'Reminds you at 9pm if you haven\'t opened the app')}
+        ${notifRow('milestones', '🏆 Milestone celebrations', 'When you hit 50% and 100% on any cert')}
+        <div style="padding-top:10px;border-top:1px solid var(--bg2)">
+          <div style="font-size:11px;font-weight:700;text-transform:uppercase;color:var(--text3);letter-spacing:.05em;margin-bottom:8px">Daily Reminder Time</div>
+          <input type="time" value="${NOTIF.settings.dailyTime}" onchange="NOTIF.settings.dailyTime=this.value;saveNotifSettings();scheduleAllNotifications()" style="width:130px">
+        </div>
+        <button class="btn btn-ghost" onclick="testNotification()" style="margin-top:4px;font-size:12px;padding:9px">Send test notification</button>
+      </div>` : ''}
+    </div>`;
+}
+
+function notifRow(key, title, desc) {
+  const on = NOTIF.settings[key];
+  return `<div style="display:flex;justify-content:space-between;align-items:center;gap:10px">
+    <div><div style="font-size:13px;color:var(--text);font-weight:500">${title}</div><div style="font-size:11px;color:var(--text3)">${desc}</div></div>
+    <label style="position:relative;display:inline-block;width:36px;height:20px;flex-shrink:0">
+      <input type="checkbox" ${on ? 'checked' : ''} onchange="toggleNotifKey('${key}',this.checked)" style="opacity:0;width:0;height:0">
+      <span style="position:absolute;inset:0;background:${on ? 'var(--accent)' : 'var(--bg2)'};border-radius:10px;cursor:pointer;transition:.3s">
+        <span style="position:absolute;width:14px;height:14px;background:#fff;border-radius:50%;top:3px;left:${on ? '19px' : '3px'};transition:.3s"></span>
+      </span>
+    </label>
+  </div>`;
+}
+
+function toggleNotif(on) {
+  NOTIF.settings.enabled = on;
+  saveNotifSettings();
+  if (on) scheduleAllNotifications();
+  updateNotifUI();
+  showToast(on ? '🔔 Notifications on' : '🔕 Notifications off');
+}
+
+function toggleNotifKey(key, on) {
+  NOTIF.settings[key] = on;
+  saveNotifSettings();
+  if (on) scheduleAllNotifications();
+  updateNotifUI();
+}
+
+function testNotification() {
+  if (NOTIF.permission !== 'granted') { showToast('⚠️ Enable notifications first'); return; }
+  new Notification('CareerPlanner AI 🎯', {
+    body: 'Notifications are working! You\'ll get study reminders, exam alerts and milestone celebrations.',
+    icon: './icons/icon-192.png',
+    badge: './icons/icon-192.png',
+    tag: 'test'
+  });
+  showToast('✅ Test notification sent!');
+}
+
+// ── HOOK INTO TRACKER to trigger milestone notifications ──
+const _origToggleMs = window.toggleMs;
+window.toggleMs = function(cert, idx, val) {
+  _origToggleMs(cert, idx, val);
+  if (val && S.trackers[cert]) {
+    const done = S.trackers[cert].milestones.filter(m => m.done).length;
+    const pct = Math.round(done / S.trackers[cert].milestones.length * 100);
+    checkMilestoneTriggers(cert, pct);
+  }
+};
+
+// ── ADD NOTIFICATION PANEL TO PROFILE PAGE ──
+document.addEventListener('DOMContentLoaded', () => {});
+window.addEventListener('load', () => {
+  // Inject notification panel into profile page
+  const profilePage = document.getElementById('page-profile');
+  if (profilePage) {
+    const divider = profilePage.querySelector('.divider');
+    if (divider) {
+      const panel = document.createElement('div');
+      panel.id = 'notif-panel';
+      profilePage.insertBefore(panel, divider);
+    }
+  }
+  initNotifications();
+});
+
+// ══════════════════════════════════════
+// NOTIFICATION PAGE UI FUNCTIONS
+// ══════════════════════════════════════
+
+function renderNotifPage() {
+  const granted = NOTIF.permission === 'granted';
+  const enabled = NOTIF.settings.enabled && granted;
+
+  // Permission banner
+  const banner = document.getElementById('notif-permission-banner');
+  if (banner) {
+    banner.innerHTML = !granted
+      ? `<div class="permission-banner">⚠️ Notifications are not enabled yet. Tap "Enable all notifications" below and allow when Chrome asks.</div>`
+      : '';
+  }
+
+  // Master toggle
+  const mt = document.getElementById('mt-track');
+  const mth = document.getElementById('mt-thumb');
+  const mDesc = document.getElementById('notif-master-desc');
+  if (mt) { mt.className = 'toggle-track ' + (enabled ? 'on' : 'off'); }
+  if (mth) { mth.className = 'toggle-thumb ' + (enabled ? 'on' : 'off'); }
+  if (mDesc) mDesc.textContent = enabled ? 'All notifications active' : !granted ? 'Tap to enable notifications' : 'Notifications paused — tap to resume';
+
+  // Settings body
+  const body = document.getElementById('notif-settings-body');
+  if (body) body.style.display = enabled ? 'block' : 'none';
+
+  // Individual toggles
+  ['daily','examCountdown','weeklyReport','streakReminder','milestones'].forEach(key => {
+    const on = NOTIF.settings[key];
+    const track = document.getElementById('tk-' + key + '-track');
+    const thumb = document.getElementById('tk-' + key + '-thumb');
+    if (track) track.className = 'toggle-track ' + (on ? 'on' : 'off');
+    if (thumb) thumb.className = 'toggle-thumb ' + (on ? 'on' : 'off');
+  });
+
+  // Active preset highlight for daily time
+  document.querySelectorAll('.time-preset[data-time]').forEach(el => {
+    if (el.dataset.time === NOTIF.settings.dailyTime) el.classList.add('active');
+    else el.classList.remove('active');
+  });
+  const cti = document.getElementById('custom-time-input');
+  if (cti) cti.value = NOTIF.settings.dailyTime;
+
+  // Header stats
+  const activeCount = ['daily','examCountdown','weeklyReport','streakReminder','milestones'].filter(k => NOTIF.settings[k]).length;
+  const nhActive = document.getElementById('nh-active'); if (nhActive) nhActive.textContent = enabled ? activeCount : 0;
+  const nhStreak = document.getElementById('nh-streak'); if (nhStreak) nhStreak.textContent = parseInt(localStorage.getItem('cp_streak')||'0');
+  const nhExams = document.getElementById('nh-exams'); if (nhExams) nhExams.textContent = Object.values(S.trackers).filter(t => t.examDate).length;
+
+  // Exam dates list
+  const edl = document.getElementById('exam-dates-list');
+  if (edl) {
+    const exams = Object.entries(S.trackers).filter(([,t]) => t.examDate);
+    if (exams.length === 0) {
+      edl.innerHTML = '<div style="font-size:12px;color:var(--text3);padding:6px 0">No exam dates set yet — add one in the Tracker tab</div>';
+    } else {
+      edl.innerHTML = exams.map(([name, tr]) => {
+        const days = Math.ceil((new Date(tr.examDate) - new Date()) / 86400000);
+        const col = days > 14 ? 'var(--accent2)' : days > 3 ? 'var(--gold)' : 'var(--red)';
+        return `<div style="display:flex;justify-content:space-between;align-items:center;padding:7px 10px;background:var(--bg);border-radius:var(--r-xs);margin-bottom:5px;font-size:12px">
+          <span style="color:var(--text2);font-weight:500">${name.split(' ').slice(0,3).join(' ')}</span>
+          <span style="color:${col};font-weight:600">${days > 0 ? days + ' days left' : days === 0 ? 'TODAY!' : Math.abs(days) + ' days ago'}</span>
+        </div>`;
+      }).join('');
+    }
+  }
+
+  // Bell icon badge on nav
+  const bellBtn = document.getElementById('bn-notif-icon');
+  if (bellBtn && enabled) {
+    bellBtn.style.position = 'relative';
+  }
+}
+
+function masterToggle() {
+  if (NOTIF.permission !== 'granted') {
+    requestNotifPermission().then(() => renderNotifPage());
+    return;
+  }
+  NOTIF.settings.enabled = !NOTIF.settings.enabled;
+  saveNotifSettings();
+  if (NOTIF.settings.enabled) scheduleAllNotifications();
+  renderNotifPage();
+  showToast(NOTIF.settings.enabled ? '🔔 Notifications enabled!' : '🔕 Notifications paused');
+}
+
+function toggleKey(key, wrap) {
+  NOTIF.settings[key] = !NOTIF.settings[key];
+  saveNotifSettings();
+  if (NOTIF.settings[key]) scheduleAllNotifications();
+  renderNotifPage();
+}
+
+function setTimePreset(time, el) {
+  NOTIF.settings.dailyTime = time;
+  saveNotifSettings();
+  scheduleDailyReminder();
+  renderNotifPage();
+  showToast('✅ Reminder set for ' + formatTime(time));
+}
+
+function setCustomTime(time) {
+  if (!time) return;
+  NOTIF.settings.dailyTime = time;
+  saveNotifSettings();
+  scheduleDailyReminder();
+  document.querySelectorAll('.time-preset').forEach(el => el.classList.remove('active'));
+  showToast('✅ Reminder set for ' + formatTime(time));
+}
+
+function setWeeklyTime(time, el) {
+  NOTIF.settings.weeklyTime = time;
+  saveNotifSettings();
+  scheduleWeeklyReport();
+  document.querySelectorAll('[onclick*="setWeeklyTime"]').forEach(e => e.classList.remove('active'));
+  el.classList.add('active');
+  showToast('✅ Weekly report set for Sunday ' + formatTime(time));
+}
+
+function formatTime(t) {
+  if (!t) return '';
+  const [h, m] = t.split(':').map(Number);
+  const ampm = h >= 12 ? 'PM' : 'AM';
+  const hr = h % 12 || 12;
+  return hr + ':' + String(m).padStart(2,'0') + ' ' + ampm;
+}
+
+// Override showPage to render notif page when opened
+const _origShowPage = window.showPage;
+window.showPage = function(id) {
+  _origShowPage(id);
+  if (id === 'notif') renderNotifPage();
+};
+
+// Override initNotifications to also render page
+const _origInit = window.initNotifications;
+window.initNotifications = async function() {
+  await _origInit();
+  renderNotifPage();
+};
+
+</script>
