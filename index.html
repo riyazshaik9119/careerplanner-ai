@@ -1,18 +1,21 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>CareerPlanner AI</title>
 
 <style>
 body {
   margin:0;
-  font-family:'Segoe UI', sans-serif;
-  background:linear-gradient(135deg,#0b1220,#020617);
+  font-family:Segoe UI, sans-serif;
+  background:#0b1220;
   color:white;
 }
 
-.container { display:flex; }
+.app {
+  display:flex;
+}
 
 /* Sidebar */
 .sidebar {
@@ -23,17 +26,15 @@ body {
 }
 
 .logo {
+  font-size:18px;
   font-weight:bold;
   margin-bottom:20px;
-  background:linear-gradient(90deg,#00f7ff,#00ff88);
-  -webkit-background-clip:text;
-  -webkit-text-fill-color:transparent;
 }
 
-.sidebar button {
+.nav button {
   width:100%;
-  margin:6px 0;
   padding:10px;
+  margin:5px 0;
   background:#1f2937;
   color:white;
   border:none;
@@ -41,37 +42,42 @@ body {
 }
 
 /* Main */
-.main { flex:1; padding:20px; }
+.main {
+  flex:1;
+  padding:20px;
+}
 
 .card {
   background:#111827;
   padding:20px;
-  margin-bottom:20px;
   border-radius:10px;
+  margin-bottom:20px;
 }
 
-input, textarea {
+input, select, textarea {
   width:100%;
   padding:10px;
-  margin:8px 0;
+  margin:10px 0;
   background:#1f2937;
   border:none;
   color:white;
 }
 
-button.main-btn {
-  background:linear-gradient(90deg,#00f7ff,#00ff88);
+button.primary {
+  background:#00c2ff;
   border:none;
   padding:10px;
-  cursor:pointer;
   width:100%;
+  cursor:pointer;
 }
 
-/* Mobile */
-@media (max-width:768px){
-.container { flex-direction:column; }
-.sidebar { width:100%; height:auto; display:flex; flex-wrap:wrap; }
-.sidebar button { width:45%; margin:5px; }
+/* Chat */
+.chat {
+  height:200px;
+  overflow:auto;
+  background:#1f2937;
+  padding:10px;
+  margin-bottom:10px;
 }
 </style>
 
@@ -79,100 +85,74 @@ button.main-btn {
 
 <body>
 
-<div class="container">
+<div class="app">
 
 <div class="sidebar">
 <div class="logo">📘📈 CareerPlanner AI</div>
 
+<div class="nav">
 <button onclick="show('dashboard')">Dashboard</button>
-<button onclick="show('profile')">Profile</button>
 <button onclick="show('cert')">Cert Suggester</button>
 <button onclick="show('roadmap')">Roadmap</button>
-<button onclick="show('compare')">Compare</button>
 <button onclick="show('roi')">ROI</button>
 <button onclick="show('tracker')">Tracker</button>
 <button onclick="show('ai')">AI Coach</button>
-
+</div>
 </div>
 
 <div class="main">
 
 <!-- Dashboard -->
 <div id="dashboard" class="card">
-<h2>Dashboard</h2>
-<p>Welcome! Start with Certification Suggester 🚀</p>
-</div>
-
-<!-- Profile -->
-<div id="profile" class="card" style="display:none;">
-<h2>Profile</h2>
-<input id="name" placeholder="Name">
-<input id="exp" placeholder="Experience">
-<input id="goal" placeholder="Goal">
-<button class="main-btn" onclick="saveProfile()">Save</button>
+<h2>Welcome Riyaz 👋</h2>
+<p>Your AI Career Planner</p>
 </div>
 
 <!-- Cert -->
 <div id="cert" class="card" style="display:none;">
 <h2>Certification Suggester</h2>
-<input id="field" placeholder="Field">
-<input id="budget" placeholder="Budget">
+<input id="field" placeholder="Your field">
+<input id="goal" placeholder="Your goal">
 
-<button class="main-btn" onclick="suggest()">Suggest</button>
+<button class="primary" onclick="suggest()">Suggest</button>
 
 <div id="certOut"></div>
 </div>
 
 <!-- Roadmap -->
 <div id="roadmap" class="card" style="display:none;">
-<h2>Learning Roadmap</h2>
-<button onclick="roadmap()">Generate Plan</button>
+<h2>Roadmap</h2>
+<button onclick="roadmap()">Generate</button>
 <div id="roadmapOut"></div>
-</div>
-
-<!-- Compare -->
-<div id="compare" class="card" style="display:none;">
-<h2>Comparison</h2>
-<table border="1" width="100%">
-<tr><th>Cert</th><th>Cost</th><th>ROI</th></tr>
-<tr><td>Salesforce</td><td>30k</td><td>High</td></tr>
-<tr><td>Power BI</td><td>10k</td><td>High</td></tr>
-<tr><td>ECBA</td><td>25k</td><td>Medium</td></tr>
-</table>
 </div>
 
 <!-- ROI -->
 <div id="roi" class="card" style="display:none;">
 <h2>ROI Calculator</h2>
-<input id="salary" placeholder="Current Salary">
-<button onclick="calc()">Calculate</button>
+<input id="salary" placeholder="Current salary">
+<button onclick="calcROI()">Calculate</button>
 <p id="roiOut"></p>
 </div>
 
 <!-- Tracker -->
 <div id="tracker" class="card" style="display:none;">
-<h2>Tracker</h2>
-<label><input type="checkbox" onchange="update()"> SQL</label>
-<label><input type="checkbox" onchange="update()"> Power BI</label>
+<h2>Progress Tracker</h2>
+
+<label><input type="checkbox" onchange="update()"> SQL</label><br>
+<label><input type="checkbox" onchange="update()"> Power BI</label><br>
 <label><input type="checkbox" onchange="update()"> Salesforce</label>
+
 <p id="progress">0%</p>
 </div>
 
 <!-- AI -->
 <div id="ai" class="card" style="display:none;">
-<h2>🤖 AI Career Coach</h2>
+<h2>AI Coach</h2>
 
-<h3>Ask anything</h3>
-<input id="question" placeholder="Ask career question">
-<button class="main-btn" onclick="aiChat()">Ask AI</button>
-<div id="aiOut"></div>
+<div class="chat" id="chat"></div>
 
-<hr>
-
-<h3>Resume Analyzer</h3>
-<textarea id="resume" placeholder="Paste your resume"></textarea>
-<button class="main-btn" onclick="analyze()">Analyze</button>
-<div id="resumeOut"></div>
+<input id="q" placeholder="Ask anything">
+<button class="primary" onclick="askAI()">Ask</button>
 
 </div>
 
@@ -183,75 +163,59 @@ button.main-btn {
 
 // Navigation
 function show(id){
-["dashboard","profile","cert","roadmap","compare","roi","tracker","ai"]
+["dashboard","cert","roadmap","roi","tracker","ai"]
 .forEach(i=>document.getElementById(i).style.display="none");
-document.getElementById(id).style.display="block";
-}
 
-// Profile
-function saveProfile(){
-localStorage.setItem("name", document.getElementById("name").value);
-alert("Saved");
+document.getElementById(id).style.display="block";
 }
 
 // Suggest
 function suggest(){
 let field = document.getElementById("field").value;
 
-if(field.toLowerCase().includes("sales")){
-document.getElementById("certOut").innerHTML =
-"🔥 Salesforce Admin (Top Pick)<br>Also: BA, Power BI";
-}else{
-document.getElementById("certOut").innerHTML =
-"🔥 Business Analyst (Top Pick)<br>Also: Agile, PMP";
-}
+let result = field.includes("sales") ?
+"🔥 Salesforce + BA + Power BI" :
+"🔥 Business Analyst + SQL + AI";
+
+document.getElementById("certOut").innerText = result;
 }
 
 // Roadmap
 function roadmap(){
 document.getElementById("roadmapOut").innerText =
-"Week 1-2: Basics\nWeek 3-4: Tools\nWeek 5: Projects\nWeek 6: Apply jobs";
+"Week1: Basics\nWeek2: Tools\nWeek3: Practice\nWeek4: Apply";
 }
 
 // ROI
-function calc(){
+function calcROI(){
 let sal = document.getElementById("salary").value;
 document.getElementById("roiOut").innerText =
-"Expected Salary: " + (sal*1.5);
+"Expected: " + (sal * 1.5);
 }
 
 // Tracker
 function update(){
 let total = document.querySelectorAll("input[type=checkbox]").length;
 let checked = document.querySelectorAll("input[type=checkbox]:checked").length;
+
 let p = Math.round((checked/total)*100);
-document.getElementById("progress").innerText = p+"%";
-localStorage.setItem("progress", p);
+document.getElementById("progress").innerText = p + "%";
 }
 
 // AI Chat
-function aiChat(){
-let q = document.getElementById("question").value;
+function askAI(){
+let q = document.getElementById("q").value;
+let chat = document.getElementById("chat");
 
-let answer = "";
+chat.innerHTML += "<p><b>You:</b> " + q + "</p>";
 
-if(q.toLowerCase().includes("salesforce")){
-answer = "Salesforce is best for global jobs. Pair with BA + Power BI.";
-}
-else if(q.toLowerCase().includes("pmp")){
-answer = "PMP is good for management roles.";
-}
-else{
-answer = "Start with BA + Power BI + AI.";
+let answer = "Start with BA + Power BI + AI";
+
+if(q.includes("salesforce")){
+answer = "Salesforce + BA is best for global jobs";
 }
 
-document.getElementById("aiOut").innerText = answer;
-}
-
-// Resume Analyzer
-function analyze(){
-document.getElementById("resumeOut").innerText =
-"Missing Skills: SQL, Power BI\nRecommended: ECBA, AI";
+chat.innerHTML += "<p><b>AI:</b> " + answer + "</p>";
 }
 
 </script>
