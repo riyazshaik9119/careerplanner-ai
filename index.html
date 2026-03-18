@@ -2,223 +2,1117 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#4e83ff">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="CareerAI">
+<meta name="description" content="AI-powered certification advisor for smarter career decisions">
 <title>CareerPlanner AI</title>
+<link rel="manifest" href="./manifest.json">
+<link rel="apple-touch-icon" href="./icon-192.png">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700&family=Epilogue:wght@300;400;500;600&display=swap" rel="stylesheet">
 
 <style>
+:root {
+  --bg: #07090f;
+  --bg2: #0d1117;
+  --bg3: #111820;
+  --surface: #161d2a;
+  --surface2: #1c2535;
+  --border: rgba(78,131,255,0.1);
+  --border2: rgba(78,131,255,0.22);
+  --accent: #4e83ff;
+  --accent2: #00e5a0;
+  --gold: #ffb347;
+  --red: #ff6b6b;
+  --text: #e2e8f6;
+  --text2: #7d92b5;
+  --text3: #3d506e;
+  --r: 14px;
+  --r-sm: 9px;
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { height: 100%; }
+
 body {
-  margin:0;
-  font-family:Segoe UI, sans-serif;
-  background:#0b1220;
-  color:white;
+  font-family: 'Epilogue', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  height: 100%;
+  overflow: hidden;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-font-smoothing: antialiased;
 }
 
+/* ── APP SHELL ── */
 .app {
-  display:flex;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  height: 100dvh;
 }
 
-/* Sidebar */
-.sidebar {
-  width:230px;
-  background:#111827;
-  height:100vh;
-  padding:20px;
+/* ── TOP BAR ── */
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: calc(var(--safe-top) + 12px) 16px 12px;
+  background: var(--bg2);
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+  min-height: 60px;
+  position: relative;
+  z-index: 10;
 }
 
-.logo {
-  font-size:18px;
-  font-weight:bold;
-  margin-bottom:20px;
+.topbar-logo {
+  display: flex;
+  align-items: center;
+  gap: 9px;
 }
 
-.nav button {
-  width:100%;
-  padding:10px;
-  margin:5px 0;
-  background:#1f2937;
-  color:white;
-  border:none;
-  cursor:pointer;
+.topbar-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 9px;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
 }
 
-/* Main */
-.main {
-  flex:1;
-  padding:20px;
+.topbar-name {
+  font-family: 'Syne', sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text);
+  letter-spacing: -0.3px;
 }
 
-.card {
-  background:#111827;
-  padding:20px;
-  border-radius:10px;
-  margin-bottom:20px;
+.topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
+.topbar-av {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: 12px;
+  color: #fff;
+  cursor: pointer;
+}
+
+.streak-badge {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  background: rgba(255,179,71,0.12);
+  border: 1px solid rgba(255,179,71,0.22);
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--gold);
+}
+
+/* ── CONTENT AREA ── */
+.content {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+}
+
+/* ── PAGES ── */
+.page {
+  display: none;
+  padding: 20px 16px calc(80px + var(--safe-bottom));
+  animation: fadeUp 0.25s ease;
+  min-height: 100%;
+}
+.page.active { display: block; }
+@keyframes fadeUp { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
+
+/* ── BOTTOM NAV ── */
+.bottomnav {
+  display: flex;
+  background: var(--bg2);
+  border-top: 1px solid var(--border);
+  padding-bottom: var(--safe-bottom);
+  flex-shrink: 0;
+  z-index: 10;
+}
+
+.bn-btn {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  padding: 10px 4px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 10px;
+  font-weight: 500;
+  font-family: 'Epilogue', sans-serif;
+  color: var(--text3);
+  transition: color 0.15s;
+  position: relative;
+}
+
+.bn-btn.active { color: var(--accent); }
+
+.bn-btn.active::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 50%;
+  transform: translateX(-50%);
+  width: 32px;
+  height: 2px;
+  background: var(--accent);
+  border-radius: 0 0 2px 2px;
+}
+
+.bn-icon {
+  font-size: 20px;
+  line-height: 1;
+}
+
+/* ── PAGE HEADERS ── */
+.ph { margin-bottom: 20px; }
+.ph-eye { font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--accent); font-weight: 600; margin-bottom: 6px; }
+.ph-title { font-family: 'Syne', sans-serif; font-size: 22px; font-weight: 700; color: var(--text); letter-spacing: -.4px; margin-bottom: 5px; line-height: 1.2; }
+.ph-sub { font-size: 13px; color: var(--text2); line-height: 1.6; }
+
+/* ── STAT CARDS ── */
+.stats { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
+.stat { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r); padding: 14px 16px; }
+.stat-val { font-family: 'Syne', sans-serif; font-size: 24px; font-weight: 700; color: var(--accent); margin-bottom: 3px; }
+.stat-val.g { color: var(--accent2); }
+.stat-val.o { color: var(--gold); }
+.stat-lbl { font-size: 10px; color: var(--text3); text-transform: uppercase; letter-spacing: .06em; }
+
+/* ── QUICK ACTION CARDS ── */
+.qa-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.qa-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: 18px 14px;
+  text-align: center;
+  cursor: pointer;
+  transition: all .2s;
+  -webkit-tap-highlight-color: transparent;
+}
+.qa-card:active { transform: scale(0.97); background: var(--surface2); }
+.qa-icon { font-size: 26px; margin-bottom: 8px; }
+.qa-title { font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 3px; }
+.qa-sub { font-size: 11px; color: var(--text3); line-height: 1.4; }
+
+/* ── API BANNER ── */
+.api-banner {
+  background: rgba(78,131,255,0.07);
+  border: 1px solid rgba(78,131,255,0.2);
+  border-radius: var(--r);
+  padding: 14px 16px;
+  margin-bottom: 18px;
+}
+.api-banner h4 { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
+.api-banner p { font-size: 12px; color: var(--text2); line-height: 1.5; margin-bottom: 10px; }
+.api-row { display: flex; gap: 8px; }
+.api-row input { flex: 1; font-family: monospace; font-size: 12px; }
+
+/* ── INSTALL BANNER ── */
+.install-banner {
+  background: linear-gradient(135deg, rgba(0,229,160,0.08), rgba(78,131,255,0.05));
+  border: 1px solid rgba(0,229,160,0.2);
+  border-radius: var(--r);
+  padding: 14px 16px;
+  margin-bottom: 18px;
+  display: none;
+}
+.install-banner h4 { font-size: 13px; font-weight: 600; color: var(--accent2); margin-bottom: 4px; }
+.install-banner p { font-size: 12px; color: var(--text2); line-height: 1.5; margin-bottom: 10px; }
+
+/* ── FORMS ── */
+.fg { display: flex; flex-direction: column; gap: 5px; margin-bottom: 12px; }
+.fg label { font-size: 10px; font-weight: 600; color: var(--text2); letter-spacing: .06em; text-transform: uppercase; }
 input, select, textarea {
-  width:100%;
-  padding:10px;
-  margin:10px 0;
-  background:#1f2937;
-  border:none;
-  color:white;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  color: var(--text);
+  font-family: 'Epilogue', sans-serif;
+  font-size: 14px;
+  padding: 11px 13px;
+  width: 100%;
+  outline: none;
+  transition: border-color .2s;
+  -webkit-appearance: none;
 }
+input:focus, select:focus, textarea:focus { border-color: var(--accent); }
+select {
+  background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L5 5L9 1' stroke='%237d92b5' stroke-width='1.5' stroke-linecap='round' fill='none'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 32px;
+}
+select option { background: var(--bg2); }
+textarea { resize: none; min-height: 80px; line-height: 1.6; }
 
-button.primary {
-  background:#00c2ff;
-  border:none;
-  padding:10px;
-  width:100%;
-  cursor:pointer;
+/* ── CHIPS ── */
+.chip-group { display: flex; flex-wrap: wrap; gap: 7px; }
+.chip {
+  padding: 6px 13px;
+  border: 1px solid var(--border2);
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  color: var(--text2);
+  background: var(--surface);
+  transition: all .15s;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
 }
+.chip.sel { background: rgba(78,131,255,0.14); border-color: var(--accent); color: #7faaff; }
 
-/* Chat */
-.chat {
-  height:200px;
-  overflow:auto;
-  background:#1f2937;
-  padding:10px;
-  margin-bottom:10px;
+/* ── BUTTONS ── */
+.btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 13px 20px;
+  border-radius: var(--r-sm);
+  font-family: 'Epilogue', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all .2s;
+  border: none;
+  width: 100%;
+  margin-top: 4px;
+  -webkit-tap-highlight-color: transparent;
 }
+.btn:active { transform: scale(0.98); }
+.btn-primary {
+  background: linear-gradient(135deg, var(--accent), #3a6ee8);
+  color: #fff;
+  box-shadow: 0 4px 16px rgba(78,131,255,0.3);
+}
+.btn-ghost { background: var(--surface); color: var(--text2); border: 1px solid var(--border); }
+.btn-sm { padding: 9px 16px; font-size: 12px; width: auto; }
+
+/* ── OUTPUT CARDS ── */
+.out-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: 16px;
+  margin-bottom: 12px;
+  position: relative;
+  overflow: hidden;
+}
+.out-card.top { border-color: var(--accent); }
+.out-card.top::before { content: ''; position: absolute; top:0; left:0; right:0; height:2px; background:linear-gradient(90deg,var(--accent),var(--accent2)); }
+.oc-head { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 9px; gap: 10px; }
+.oc-name { font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 2px; }
+.oc-prov { font-size: 11px; color: var(--text3); }
+.badges { display: flex; gap: 5px; flex-wrap: wrap; flex-shrink: 0; }
+.bdg { font-size: 9px; font-weight: 700; padding: 3px 8px; border-radius: 20px; letter-spacing: .04em; text-transform: uppercase; }
+.bdg-blue { background: rgba(78,131,255,0.14); color: #7faaff; border: 1px solid rgba(78,131,255,0.28); }
+.bdg-green { background: rgba(0,229,160,0.1); color: var(--accent2); border: 1px solid rgba(0,229,160,0.22); }
+.bdg-gold { background: rgba(255,179,71,0.1); color: var(--gold); border: 1px solid rgba(255,179,71,0.22); }
+.bdg-gray { background: rgba(255,255,255,0.05); color: var(--text3); border: 1px solid var(--border); }
+.oc-body { font-size: 12px; color: var(--text2); line-height: 1.65; margin-bottom: 12px; }
+.oc-meta { display: flex; flex-wrap: wrap; gap: 12px; font-size: 11px; color: var(--text3); padding-top: 10px; border-top: 1px solid var(--border); }
+.oc-meta strong { color: var(--text2); }
+
+/* ── SUMMARY BOX ── */
+.sbox { background: linear-gradient(135deg, rgba(78,131,255,0.07), rgba(0,229,160,0.04)); border: 1px solid rgba(78,131,255,0.18); border-radius: var(--r); padding: 12px 14px; font-size: 13px; color: var(--text2); line-height: 1.7; margin-bottom: 16px; }
+
+/* ── ROADMAP ── */
+.timeline { position: relative; padding-left: 34px; }
+.timeline::before { content: ''; position: absolute; left: 10px; top: 13px; bottom: 13px; width: 2px; background: linear-gradient(to bottom, var(--accent), var(--accent2)); opacity: .22; border-radius: 1px; }
+.t-step { position: relative; margin-bottom: 14px; }
+.t-dot { position: absolute; left: -27px; top: 6px; width: 24px; height: 24px; border-radius: 50%; background: var(--surface2); border: 2px solid var(--accent); display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; color: var(--accent); }
+.t-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-sm); padding: 12px 14px; }
+.t-week { font-size: 9px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--accent); margin-bottom: 3px; }
+.t-title { font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 700; color: var(--text); margin-bottom: 5px; }
+.t-desc { font-size: 12px; color: var(--text2); line-height: 1.6; margin-bottom: 6px; }
+.t-foot { display: flex; flex-direction: column; gap: 3px; font-size: 11px; color: var(--text3); }
+
+/* ── COMPARE ── */
+.ctbl-wrap { overflow-x: auto; margin-bottom: 14px; -webkit-overflow-scrolling: touch; }
+.ctbl { width: 100%; border-collapse: collapse; font-size: 12px; min-width: 440px; }
+.ctbl th { text-align: left; padding: 9px 11px; background: var(--surface2); color: var(--text2); font-weight: 600; font-size: 10px; text-transform: uppercase; letter-spacing: .05em; border-bottom: 1px solid var(--border); }
+.ctbl td { padding: 9px 11px; border-bottom: 1px solid var(--border); color: var(--text); vertical-align: top; }
+.ctbl tr:last-child td { border-bottom: none; }
+.best-cell { color: var(--accent2); font-weight: 700; }
+.roi-high { color: var(--accent2); font-weight: 700; }
+
+/* ── ROI ── */
+.roi-result { background: linear-gradient(135deg, var(--surface), var(--surface2)); border: 1px solid var(--border2); border-radius: var(--r); padding: 20px 16px; margin-top: 16px; }
+.roi-num { font-family: 'Syne', sans-serif; font-size: 32px; font-weight: 700; color: var(--accent2); margin: 6px 0; }
+.roi-sub { font-size: 13px; color: var(--text2); line-height: 1.6; }
+.roi-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; margin-top: 14px; }
+.roi-box { background: var(--bg3); border: 1px solid var(--border); border-radius: var(--r-sm); padding: 10px; text-align: center; }
+.roi-box-val { font-family: 'Syne', sans-serif; font-size: 15px; font-weight: 700; color: var(--gold); margin-bottom: 3px; }
+.roi-box-lbl { font-size: 10px; color: var(--text3); }
+
+/* ── TRACKER ── */
+.tr-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r); padding: 16px; margin-bottom: 12px; }
+.tr-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+.tr-name { font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 700; color: var(--text); }
+.tr-pct { font-family: 'Syne', sans-serif; font-size: 20px; font-weight: 700; color: var(--accent2); }
+.prog-track { height: 5px; background: var(--surface2); border-radius: 3px; margin-bottom: 12px; overflow: hidden; }
+.prog-fill { height: 100%; border-radius: 3px; background: linear-gradient(90deg, var(--accent), var(--accent2)); transition: width .5s cubic-bezier(.4,0,.2,1); }
+.ms-list { display: flex; flex-direction: column; gap: 6px; }
+.ms-item { display: flex; align-items: center; gap: 10px; font-size: 13px; color: var(--text2); padding: 6px 8px; border-radius: var(--r-sm); transition: background .15s; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+.ms-item:active { background: var(--surface2); }
+.ms-item input[type=checkbox] { width: 16px; height: 16px; accent-color: var(--accent2); flex-shrink: 0; cursor: pointer; }
+.ms-item.done { color: var(--text3); text-decoration: line-through; }
+.tr-foot { margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; font-size: 11px; color: var(--text3); }
+.tr-del { color: var(--red); cursor: pointer; }
+.countdown-row { font-size: 12px; margin-bottom: 10px; }
+
+/* ── CHAT ── */
+.chat-wrap { display: flex; flex-direction: column; height: calc(100dvh - 200px); min-height: 300px; }
+.chat-msgs { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; padding-bottom: 8px; -webkit-overflow-scrolling: touch; }
+.msg { display: flex; gap: 8px; align-items: flex-start; }
+.msg-av { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; flex-shrink: 0; }
+.msg-av.user { background: linear-gradient(135deg, var(--accent), #3a6ee8); color: #fff; }
+.msg-av.ai { background: linear-gradient(135deg, var(--accent2), #00b87a); color: #fff; }
+.msg-bubble { background: var(--surface2); border-radius: 12px; padding: 10px 12px; font-size: 13px; color: var(--text2); line-height: 1.6; max-width: 82%; }
+.msg-bubble.u { background: rgba(78,131,255,0.14); color: var(--text); }
+.chat-input-row { display: flex; gap: 8px; padding-top: 10px; border-top: 1px solid var(--border); margin-top: 8px; }
+.chat-input-row input { flex: 1; border-radius: 20px; padding: 10px 15px; font-size: 13px; }
+.chat-send { padding: 10px 16px; background: var(--accent); border: none; cursor: pointer; color: #fff; font-size: 13px; font-weight: 600; font-family: 'Epilogue', sans-serif; border-radius: 20px; white-space: nowrap; -webkit-tap-highlight-color: transparent; }
+
+/* ── LOADING ── */
+.loading { display: flex; flex-direction: column; align-items: center; padding: 36px 20px; gap: 10px; }
+.spin { width: 28px; height: 28px; border: 3px solid var(--surface2); border-top-color: var(--accent); border-radius: 50%; animation: spin .8s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.spin-txt { font-size: 13px; color: var(--text3); }
+
+/* ── ERROR ── */
+.err { background: rgba(255,107,107,0.09); border: 1px solid rgba(255,107,107,0.22); border-radius: var(--r-sm); padding: 12px 14px; font-size: 13px; color: #ff9a9a; margin-top: 10px; }
+
+/* ── PROFILE ── */
+.profile-av-lg { width: 64px; height: 64px; border-radius: 50%; background: linear-gradient(135deg, var(--accent), var(--accent2)); display: flex; align-items: center; justify-content: center; font-family: 'Syne', sans-serif; font-weight: 700; font-size: 22px; color: #fff; margin-bottom: 14px; }
+
+/* ── SECTION DIVIDER ── */
+.divider { height: 1px; background: var(--border); margin: 18px 0; }
+
+/* ── MINI GRID ── */
+.mini-grid { display: grid; grid-template-columns: 1fr; gap: 8px; margin-top: 12px; }
+.mini-c { background: var(--surface2); border: 1px solid var(--border); border-radius: var(--r-sm); padding: 10px 12px; }
+.mini-c-name { font-size: 12px; font-weight: 600; color: var(--text); margin-bottom: 5px; }
+.mini-pro { font-size: 11px; color: var(--accent2); margin-bottom: 2px; }
+.mini-con { font-size: 11px; color: #ff9a9a; }
+
+/* ── QUIZ ── */
+.quiz-q { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r); padding: 14px 16px; margin-bottom: 10px; }
+.quiz-q-text { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 10px; line-height: 1.5; }
+.quiz-opt { display: flex; align-items: center; gap: 9px; font-size: 13px; color: var(--text2); cursor: pointer; padding: 7px 8px; border-radius: var(--r-sm); margin-bottom: 4px; }
+.quiz-opt input { width: 15px; height: 15px; accent-color: var(--accent); flex-shrink: 0; }
+.quiz-ans { display: none; font-size: 12px; padding: 8px 10px; background: rgba(0,229,160,0.08); border: 1px solid rgba(0,229,160,0.2); border-radius: var(--r-sm); color: var(--accent2); margin-top: 8px; }
+.show-ans-btn { font-size: 11px; padding: 6px 12px; margin-top: 6px; }
+
+/* ── OFFLINE TOAST ── */
+.toast { position: fixed; bottom: calc(72px + var(--safe-bottom) + 10px); left: 50%; transform: translateX(-50%) translateY(20px); background: var(--surface2); border: 1px solid var(--border2); border-radius: 20px; padding: 8px 16px; font-size: 12px; color: var(--text2); opacity: 0; transition: all .3s; z-index: 100; white-space: nowrap; pointer-events: none; }
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar { width: 3px; }
+::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
 </style>
-
 </head>
-
 <body>
 
 <div class="app">
 
-<div class="sidebar">
-<div class="logo">📘📈 CareerPlanner AI</div>
+  <!-- TOP BAR -->
+  <div class="topbar">
+    <div class="topbar-logo">
+      <div class="topbar-icon">🎯</div>
+      <div class="topbar-name">CareerPlanner AI</div>
+    </div>
+    <div class="topbar-right">
+      <div class="streak-badge" id="streak-badge">🔥 0</div>
+      <div class="topbar-av" id="top-av" onclick="showPage('profile')">RS</div>
+    </div>
+  </div>
 
-<div class="nav">
-<button onclick="show('dashboard')">Dashboard</button>
-<button onclick="show('cert')">Cert Suggester</button>
-<button onclick="show('roadmap')">Roadmap</button>
-<button onclick="show('roi')">ROI</button>
-<button onclick="show('tracker')">Tracker</button>
-<button onclick="show('ai')">AI Coach</button>
+  <!-- CONTENT -->
+  <div class="content" id="content">
+
+    <!-- ═══ HOME ═══ -->
+    <div class="page active" id="page-home">
+      <div class="ph">
+        <div class="ph-eye">Welcome back</div>
+        <div class="ph-title">Hi Riyaz 👋</div>
+        <div class="ph-sub">Your AI career planning hub</div>
+      </div>
+
+      <div id="install-banner" class="install-banner">
+        <h4>📲 Install this App</h4>
+        <p>Add CareerPlanner AI to your home screen for instant access — works offline too!</p>
+        <button class="btn btn-primary btn-sm" onclick="installApp()" style="width:auto">Install Now →</button>
+      </div>
+
+      <div id="api-banner" class="api-banner">
+        <h4>🔑 Connect AI (one time)</h4>
+        <p>Enter your Anthropic API key to unlock all AI features. Get a free key at console.anthropic.com</p>
+        <div class="api-row">
+          <input id="api-input" type="password" placeholder="sk-ant-api03-..." autocomplete="off" style="font-family:monospace;font-size:11px">
+          <button class="btn btn-primary btn-sm" onclick="saveKey()" style="width:auto">Save →</button>
+        </div>
+      </div>
+
+      <div class="stats">
+        <div class="stat"><div class="stat-val" id="d-tracked">0</div><div class="stat-lbl">Certs Tracked</div></div>
+        <div class="stat"><div class="stat-val g" id="d-progress">0%</div><div class="stat-lbl">Avg Progress</div></div>
+        <div class="stat"><div class="stat-val o" id="d-ms">0</div><div class="stat-lbl">Done Milestones</div></div>
+        <div class="stat"><div class="stat-val" id="d-streak">0</div><div class="stat-lbl">Day Streak</div></div>
+      </div>
+
+      <div class="ph-eye" style="margin-bottom:10px">Features</div>
+      <div class="qa-grid">
+        <div class="qa-card" onclick="showPage('suggest')">
+          <div class="qa-icon">🔍</div>
+          <div class="qa-title">Cert Suggester</div>
+          <div class="qa-sub">AI picks for your profile</div>
+        </div>
+        <div class="qa-card" onclick="showPage('roadmap')">
+          <div class="qa-icon">🗺️</div>
+          <div class="qa-title">Roadmap</div>
+          <div class="qa-sub">Week-by-week plan</div>
+        </div>
+        <div class="qa-card" onclick="showPage('compare')">
+          <div class="qa-icon">⚖️</div>
+          <div class="qa-title">Compare</div>
+          <div class="qa-sub">Cost, ROI & difficulty</div>
+        </div>
+        <div class="qa-card" onclick="showPage('roi')">
+          <div class="qa-icon">💰</div>
+          <div class="qa-title">ROI Calc</div>
+          <div class="qa-sub">See your salary boost</div>
+        </div>
+        <div class="qa-card" onclick="showPage('tracker')">
+          <div class="qa-icon">✅</div>
+          <div class="qa-title">Tracker</div>
+          <div class="qa-sub">Track milestones</div>
+        </div>
+        <div class="qa-card" onclick="showPage('ai')">
+          <div class="qa-icon">🤖</div>
+          <div class="qa-title">AI Coach</div>
+          <div class="qa-sub">Ask anything</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ SUGGEST ═══ -->
+    <div class="page" id="page-suggest">
+      <div class="ph">
+        <div class="ph-eye">AI Feature</div>
+        <div class="ph-title">Cert Suggester</div>
+        <div class="ph-sub">AI picks the best certifications for your exact profile</div>
+      </div>
+      <div class="fg"><label>Field</label>
+        <select id="s-field"><option selected>Marketing / Sales</option><option>Business / Management</option><option>Software / IT</option><option>Data & Analytics</option><option>Finance</option></select>
+      </div>
+      <div class="fg"><label>Experience</label>
+        <select id="s-exp"><option>0–1 yrs</option><option>1–3 yrs</option><option>3–7 yrs</option><option selected>7+ yrs</option></select>
+      </div>
+      <div class="fg"><label>Budget</label>
+        <select id="s-budget"><option>Free / under ₹5k</option><option>₹5k–20k</option><option selected>₹20k–60k</option><option>₹60k+</option></select>
+      </div>
+      <div class="fg"><label>Goals</label>
+        <div class="chip-group" id="s-goals">
+          <span class="chip sel" onclick="tog(this)">Higher salary</span>
+          <span class="chip sel" onclick="tog(this)">Work globally</span>
+          <span class="chip sel" onclick="tog(this)">Management role</span>
+          <span class="chip" onclick="tog(this)">Promotion</span>
+          <span class="chip" onclick="tog(this)">Switch careers</span>
+          <span class="chip" onclick="tog(this)">Consulting</span>
+          <span class="chip" onclick="tog(this)">Freelancing</span>
+        </div>
+      </div>
+      <div class="fg"><label>Your Background</label>
+        <textarea id="s-bg">12+ yrs B2B SaaS & Managed IT Sales. Key account management, CRM, business development. 225% of FY2024 target. Hyderabad, India.</textarea>
+      </div>
+      <button class="btn btn-primary" onclick="runSuggest()">Get Recommendations →</button>
+      <div id="suggest-out" style="margin-top:16px"></div>
+    </div>
+
+    <!-- ═══ ROADMAP ═══ -->
+    <div class="page" id="page-roadmap">
+      <div class="ph">
+        <div class="ph-eye">AI Feature</div>
+        <div class="ph-title">Learning Roadmap</div>
+        <div class="ph-sub">Your personalised week-by-week study plan</div>
+      </div>
+      <div class="fg"><label>Certification</label>
+        <select id="r-cert">
+          <option value="">Select...</option>
+          <option>Salesforce Certified Sales Cloud Consultant</option>
+          <option>HubSpot Sales Hub Certification</option>
+          <option>Certified Sales Leadership Professional (CSLP)</option>
+          <option>PMP (Project Management Professional)</option>
+          <option>Google Project Management Certificate</option>
+          <option>AWS Cloud Practitioner</option>
+          <option>Certified Scrum Master (CSM)</option>
+          <option>CFA Level 1</option>
+          <option>Six Sigma Green Belt</option>
+        </select>
+      </div>
+      <div class="fg"><label>Your Level</label>
+        <select id="r-level"><option>Complete beginner</option><option>Some knowledge</option><option selected>Intermediate</option><option>Near exam ready</option></select>
+      </div>
+      <div class="fg"><label>Hours / Week</label>
+        <select id="r-time"><option>2–3 hrs</option><option selected>5–8 hrs</option><option>10+ hrs</option></select>
+      </div>
+      <button class="btn btn-primary" onclick="runRoadmap()">Build My Roadmap →</button>
+      <div id="roadmap-out" style="margin-top:16px"></div>
+    </div>
+
+    <!-- ═══ COMPARE ═══ -->
+    <div class="page" id="page-compare">
+      <div class="ph">
+        <div class="ph-eye">AI Feature</div>
+        <div class="ph-title">Compare Certs</div>
+        <div class="ph-sub">Side-by-side comparison with ROI, cost and fit</div>
+      </div>
+      <div class="fg"><label>Select Certifications</label>
+        <div class="chip-group" id="c-certs">
+          <span class="chip sel" onclick="tog(this)">Salesforce</span>
+          <span class="chip sel" onclick="tog(this)">HubSpot Sales</span>
+          <span class="chip sel" onclick="tog(this)">CSLP</span>
+          <span class="chip" onclick="tog(this)">PMP</span>
+          <span class="chip" onclick="tog(this)">Six Sigma</span>
+          <span class="chip" onclick="tog(this)">Google PM</span>
+          <span class="chip" onclick="tog(this)">AWS</span>
+          <span class="chip" onclick="tog(this)">CFA L1</span>
+        </div>
+      </div>
+      <div class="fg"><label>Your Background</label>
+        <textarea id="c-ctx">12+ yrs B2B SaaS Sales. Key accounts, CRM, 225% FY2024 target. Want globally recognised cert for senior sales leadership.</textarea>
+      </div>
+      <button class="btn btn-primary" onclick="runCompare()">Compare Now →</button>
+      <div id="compare-out" style="margin-top:16px"></div>
+    </div>
+
+    <!-- ═══ ROI ═══ -->
+    <div class="page" id="page-roi">
+      <div class="ph">
+        <div class="ph-eye">Calculator</div>
+        <div class="ph-title">ROI Calculator</div>
+        <div class="ph-sub">See the exact salary impact of each certification</div>
+      </div>
+      <div class="fg"><label>Current CTC (₹ LPA)</label>
+        <input id="roi-ctc" type="number" inputmode="numeric" placeholder="e.g. 25" value="25">
+      </div>
+      <div class="fg"><label>Certification</label>
+        <select id="roi-cert">
+          <option value="">Select...</option>
+          <option data-boost="35" data-cost="25000" data-months="4">Salesforce Sales Cloud Consultant</option>
+          <option data-boost="20" data-cost="5000" data-months="2">HubSpot Sales Hub</option>
+          <option data-boost="40" data-cost="60000" data-months="6">CSLP (Sales Leadership)</option>
+          <option data-boost="30" data-cost="150000" data-months="5">PMP</option>
+          <option data-boost="25" data-cost="15000" data-months="6">Google PM Certificate</option>
+          <option data-boost="45" data-cost="300000" data-months="18">CFA Level 1</option>
+          <option data-boost="50" data-cost="80000" data-months="8">Six Sigma Green Belt</option>
+          <option data-boost="30" data-cost="40000" data-months="3">AWS Cloud Practitioner</option>
+        </select>
+      </div>
+      <button class="btn btn-primary" onclick="calcROI()">Calculate →</button>
+      <div id="roi-out"></div>
+    </div>
+
+    <!-- ═══ TRACKER ═══ -->
+    <div class="page" id="page-tracker">
+      <div class="ph">
+        <div class="ph-eye">Progress</div>
+        <div class="ph-title">Cert Tracker</div>
+        <div class="ph-sub">Track your milestones — saved automatically</div>
+      </div>
+      <div class="fg"><label>Add Certification</label>
+        <select id="t-cert">
+          <option value="">Select cert to track...</option>
+          <option>Salesforce Certified Sales Cloud Consultant</option>
+          <option>HubSpot Sales Hub Certification</option>
+          <option>CSLP</option>
+          <option>PMP</option>
+          <option>Certified Scrum Master (CSM)</option>
+          <option>Six Sigma Green Belt</option>
+          <option>AWS Cloud Practitioner</option>
+          <option>Google PM Certificate</option>
+        </select>
+      </div>
+      <div class="fg"><label>Target Exam Date (optional)</label>
+        <input type="date" id="t-date">
+      </div>
+      <button class="btn btn-primary" onclick="addTracker()">+ Add Tracker →</button>
+      <div style="margin-top:16px" id="tracker-out">
+        <div style="text-align:center;padding:40px 0;color:var(--text3)">
+          <div style="font-size:32px;margin-bottom:8px">📋</div>
+          <div style="font-size:13px">No certifications tracked yet</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ AI COACH ═══ -->
+    <div class="page" id="page-ai">
+      <div class="ph">
+        <div class="ph-eye">AI Feature</div>
+        <div class="ph-title">AI Career Coach</div>
+        <div class="ph-sub">Ask anything about certs, career moves or salary</div>
+      </div>
+      <div class="chat-wrap">
+        <div class="chat-msgs" id="chat-msgs">
+          <div class="msg">
+            <div class="msg-av ai">AI</div>
+            <div class="msg-bubble">Hi Riyaz! 👋 I'm your AI Career Coach. Ask me anything — which cert to do first, how to negotiate your salary, what skills are most in demand for SaaS sales leaders, or anything else. How can I help?</div>
+          </div>
+        </div>
+        <div class="chat-input-row">
+          <input id="chat-q" placeholder="Ask a career question..." onkeydown="if(event.key==='Enter')sendChat()">
+          <button class="chat-send" onclick="sendChat()">→</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ PROFILE ═══ -->
+    <div class="page" id="page-profile">
+      <div class="ph">
+        <div class="ph-eye">Settings</div>
+        <div class="ph-title">My Profile</div>
+        <div class="ph-sub">Your details personalise all AI features</div>
+      </div>
+      <div class="profile-av-lg" id="p-av">RS</div>
+      <div class="fg"><label>Full Name</label><input id="p-name" value="Riyaz Shaik"></div>
+      <div class="fg"><label>Field</label>
+        <select id="p-field"><option selected>Marketing / Sales</option><option>Business / Management</option><option>Software / IT</option></select>
+      </div>
+      <div class="fg"><label>Experience</label>
+        <select id="p-exp"><option>0–1 yrs</option><option>1–3 yrs</option><option>3–7 yrs</option><option selected>7+ yrs</option></select>
+      </div>
+      <div class="fg"><label>Current CTC (₹ LPA)</label><input id="p-ctc" type="number" inputmode="numeric" value="25"></div>
+      <div class="fg"><label>Target Role</label><input id="p-target" value="VP Sales / Sales Director"></div>
+      <div class="fg"><label>Location</label><input id="p-loc" value="Hyderabad, India"></div>
+      <div class="fg"><label>Professional Bio</label>
+        <textarea id="p-bio" style="min-height:100px">12+ years B2B SaaS & Managed IT Sales. Expert in key account management, business development, CRM. 225% of FY2024 target. India & Canada.</textarea>
+      </div>
+      <button class="btn btn-primary" onclick="saveProfile()">Save Profile →</button>
+      <span id="p-saved" style="display:none;font-size:12px;color:var(--accent2);margin-top:8px;display:none">✓ Profile saved!</span>
+
+      <div class="divider"></div>
+
+      <div class="fg"><label>Anthropic API Key</label>
+        <input id="api-key-settings" type="password" placeholder="sk-ant-api03-..." style="font-family:monospace;font-size:12px" autocomplete="off">
+      </div>
+      <button class="btn btn-ghost" onclick="saveKeySettings()">Update API Key</button>
+
+      <div class="divider"></div>
+
+      <div style="font-size:12px;color:var(--text3);line-height:1.7;margin-bottom:8px">
+        App Version 2.0 · Data stored on device<br>
+        Powered by Claude AI (Anthropic)
+      </div>
+      <button class="btn btn-ghost" onclick="if(confirm('Clear all data?')){localStorage.clear();sessionStorage.clear();location.reload()}">Clear All Data</button>
+    </div>
+
+  </div><!-- end content -->
+
+  <!-- BOTTOM NAV -->
+  <nav class="bottomnav">
+    <button class="bn-btn active" id="bn-home" onclick="showPage('home')"><span class="bn-icon">🏠</span>Home</button>
+    <button class="bn-btn" id="bn-suggest" onclick="showPage('suggest')"><span class="bn-icon">🔍</span>Suggest</button>
+    <button class="bn-btn" id="bn-tracker" onclick="showPage('tracker')"><span class="bn-icon">✅</span>Track</button>
+    <button class="bn-btn" id="bn-ai" onclick="showPage('ai')"><span class="bn-icon">🤖</span>Coach</button>
+    <button class="bn-btn" id="bn-profile" onclick="showPage('profile')"><span class="bn-icon">👤</span>Profile</button>
+  </nav>
+
 </div>
-</div>
 
-<div class="main">
-
-<!-- Dashboard -->
-<div id="dashboard" class="card">
-<h2>Welcome Riyaz 👋</h2>
-<p>Your AI Career Planner</p>
-</div>
-
-<!-- Cert -->
-<div id="cert" class="card" style="display:none;">
-<h2>Certification Suggester</h2>
-<input id="field" placeholder="Your field">
-<input id="goal" placeholder="Your goal">
-
-<button class="primary" onclick="suggest()">Suggest</button>
-
-<div id="certOut"></div>
-</div>
-
-<!-- Roadmap -->
-<div id="roadmap" class="card" style="display:none;">
-<h2>Roadmap</h2>
-<button onclick="roadmap()">Generate</button>
-<div id="roadmapOut"></div>
-</div>
-
-<!-- ROI -->
-<div id="roi" class="card" style="display:none;">
-<h2>ROI Calculator</h2>
-<input id="salary" placeholder="Current salary">
-<button onclick="calcROI()">Calculate</button>
-<p id="roiOut"></p>
-</div>
-
-<!-- Tracker -->
-<div id="tracker" class="card" style="display:none;">
-<h2>Progress Tracker</h2>
-
-<label><input type="checkbox" onchange="update()"> SQL</label><br>
-<label><input type="checkbox" onchange="update()"> Power BI</label><br>
-<label><input type="checkbox" onchange="update()"> Salesforce</label>
-
-<p id="progress">0%</p>
-</div>
-
-<!-- AI -->
-<div id="ai" class="card" style="display:none;">
-<h2>AI Coach</h2>
-
-<div class="chat" id="chat"></div>
-
-<input id="q" placeholder="Ask anything">
-<button class="primary" onclick="askAI()">Ask</button>
-
-</div>
-
-</div>
-</div>
+<div class="toast" id="toast"></div>
 
 <script>
+// ── STATE ──
+const S = {
+  apiKey: sessionStorage.getItem('cp_key') || '',
+  trackers: JSON.parse(localStorage.getItem('cp_trackers') || '{}'),
+  profile: JSON.parse(localStorage.getItem('cp_profile') || '{}'),
+  chat: [],
+  deferredPrompt: null
+};
 
-// Navigation
-function show(id){
-["dashboard","cert","roadmap","roi","tracker","ai"]
-.forEach(i=>document.getElementById(i).style.display="none");
+// ── INIT ──
+window.addEventListener('load', () => {
+  if (S.apiKey) hideBanner();
+  loadProfile();
+  updateDashboard();
+  updateStreak();
+  renderTrackers();
+  handleDeepLink();
+});
 
-document.getElementById(id).style.display="block";
+// ── SERVICE WORKER ──
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('./sw.js')
+    .then(() => console.log('SW registered'))
+    .catch(e => console.log('SW error', e));
 }
 
-// Suggest
-function suggest(){
-let field = document.getElementById("field").value;
+// ── PWA INSTALL ──
+window.addEventListener('beforeinstallprompt', e => {
+  e.preventDefault();
+  S.deferredPrompt = e;
+  document.getElementById('install-banner').style.display = 'block';
+});
 
-let result = field.includes("sales") ?
-"🔥 Salesforce + BA + Power BI" :
-"🔥 Business Analyst + SQL + AI";
-
-document.getElementById("certOut").innerText = result;
+function installApp() {
+  if (!S.deferredPrompt) { showToast('Open this page in Chrome and use "Add to Home Screen"'); return; }
+  S.deferredPrompt.prompt();
+  S.deferredPrompt.userChoice.then(r => {
+    if (r.outcome === 'accepted') { document.getElementById('install-banner').style.display = 'none'; showToast('✅ App installed!'); }
+    S.deferredPrompt = null;
+  });
 }
 
-// Roadmap
-function roadmap(){
-document.getElementById("roadmapOut").innerText =
-"Week1: Basics\nWeek2: Tools\nWeek3: Practice\nWeek4: Apply";
+window.addEventListener('appinstalled', () => showToast('✅ CareerPlanner AI installed!'));
+
+// ── DEEP LINK ──
+function handleDeepLink() {
+  const hash = window.location.hash.replace('#','');
+  if (hash) showPage(hash);
 }
 
-// ROI
-function calcROI(){
-let sal = document.getElementById("salary").value;
-document.getElementById("roiOut").innerText =
-"Expected: " + (sal * 1.5);
+// ── TOAST ──
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
 }
 
-// Tracker
-function update(){
-let total = document.querySelectorAll("input[type=checkbox]").length;
-let checked = document.querySelectorAll("input[type=checkbox]:checked").length;
-
-let p = Math.round((checked/total)*100);
-document.getElementById("progress").innerText = p + "%";
+// ── STREAK ──
+function updateStreak() {
+  const today = new Date().toDateString();
+  const last = localStorage.getItem('cp_last');
+  let streak = parseInt(localStorage.getItem('cp_streak') || '0');
+  if (last !== today) {
+    const yesterday = new Date(Date.now() - 86400000).toDateString();
+    streak = last === yesterday ? streak + 1 : 1;
+    localStorage.setItem('cp_streak', streak);
+    localStorage.setItem('cp_last', today);
+  }
+  document.getElementById('d-streak').textContent = streak;
+  document.getElementById('streak-badge').textContent = '🔥 ' + streak;
 }
 
-// AI Chat
-function askAI(){
-let q = document.getElementById("q").value;
-let chat = document.getElementById("chat");
-
-chat.innerHTML += "<p><b>You:</b> " + q + "</p>";
-
-let answer = "Start with BA + Power BI + AI";
-
-if(q.includes("salesforce")){
-answer = "Salesforce + BA is best for global jobs";
+// ── DASHBOARD ──
+function updateDashboard() {
+  const keys = Object.keys(S.trackers);
+  document.getElementById('d-tracked').textContent = keys.length;
+  if (!keys.length) { document.getElementById('d-progress').textContent = '0%'; document.getElementById('d-ms').textContent = '0'; return; }
+  let total = 0, done = 0;
+  keys.forEach(k => { total += S.trackers[k].milestones.length; done += S.trackers[k].milestones.filter(m => m.done).length; });
+  document.getElementById('d-ms').textContent = done;
+  document.getElementById('d-progress').textContent = total ? Math.round(done / total * 100) + '%' : '0%';
 }
 
-chat.innerHTML += "<p><b>AI:</b> " + answer + "</p>";
+// ── NAVIGATION ──
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + id).classList.add('active');
+  document.querySelectorAll('.bn-btn').forEach(b => b.classList.remove('active'));
+  const nb = document.getElementById('bn-' + id);
+  if (nb) nb.classList.add('active');
+  document.getElementById('content').scrollTo(0, 0);
+  window.location.hash = id;
 }
 
+// ── API KEY ──
+function saveKey() {
+  const k = document.getElementById('api-input').value.trim();
+  if (!k.startsWith('sk-')) { showToast('⚠️ Invalid key — must start with sk-'); return; }
+  S.apiKey = k;
+  sessionStorage.setItem('cp_key', k);
+  hideBanner();
+  showToast('✅ API key saved!');
+}
+function saveKeySettings() {
+  const k = document.getElementById('api-key-settings').value.trim();
+  if (!k.startsWith('sk-')) { showToast('⚠️ Invalid key'); return; }
+  S.apiKey = k;
+  sessionStorage.setItem('cp_key', k);
+  showToast('✅ API key updated!');
+}
+function hideBanner() { const b = document.getElementById('api-banner'); if (b) b.style.display = 'none'; }
+
+// ── PROFILE ──
+function loadProfile() {
+  if (S.profile.name) {
+    document.getElementById('p-name').value = S.profile.name;
+    document.getElementById('p-ctc').value = S.profile.ctc || '25';
+    document.getElementById('p-target').value = S.profile.target || 'VP Sales';
+    document.getElementById('p-loc').value = S.profile.loc || 'Hyderabad';
+    if (S.profile.bio) document.getElementById('p-bio').value = S.profile.bio;
+    updateProfileUI();
+  }
+}
+function saveProfile() {
+  S.profile = {
+    name: document.getElementById('p-name').value,
+    ctc: document.getElementById('p-ctc').value,
+    target: document.getElementById('p-target').value,
+    loc: document.getElementById('p-loc').value,
+    bio: document.getElementById('p-bio').value
+  };
+  localStorage.setItem('cp_profile', JSON.stringify(S.profile));
+  updateProfileUI();
+  showToast('✅ Profile saved!');
+}
+function updateProfileUI() {
+  const name = S.profile.name || 'Riyaz Shaik';
+  const ini = name.split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2);
+  document.getElementById('top-av').textContent = ini;
+  document.getElementById('p-av').textContent = ini;
+}
+
+// ── CHIPS ──
+function tog(el) { el.classList.toggle('sel'); }
+function chips(id) { return [...document.querySelectorAll('#' + id + ' .chip.sel')].map(c => c.textContent.trim()).join(', '); }
+
+// ── AI CALL ──
+async function callAI(prompt, outEl, msg = 'Thinking...') {
+  if (!S.apiKey) {
+    outEl.innerHTML = '<div class="err">⚠️ No API key. Add it on Home or Profile page.</div>';
+    return null;
+  }
+  outEl.innerHTML = `<div class="loading"><div class="spin"></div><div class="spin-txt">${msg}</div></div>`;
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'x-api-key': S.apiKey, 'anthropic-version': '2023-06-01', 'anthropic-dangerous-direct-browser-access': 'true' },
+      body: JSON.stringify({ model: 'claude-sonnet-4-5', max_tokens: 1500, messages: [{ role: 'user', content: prompt }] })
+    });
+    if (!res.ok) { const e = await res.json(); outEl.innerHTML = `<div class="err">Error: ${e.error?.message || 'Check API key'}</div>`; return null; }
+    const data = await res.json();
+    return data.content.map(b => b.text || '').join('').replace(/```json|```/g, '').trim();
+  } catch (e) { outEl.innerHTML = '<div class="err">Network error. Check connection.</div>'; return null; }
+}
+
+// ── SUGGEST ──
+async function runSuggest() {
+  const out = document.getElementById('suggest-out');
+  const prompt = `Senior career advisor for India. Recommend 3-4 certifications.
+Profile: ${document.getElementById('s-field').value}, ${document.getElementById('s-exp').value}, Budget: ${document.getElementById('s-budget').value}, Goals: ${chips('s-goals')}.
+Background: ${document.getElementById('s-bg').value}
+Return ONLY valid JSON no markdown:
+{"summary":"2-3 sentence analysis","certifications":[{"name":"Full name","provider":"Org","badge":"Tag","topPick":true,"why":"2 sentences why this fits them","timeToComplete":"X months","avgCost":"₹ range","salaryImpact":"% increase","difficulty":"Beginner/Intermediate/Advanced"}]}`;
+  const raw = await callAI(prompt, out, 'Finding best certifications...');
+  if (!raw) return;
+  try {
+    const d = JSON.parse(raw);
+    let h = `<div class="sbox">${d.summary}</div>`;
+    d.certifications.forEach(c => {
+      const db = c.difficulty === 'Beginner' ? 'bdg-green' : c.difficulty === 'Advanced' ? 'bdg-gold' : 'bdg-gray';
+      h += `<div class="out-card ${c.topPick ? 'top' : ''}">
+        <div class="oc-head"><div><div class="oc-name">${c.name}</div><div class="oc-prov">${c.provider}</div></div>
+        <div class="badges">${c.topPick ? '<span class="bdg bdg-blue">Top</span>' : ''}<span class="bdg ${db}">${c.difficulty}</span></div></div>
+        <div class="oc-body">${c.why}</div>
+        <div class="oc-meta"><span>⏱ <strong>${c.timeToComplete}</strong></span><span>💰 <strong>${c.avgCost}</strong></span><span>📈 <strong>${c.salaryImpact}</strong></span></div>
+      </div>`;
+    });
+    out.innerHTML = h;
+  } catch (e) { out.innerHTML = '<div class="err">Could not parse. Try again.</div>'; }
+}
+
+// ── ROADMAP ──
+async function runRoadmap() {
+  const out = document.getElementById('roadmap-out');
+  const cert = document.getElementById('r-cert').value;
+  if (!cert) { out.innerHTML = '<div class="err">Please select a certification.</div>'; return; }
+  const prompt = `Week-by-week roadmap for: ${cert}. Level: ${document.getElementById('r-level').value}. Time: ${document.getElementById('r-time').value}.
+Return ONLY valid JSON:
+{"overview":"1-2 sentence overview","totalDuration":"X weeks","steps":[{"week":"Week 1-2","title":"Phase","description":"What to do","resources":"Specific resources","hours":"Hrs"}]}
+5-7 phases.`;
+  const raw = await callAI(prompt, out, 'Building your roadmap...');
+  if (!raw) return;
+  try {
+    const d = JSON.parse(raw);
+    let h = `<div class="sbox">${d.overview} <strong>Total: ${d.totalDuration}</strong></div><div class="timeline">`;
+    d.steps.forEach((s, i) => {
+      h += `<div class="t-step"><div class="t-dot">${i + 1}</div>
+        <div class="t-card"><div class="t-week">${s.week}</div><div class="t-title">${s.title}</div>
+        <div class="t-desc">${s.description}</div>
+        <div class="t-foot"><span>📚 ${s.resources}</span><span>⏱ ${s.hours}</span></div></div></div>`;
+    });
+    out.innerHTML = h + '</div>';
+  } catch (e) { out.innerHTML = '<div class="err">Could not parse. Try again.</div>'; }
+}
+
+// ── COMPARE ──
+async function runCompare() {
+  const out = document.getElementById('compare-out');
+  const sel = chips('c-certs');
+  if (!sel) { out.innerHTML = '<div class="err">Select at least 2 certifications.</div>'; return; }
+  const prompt = `Compare for India professional: ${sel}. Background: ${document.getElementById('c-ctx').value}.
+Return ONLY valid JSON:
+{"insight":"2 sentence insight","winner":"short name","certs":[{"name":"short","fullName":"full","cost":"₹","duration":"months","difficulty":"Beginner/Intermediate/Advanced","roiScore":8,"globalRecognition":"High/Medium/Low","bestFor":"1 sentence","pros":"key pro","cons":"key con"}]}`;
+  const raw = await callAI(prompt, out, 'Comparing certifications...');
+  if (!raw) return;
+  try {
+    const d = JSON.parse(raw);
+    let h = `<div class="sbox">${d.insight} <strong>Best: ${d.winner}</strong></div>
+    <div class="ctbl-wrap"><table class="ctbl"><thead><tr><th>Cert</th><th>Cost</th><th>Time</th><th>ROI</th><th>Global</th></tr></thead><tbody>`;
+    d.certs.forEach(c => {
+      const isW = d.winner && d.winner.toLowerCase().includes(c.name.toLowerCase().split(' ')[0]);
+      h += `<tr><td><strong>${c.name}</strong>${isW ? ' <span class="bdg bdg-blue">Best</span>' : ''}</td>
+      <td class="${isW ? 'best-cell' : ''}">${c.cost}</td><td>${c.duration}</td>
+      <td class="${c.roiScore >= 8 ? 'roi-high' : ''}">${c.roiScore}/10</td><td>${c.globalRecognition}</td></tr>`;
+    });
+    h += `</tbody></table></div><div class="mini-grid">`;
+    d.certs.forEach(c => {
+      h += `<div class="mini-c"><div class="mini-c-name">${c.fullName || c.name}</div>
+      <div class="mini-pro">✓ ${c.pros}</div><div class="mini-con">✗ ${c.cons}</div></div>`;
+    });
+    out.innerHTML = h + '</div>';
+  } catch (e) { out.innerHTML = '<div class="err">Could not parse. Try again.</div>'; }
+}
+
+// ── ROI ──
+function calcROI() {
+  const out = document.getElementById('roi-out');
+  const ctc = parseFloat(document.getElementById('roi-ctc').value);
+  const sel = document.getElementById('roi-cert');
+  const opt = sel.options[sel.selectedIndex];
+  if (!ctc || !sel.value) { out.innerHTML = '<div class="err" style="margin-top:12px">Enter your CTC and select a certification.</div>'; return; }
+  const boost = parseFloat(opt.dataset.boost);
+  const cost = parseInt(opt.dataset.cost);
+  const newCtc = (ctc * (1 + boost / 100)).toFixed(1);
+  const gain = ((newCtc - ctc) * 100000).toLocaleString('en-IN');
+  const payback = Math.ceil(cost / ((newCtc - ctc) * 100000 / 12));
+  out.innerHTML = `<div class="roi-result">
+    <div style="font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:4px">Projected New CTC</div>
+    <div class="roi-num">₹${newCtc} LPA</div>
+    <div class="roi-sub">From ₹${ctc} LPA — <strong style="color:var(--accent2)">${boost}% increase</strong> after ${sel.value}</div>
+    <div class="roi-grid">
+      <div class="roi-box"><div class="roi-box-val">+₹${gain}</div><div class="roi-box-lbl">Annual Gain</div></div>
+      <div class="roi-box"><div class="roi-box-val">₹${cost.toLocaleString('en-IN')}</div><div class="roi-box-lbl">Cert Cost</div></div>
+      <div class="roi-box"><div class="roi-box-val">${payback}mo</div><div class="roi-box-lbl">Payback</div></div>
+    </div>
+  </div>`;
+}
+
+// ── TRACKER ──
+async function addTracker() {
+  const cert = document.getElementById('t-cert').value;
+  const examDate = document.getElementById('t-date').value;
+  if (!cert) { showToast('⚠️ Please select a certification'); return; }
+  if (S.trackers[cert]) { showToast('Already tracking this cert!'); return; }
+  const out = document.getElementById('tracker-out');
+  out.innerHTML = '<div class="loading"><div class="spin"></div><div class="spin-txt">Loading milestones...</div></div>';
+  const defaultMs = ['Register and pay for the exam','Complete the official study guide','Watch a full video course','Complete 2 practice tests','Review and revise weak areas','Final mock exam (aim 80%+)','Book your exam slot','Pass the exam! 🎉'];
+  if (!S.apiKey) {
+    S.trackers[cert] = { milestones: defaultMs.map(m => ({ label: m, done: false })), examDate };
+    saveTrackers(); renderTrackers(); return;
+  }
+  const prompt = `List 7-8 specific milestones for someone pursuing "${cert}" certification. Return ONLY valid JSON: {"milestones":["milestone 1","milestone 2",...]}`;
+  const raw = await callAI(prompt, out, 'Loading milestones...');
+  if (!raw) return;
+  try {
+    const d = JSON.parse(raw);
+    S.trackers[cert] = { milestones: d.milestones.map(m => ({ label: m, done: false })), examDate };
+    saveTrackers(); renderTrackers();
+  } catch (e) {
+    S.trackers[cert] = { milestones: defaultMs.map(m => ({ label: m, done: false })), examDate };
+    saveTrackers(); renderTrackers();
+  }
+}
+
+function saveTrackers() { localStorage.setItem('cp_trackers', JSON.stringify(S.trackers)); }
+
+function renderTrackers() {
+  const out = document.getElementById('tracker-out');
+  const keys = Object.keys(S.trackers);
+  if (!keys.length) { out.innerHTML = '<div style="text-align:center;padding:40px 0;color:var(--text3)"><div style="font-size:32px;margin-bottom:8px">📋</div><div style="font-size:13px">No certifications tracked yet</div></div>'; updateDashboard(); return; }
+  let h = '';
+  keys.forEach(name => {
+    const tr = S.trackers[name];
+    const done = tr.milestones.filter(m => m.done).length;
+    const pct = Math.round(done / tr.milestones.length * 100);
+    let cd = '';
+    if (tr.examDate) {
+      const days = Math.ceil((new Date(tr.examDate) - new Date()) / 86400000);
+      cd = `<div class="countdown-row">${days > 0 ? `⏰ <span style="color:var(--gold)">${days} days to exam</span>` : days === 0 ? '🔥 <span style="color:var(--red)">Exam is TODAY!</span>' : `<span style="color:var(--text3)">Exam was ${Math.abs(days)} days ago</span>`}</div>`;
+    }
+    h += `<div class="tr-card"><div class="tr-head"><div class="tr-name">${name}</div><div class="tr-pct">${pct}%</div></div>
+      ${cd}<div class="prog-track"><div class="prog-fill" style="width:${pct}%"></div></div>
+      <div class="ms-list">`;
+    tr.milestones.forEach((m, i) => {
+      h += `<label class="ms-item ${m.done ? 'done' : ''}">
+        <input type="checkbox" ${m.done ? 'checked' : ''} onchange="toggleMs('${name.replace(/'/g, "\\'")}',${i},this.checked)">
+        ${m.label}</label>`;
+    });
+    h += `</div><div class="tr-foot"><span>${done}/${tr.milestones.length} done</span><span class="tr-del" onclick="delTracker('${name.replace(/'/g, "\\'")}')">Remove ×</span></div></div>`;
+  });
+  out.innerHTML = h;
+  updateDashboard();
+}
+
+function toggleMs(cert, idx, checked) { S.trackers[cert].milestones[idx].done = checked; saveTrackers(); renderTrackers(); }
+function delTracker(cert) { if (confirm(`Remove "${cert}"?`)) { delete S.trackers[cert]; saveTrackers(); renderTrackers(); } }
+
+// ── CHAT ──
+async function sendChat() {
+  const q = document.getElementById('chat-q').value.trim();
+  if (!q) return;
+  document.getElementById('chat-q').value = '';
+  const msgs = document.getElementById('chat-msgs');
+  msgs.innerHTML += `<div class="msg"><div class="msg-av user">${(S.profile.name || 'R')[0]}</div><div class="msg-bubble u">${q}</div></div>`;
+  msgs.innerHTML += `<div class="msg" id="ai-typing"><div class="msg-av ai">AI</div><div class="msg-bubble" style="color:var(--text3)">...</div></div>`;
+  msgs.scrollTop = msgs.scrollHeight;
+  if (!S.apiKey) { document.getElementById('ai-typing').querySelector('.msg-bubble').textContent = '⚠️ Add API key on Home page to use AI Chat.'; return; }
+  S.chat.push({ role: 'user', content: q });
+  const sys = `You are an expert career coach for sales professionals in India. User: ${S.profile.name || 'Riyaz'}, background: ${S.profile.bio || '12+ yrs B2B SaaS sales'}. Be concise, direct, actionable. Max 3-4 sentences.`;
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'x-api-key': S.apiKey, 'anthropic-version': '2023-06-01', 'anthropic-dangerous-direct-browser-access': 'true' },
+      body: JSON.stringify({ model: 'claude-sonnet-4-5', max_tokens: 400, system: sys, messages: S.chat.slice(-10) })
+    });
+    const data = await res.json();
+    const reply = data.content.map(b => b.text || '').join('');
+    S.chat.push({ role: 'assistant', content: reply });
+    document.getElementById('ai-typing').innerHTML = `<div class="msg-av ai">AI</div><div class="msg-bubble">${reply}</div>`;
+  } catch (e) { document.getElementById('ai-typing').querySelector('.msg-bubble').textContent = 'Network error. Try again.'; }
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+// ── OFFLINE ──
+window.addEventListener('online', () => showToast('✅ Back online'));
+window.addEventListener('offline', () => showToast('📴 You are offline'));
 </script>
-
 </body>
 </html>
