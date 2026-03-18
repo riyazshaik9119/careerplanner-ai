@@ -1,0 +1,6 @@
+{
+  "name": "careerplanner-functions",
+  "version": "1.0.0",
+  "description": "CareerPlanner AI serverless functions",
+  "main": "ai.js"
+}
