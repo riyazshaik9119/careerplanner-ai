@@ -1,658 +1,234 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CareerPlanner AI — From Confusion to Clarity</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Aspira</title>
+
+<style>
+body {
+  margin:0;
+  font-family: 'Segoe UI', sans-serif;
+  background:#f8fafc;
+  color:#0f172a;
+}
+
+.container {
+  display:flex;
+  height:100vh;
+}
+
+/* Sidebar */
+.sidebar {
+  width:220px;
+  background:white;
+  border-right:1px solid #e5e7eb;
+  padding:16px;
+}
+
+.sidebar h2 {
+  margin-bottom:20px;
+}
+
+.nav-item {
+  padding:10px;
+  margin-bottom:8px;
+  cursor:pointer;
+  border-radius:8px;
+}
+
+.nav-item:hover {
+  background:#f1f5f9;
+}
+
+/* Main */
+.main {
+  flex:1;
+  padding:20px;
+  overflow-y:auto;
+}
+
+/* Right panel */
+.right {
+  width:260px;
+  background:white;
+  border-left:1px solid #e5e7eb;
+  padding:16px;
+}
+
+/* Cards */
+.card {
+  background:white;
+  border-radius:14px;
+  padding:16px;
+  margin-bottom:16px;
+  box-shadow:0 4px 12px rgba(0,0,0,0.05);
+}
+
+.button {
+  padding:10px 16px;
+  border:none;
+  border-radius:8px;
+  background:linear-gradient(135deg,#3b82f6,#2563eb);
+  color:white;
+  cursor:pointer;
+}
+
+.input {
+  width:100%;
+  padding:10px;
+  margin-bottom:12px;
+  border-radius:8px;
+  border:1px solid #e5e7eb;
+}
+
+/* Center landing */
+.center {
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  height:100vh;
+}
+
+.hidden {
+  display:none;
+}
+</style>
 </head>
+
 <body>
 
-<nav>
-  <div class="logo">
-    <div class="logo-dot"></div>
-    CareerPlanner AI
-  </div>
-  <div class="nav-links">
-    <button class="nav-link active" onclick="show('home')">Home</button>
-    <button class="nav-link" onclick="show('roadmap')">AI Roadmap</button>
-    <button class="nav-link" onclick="show('dashboard')">Dashboard</button>
-    <button class="nav-link" onclick="show('mentors')">Mentors</button>
-    <button class="nav-link" onclick="show('institutions')">Institutions</button>
-    <button class="nav-link" onclick="show('admin')">Admin</button>
-    <button class="nav-link" onclick="show('auth')">Login</button>
-  </div>
-  <div class="nav-right">
-    <button class="theme-btn" onclick="toggleTheme()" id="theme-btn" title="Toggle theme">☀</button>
-    <button class="btn btn-primary" onclick="show('auth')">Get Started</button>
-  </div>
-</nav>
+<div id="app"></div>
 
-<!-- HOME -->
-<section id="home" class="active">
-  <div class="hero">
-    <div class="hero-badge">
-      <svg width="12" height="12" stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
-      India's Career Decision Engine
-    </div>
-    <h1>From <em>Confusion</em><br>to <span class="serif" style="font-style:italic">Clarity</span></h1>
-    <p>AI-powered career roadmaps that guide you through the decisions that define the next 20–30 years of your life.</p>
-    <div class="hero-btns">
-      <button class="btn btn-primary" onclick="show('roadmap')">Generate My Roadmap</button>
-      <button class="btn btn-outline" onclick="show('dashboard')">View Dashboard</button>
-    </div>
-    <div class="stats-row">
-      <div class="stat-cell">
-        <div class="stat-num">50K+</div>
-        <div class="stat-lbl">Students Guided</div>
-      </div>
-      <div class="stat-cell">
-        <div class="stat-num">200+</div>
-        <div class="stat-lbl">Expert Mentors</div>
-      </div>
-      <div class="stat-cell">
-        <div class="stat-num">95%</div>
-        <div class="stat-lbl">Clarity Rate</div>
-      </div>
+<script>
+let AppState = JSON.parse(localStorage.getItem("aspira")) || {
+  user: {},
+  currentPage: "landing"
+};
+
+function save() {
+  localStorage.setItem("aspira", JSON.stringify(AppState));
+}
+
+/* ROUTER */
+function navigate(page) {
+  AppState.currentPage = page;
+  save();
+  render();
+}
+
+/* LANDING */
+function landing() {
+  return `
+  <div class="center">
+    <div class="card" style="width:400px;text-align:center">
+      <h2>Aspira</h2>
+      <p>We help you find your path</p>
+      <input class="input" placeholder="Name" id="name"/>
+      <button class="button" onclick="start()">Get Started</button>
     </div>
   </div>
+  `;
+}
 
-  <div style="max-width:960px;margin:0 auto;padding:0 28px 0">
-    <div style="text-align:center;margin-bottom:36px">
-      <div class="sec-tag">Platform Features</div>
-      <h2 style="font-size:clamp(22px,3.5vw,34px);font-weight:300;letter-spacing:-1px;color:var(--text)">Everything you need to plan your career</h2>
-    </div>
-  </div>
+function start(){
+  AppState.user.name = document.getElementById("name").value;
+  navigate("profile");
+}
 
-  <div class="cards-grid">
-    <div class="card" onclick="show('roadmap')" style="cursor:pointer">
-      <div class="card-icon">
-        <svg viewBox="0 0 24 24"><path d="M3 3v18h18"/><polyline points="7 16 11 12 15 16 21 10"/></svg>
-      </div>
-      <h3>AI Roadmap Generator</h3>
-      <p>Get a personalised 20-year career roadmap based on your goals, current stage, and aspirations.</p>
-      <span class="card-badge">Phase 1 — Live</span>
-    </div>
-    <div class="card" onclick="show('mentors')" style="cursor:pointer">
-      <div class="card-icon">
-        <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-      </div>
-      <h3>Mentor Marketplace</h3>
-      <p>Book 1-on-1 sessions with industry professionals who have walked the path you're aiming for.</p>
-      <span class="card-badge">Phase 2 — Coming Soon</span>
-    </div>
-    <div class="card" onclick="show('institutions')" style="cursor:pointer">
-      <div class="card-icon">
-        <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-      </div>
-      <h3>Institution Marketplace</h3>
-      <p>Institutions discover high-intent students. Students find programs aligned with their career goals.</p>
-      <span class="card-badge">Phase 3 — Upcoming</span>
-    </div>
+/* PROFILE */
+function profile(){
+  return layout(`
     <div class="card">
-      <div class="card-icon">
-        <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-      </div>
-      <h3>Verified Reviews</h3>
-      <p>Real student reviews of institutions and mentors — building trust and transparency in career guidance.</p>
-      <span class="card-badge">Phase 4 — Upcoming</span>
+      <h3>Build Profile</h3>
+      <input class="input" placeholder="Education" id="edu"/>
+      <input class="input" placeholder="Goal (e.g Data Analyst)" id="goal"/>
+      <button class="button" onclick="saveProfile()">Continue</button>
     </div>
-    <div class="card" onclick="show('dashboard')" style="cursor:pointer">
-      <div class="card-icon">
-        <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
-      </div>
-      <h3>Progress Tracking</h3>
-      <p>Daily plans, streak system, milestone tracking — stay on course toward your long-term career goals.</p>
-      <span class="card-badge">Phase 1 — Live</span>
-    </div>
+  `);
+}
+
+function saveProfile(){
+  AppState.user.education = document.getElementById("edu").value;
+  AppState.user.goal = document.getElementById("goal").value;
+  navigate("assessment");
+}
+
+/* ASSESSMENT */
+function assessment(){
+  return layout(`
     <div class="card">
-      <div class="card-icon">
-        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-      </div>
-      <h3>Smart Reminders</h3>
-      <p>Daily nudges, weekly progress reports, and milestone celebrations keep you accountable and motivated.</p>
-      <span class="card-badge">Phase 1 — Live</span>
+      <h3>Quick Assessment</h3>
+      <p>Do you enjoy solving problems?</p>
+      <button class="button" onclick="finishAssessment()">Yes</button>
     </div>
-  </div>
+  `);
+}
 
-  <div style="max-width:960px;margin:48px auto 0;padding:0 28px">
-    <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);padding:36px;text-align:center">
-      <div class="sec-tag" style="margin-bottom:12px">Product Roadmap</div>
-      <h2 style="font-size:22px;font-weight:400;color:var(--text);margin-bottom:28px">How we're building it</h2>
-      <div class="phases-steps" style="padding:0;text-align:left">
-        <div class="phase-step">
-          <div class="step-num step-green">1</div>
-          <div class="step-content">
-            <span class="step-phase-tag" style="background:#DCFCE7;color:#166534">Live Now</span>
-            <h3>AI Career Guidance MVP</h3>
-            <p>Students sign up, select their goals, and get an AI-generated 20–30 year roadmap. Download as PDF or receive via email.</p>
-          </div>
-        </div>
-        <div class="phase-step">
-          <div class="step-num step-yellow">2</div>
-          <div class="step-content">
-            <span class="step-phase-tag" style="background:#FEF9C3;color:#854D0E">In Progress</span>
-            <h3>Mentor Marketplace</h3>
-            <p>Book sessions with verified mentors. Chat guidance, paid sessions, and a commission-based model for mentors.</p>
-          </div>
-        </div>
-        <div class="phase-step">
-          <div class="step-num step-red">3</div>
-          <div class="step-content">
-            <span class="step-phase-tag" style="background:#FEE2E2;color:#991B1B">Upcoming</span>
-            <h3>Institution Marketplace</h3>
-            <p>Consent-based student data marketplace. Institutions see demand signals and connect with high-intent students.</p>
-          </div>
-        </div>
-        <div class="phase-step" style="border-bottom:none">
-          <div class="step-num step-purple">4</div>
-          <div class="step-content">
-            <span class="step-phase-tag" style="background:#EDE9FE;color:#5B21B6">Future</span>
-            <h3>Trust & Review Platform</h3>
-            <p>Verified student reviews of institutions and mentors. Building the trust layer for India's career guidance ecosystem.</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
+function finishAssessment(){
+  AppState.user.ready = true;
+  navigate("dashboard");
+}
 
-<!-- ROADMAP -->
-<section id="roadmap">
-  <div class="sec-head">
-    <div class="sec-tag">AI Roadmap Generator</div>
-    <h2>What's your career goal?</h2>
-    <p>Select your target role and current stage. Our AI will generate a personalised 20–30 year roadmap for you.</p>
-  </div>
-  <div class="roadmap-container">
-    <div class="goal-select-grid" id="goal-grid">
-      <div class="goal-chip" onclick="selectGoal(this,'Data Analyst')">Data Analyst</div>
-      <div class="goal-chip" onclick="selectGoal(this,'Software Engineer')">Software Engineer</div>
-      <div class="goal-chip" onclick="selectGoal(this,'Product Manager')">Product Manager</div>
-      <div class="goal-chip" onclick="selectGoal(this,'CEO / Founder')">CEO / Founder</div>
-      <div class="goal-chip" onclick="selectGoal(this,'HR Head')">HR Head</div>
-      <div class="goal-chip" onclick="selectGoal(this,'Banker')">Banker</div>
-      <div class="goal-chip" onclick="selectGoal(this,'Doctor')">Doctor</div>
-      <div class="goal-chip" onclick="selectGoal(this,'Civil Services')">Civil Services</div>
+/* DASHBOARD */
+function dashboard(){
+  return layout(`
+    <div class="card">
+      <h2>Hello ${AppState.user.name}</h2>
+      <p>You are on: ${AppState.user.goal} path</p>
     </div>
 
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:24px">
-      <div>
-        <div class="form-label">Current Stage</div>
-        <select class="form-input" id="stage-select">
-          <option>After 10th</option>
-          <option>After Intermediate (12th)</option>
-          <option>During Degree</option>
-          <option>After Degree / B.Tech</option>
-          <option>Working Professional</option>
-        </select>
+    <div class="card">
+      <h3>Today's Task</h3>
+      <p>Learn basics</p>
+      <button class="button">Mark Complete</button>
+    </div>
+  `);
+}
+
+/* LAYOUT */
+function layout(content){
+  return `
+  <div class="container">
+
+    <div class="sidebar">
+      <h2>Aspira</h2>
+      <div class="nav-item" onclick="navigate('dashboard')">Home</div>
+      <div class="nav-item" onclick="navigate('assessment')">Assessment</div>
+    </div>
+
+    <div class="main">
+      ${content}
+    </div>
+
+    <div class="right">
+      <div class="card">
+        <h4>Next Step</h4>
+        <p>Complete task</p>
       </div>
-      <div>
-        <div class="form-label">Open to opportunities?</div>
-        <select class="form-input">
-          <option>Yes, show me alternatives</option>
-          <option>No, focused on my goal</option>
-        </select>
+
+      <div class="card">
+        <h4>Motivation</h4>
+        <p>Stay consistent</p>
       </div>
     </div>
 
-    <button class="generate-btn" onclick="generateRoadmap()">Generate My Career Roadmap</button>
+  </div>
+  `;
+}
 
-    <div class="roadmap-output" id="roadmap-output">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:12px">
-        <div>
-          <div id="roadmap-title" style="font-size:18px;font-weight:500;color:var(--text)">Your Roadmap</div>
-          <div id="roadmap-sub" style="font-size:13px;color:var(--text3)">Personalised 20-year career path</div>
-        </div>
-        <div style="display:flex;gap:8px">
-          <button class="btn btn-outline" style="font-size:12px;padding:7px 14px">Download PDF</button>
-          <button class="btn btn-outline" style="font-size:12px;padding:7px 14px">Email Me</button>
-        </div>
-      </div>
-      <div class="phases-wrap">
-        <div class="phases" id="phases-content"></div>
-      </div>
-      <div style="margin-top:16px;padding:16px;background:var(--blue-light);border:1px solid rgba(26,111,224,0.15);border-radius:var(--r);font-size:13px;color:var(--blue)">
-        <strong style="font-weight:500">Alternative path:</strong> Based on your profile, you may also consider transitioning to Business Intelligence or Machine Learning Engineering after your foundation phase.
-      </div>
-    </div>
-  </div>
-</section>
+/* RENDER */
+function render(){
+  const app = document.getElementById("app");
 
-<!-- DASHBOARD -->
-<section id="dashboard">
-  <div class="sec-head">
-    <div class="sec-tag">Student Dashboard</div>
-    <h2>Your Learning Hub</h2>
-    <p>Track your progress, daily plan, and career milestones all in one place.</p>
-  </div>
-  <div style="padding:0 28px;max-width:960px;margin:0 auto">
-    <div class="dash-layout">
-      <div class="dash-sidebar">
-        <div class="dash-nav-section">Main</div>
-        <div class="dash-nav-item active" onclick="switchDash(this)">
-          <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
-          Overview
-        </div>
-        <div class="dash-nav-item" onclick="switchDash(this)">
-          <svg viewBox="0 0 24 24"><path d="M3 3v18h18"/><polyline points="7 16 11 12 15 16 21 10"/></svg>
-          My Roadmap
-        </div>
-        <div class="dash-nav-item" onclick="switchDash(this)">
-          <svg viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
-          Courses
-        </div>
-        <div class="dash-nav-item" onclick="switchDash(this)">
-          <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
-          Streak
-        </div>
-        <div class="dash-nav-section">Connect</div>
-        <div class="dash-nav-item" onclick="show('mentors')">
-          <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
-          My Mentor
-        </div>
-        <div class="dash-nav-item" onclick="switchDash(this)">
-          <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-          Messages
-        </div>
-        <div class="dash-nav-section">Account</div>
-        <div class="dash-nav-item" onclick="switchDash(this)">
-          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 1v4m0 14v4M4.22 4.22l2.83 2.83m9.9 9.9 2.83 2.83M1 12h4m14 0h4M4.22 19.78l2.83-2.83m9.9-9.9 2.83-2.83"/></svg>
-          Settings
-        </div>
-      </div>
-      <div class="dash-main">
-        <div class="dash-greeting">Good morning, Arjun 👋</div>
-        <div class="dash-sub">Day 47 of your Data Analyst journey</div>
-        <div class="metrics-row">
-          <div class="metric">
-            <div class="metric-val">47</div>
-            <div class="metric-lbl">Day Streak</div>
-            <div class="metric-change">▲ Personal best</div>
-          </div>
-          <div class="metric">
-            <div class="metric-val">68%</div>
-            <div class="metric-lbl">Phase 1 Done</div>
-            <div class="metric-change">▲ +12% this week</div>
-          </div>
-          <div class="metric">
-            <div class="metric-val">3</div>
-            <div class="metric-lbl">Active Courses</div>
-            <div class="metric-change" style="color:var(--text3)">On schedule</div>
-          </div>
-        </div>
-        <div class="progress-section">
-          <div class="progress-label"><span>Foundation Phase (0–2 years)</span><span>68%</span></div>
-          <div class="progress-bar"><div class="progress-fill" style="width:68%"></div></div>
-        </div>
-        <div class="progress-section">
-          <div class="progress-label"><span>SQL Mastery</span><span>82%</span></div>
-          <div class="progress-bar"><div class="progress-fill" style="width:82%"></div></div>
-        </div>
-        <div class="progress-section">
-          <div class="progress-label"><span>Python for Data</span><span>45%</span></div>
-          <div class="progress-bar"><div class="progress-fill" style="width:45%"></div></div>
-        </div>
-        <div style="font-size:13px;font-weight:500;color:var(--text);margin:16px 0 10px">Today's Activity</div>
-        <div class="activity-list">
-          <div class="activity-item">
-            <div class="activity-dot" style="background:#22c55e"></div>
-            <span>Completed: SQL Joins — Advanced</span>
-            <span class="activity-time">2h ago</span>
-          </div>
-          <div class="activity-item">
-            <div class="activity-dot"></div>
-            <span>Up next: Python Pandas — Data Wrangling</span>
-            <span class="activity-time">Now</span>
-          </div>
-          <div class="activity-item">
-            <div class="activity-dot" style="background:var(--border2)"></div>
-            <span>Scheduled: Mentor call with Priya S.</span>
-            <span class="activity-time">5 PM</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
+  if(AppState.currentPage === "landing") app.innerHTML = landing();
+  if(AppState.currentPage === "profile") app.innerHTML = profile();
+  if(AppState.currentPage === "assessment") app.innerHTML = assessment();
+  if(AppState.currentPage === "dashboard") app.innerHTML = dashboard();
+}
 
-<!-- MENTORS -->
-<section id="mentors">
-  <div class="sec-head">
-    <div class="sec-tag">Mentor Marketplace</div>
-    <h2>Learn from people who've been there</h2>
-    <p>Book 1-on-1 sessions with verified industry mentors. Paid sessions, real guidance.</p>
-  </div>
-  <div class="mentors-grid">
-    <div class="mentor-card">
-      <div class="mentor-avatar">PS</div>
-      <div class="mentor-name">Priya Sharma</div>
-      <div class="mentor-role">Senior Data Analyst · Google</div>
-      <div class="mentor-tags">
-        <span class="mentor-tag">SQL</span>
-        <span class="mentor-tag">Python</span>
-        <span class="mentor-tag">Career Switch</span>
-      </div>
-      <div class="mentor-footer">
-        <div><div class="stars">★★★★★</div><div style="font-size:11px;color:var(--text3)">4.9 · 128 sessions</div></div>
-        <button class="book-btn">Book ₹799/hr</button>
-      </div>
-    </div>
-    <div class="mentor-card">
-      <div class="mentor-avatar" style="background:linear-gradient(135deg,#7C3AED,#EC4899)">RK</div>
-      <div class="mentor-name">Rahul Kumar</div>
-      <div class="mentor-role">Product Manager · Swiggy</div>
-      <div class="mentor-tags">
-        <span class="mentor-tag">Product Strategy</span>
-        <span class="mentor-tag">B2C</span>
-      </div>
-      <div class="mentor-footer">
-        <div><div class="stars">★★★★★</div><div style="font-size:11px;color:var(--text3)">4.8 · 96 sessions</div></div>
-        <button class="book-btn">Book ₹999/hr</button>
-      </div>
-    </div>
-    <div class="mentor-card">
-      <div class="mentor-avatar" style="background:linear-gradient(135deg,#059669,#10B981)">AM</div>
-      <div class="mentor-name">Ananya Mishra</div>
-      <div class="mentor-role">UPSC Mentor · IAS 2018</div>
-      <div class="mentor-tags">
-        <span class="mentor-tag">Civil Services</span>
-        <span class="mentor-tag">Strategy</span>
-        <span class="mentor-tag">GS</span>
-      </div>
-      <div class="mentor-footer">
-        <div><div class="stars">★★★★★</div><div style="font-size:11px;color:var(--text3)">5.0 · 204 sessions</div></div>
-        <button class="book-btn">Book ₹1499/hr</button>
-      </div>
-    </div>
-    <div class="mentor-card">
-      <div class="mentor-avatar" style="background:linear-gradient(135deg,#D97706,#F59E0B)">VR</div>
-      <div class="mentor-name">Vikram Reddy</div>
-      <div class="mentor-role">CTO · Series B Startup</div>
-      <div class="mentor-tags">
-        <span class="mentor-tag">Engineering</span>
-        <span class="mentor-tag">Leadership</span>
-        <span class="mentor-tag">Startup</span>
-      </div>
-      <div class="mentor-footer">
-        <div><div class="stars">★★★★☆</div><div style="font-size:11px;color:var(--text3)">4.7 · 72 sessions</div></div>
-        <button class="book-btn">Book ₹1999/hr</button>
-      </div>
-    </div>
-  </div>
-</section>
+render();
+</script>
 
-<!-- INSTITUTIONS -->
-<section id="institutions">
-  <div class="sec-head">
-    <div class="sec-tag">Institution Dashboard</div>
-    <h2>Student Demand Intelligence</h2>
-    <p>See real-time demand signals from high-intent students. Connect with the ones who match your programs.</p>
-  </div>
-  <div class="inst-dash">
-    <div class="inst-metrics">
-      <div class="metric">
-        <div class="metric-val">2,847</div>
-        <div class="metric-lbl">High-intent students this month</div>
-        <div class="metric-change">▲ +18% vs last month</div>
-      </div>
-      <div class="metric">
-        <div class="metric-val">64%</div>
-        <div class="metric-lbl">Match your programs</div>
-      </div>
-      <div class="metric">
-        <div class="metric-val">12</div>
-        <div class="metric-lbl">Pending lead requests</div>
-        <div class="metric-change" style="color:#F59E0B">▲ Action needed</div>
-      </div>
-      <div class="metric">
-        <div class="metric-val">₹4.2L</div>
-        <div class="metric-lbl">Revenue from leads</div>
-        <div class="metric-change">▲ This quarter</div>
-      </div>
-    </div>
-    <div class="inst-table">
-      <div class="inst-table-head">
-        <span>Course / Field</span>
-        <span>Demand</span>
-        <span>Students</span>
-        <span>Status</span>
-      </div>
-      <div class="inst-table-row">
-        <span style="font-weight:500">Data Science & Analytics</span>
-        <div><div class="demand-bar"><div class="demand-fill" style="width:90%"></div></div></div>
-        <span>1,240</span>
-        <span><span class="status-chip status-high">High</span></span>
-      </div>
-      <div class="inst-table-row">
-        <span style="font-weight:500">Software Engineering</span>
-        <div><div class="demand-bar"><div class="demand-fill" style="width:75%"></div></div></div>
-        <span>890</span>
-        <span><span class="status-chip status-high">High</span></span>
-      </div>
-      <div class="inst-table-row">
-        <span style="font-weight:500">MBA / Management</span>
-        <div><div class="demand-bar"><div class="demand-fill" style="width:58%"></div></div></div>
-        <span>632</span>
-        <span><span class="status-chip status-med">Medium</span></span>
-      </div>
-      <div class="inst-table-row">
-        <span style="font-weight:500">Civil Services Prep</span>
-        <div><div class="demand-bar"><div class="demand-fill" style="width:45%"></div></div></div>
-        <span>410</span>
-        <span><span class="status-chip status-med">Medium</span></span>
-      </div>
-      <div class="inst-table-row">
-        <span style="font-weight:500">Medical / NEET</span>
-        <div><div class="demand-bar"><div class="demand-fill" style="width:28%"></div></div></div>
-        <span>185</span>
-        <span><span class="status-chip status-low">Low</span></span>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ADMIN -->
-<section id="admin">
-  <div class="sec-head">
-    <div class="sec-tag">Admin Panel</div>
-    <h2>Platform Control Centre</h2>
-    <p>Manage users, approve institutions, assign mentors and monitor platform health.</p>
-  </div>
-  <div class="admin-layout">
-    <div class="metrics-row" style="margin-bottom:20px">
-      <div class="metric">
-        <div class="metric-val">50,284</div>
-        <div class="metric-lbl">Total Users</div>
-        <div class="metric-change">▲ +340 today</div>
-      </div>
-      <div class="metric">
-        <div class="metric-val">214</div>
-        <div class="metric-lbl">Active Mentors</div>
-      </div>
-      <div class="metric">
-        <div class="metric-val">89</div>
-        <div class="metric-lbl">Institutions</div>
-        <div class="metric-change" style="color:#F59E0B">7 pending</div>
-      </div>
-    </div>
-    <div class="admin-cards">
-      <div class="admin-card">
-        <div class="admin-card-head">
-          <div class="admin-card-title">Pending Institution Approvals</div>
-          <span class="status-chip status-med" style="font-size:11px">7 pending</span>
-        </div>
-        <div class="admin-action-list">
-          <div class="admin-action-row">
-            <div class="activity-dot" style="background:var(--blue)"></div>
-            <span class="action-name">NIIT Technologies, Hyderabad</span>
-            <button class="admin-action-btn approve-btn">Approve</button>
-            <button class="admin-action-btn reject-btn">Reject</button>
-          </div>
-          <div class="admin-action-row">
-            <div class="activity-dot" style="background:var(--blue)"></div>
-            <span class="action-name">Manipal Academy, Bengaluru</span>
-            <button class="admin-action-btn approve-btn">Approve</button>
-            <button class="admin-action-btn reject-btn">Reject</button>
-          </div>
-          <div class="admin-action-row">
-            <div class="activity-dot" style="background:var(--blue)"></div>
-            <span class="action-name">Upgrad Institute, Mumbai</span>
-            <button class="admin-action-btn approve-btn">Approve</button>
-            <button class="admin-action-btn reject-btn">Reject</button>
-          </div>
-        </div>
-      </div>
-      <div class="admin-card">
-        <div class="admin-card-head">
-          <div class="admin-card-title">Mentor Requests</div>
-          <span class="status-chip status-high" style="font-size:11px">4 new</span>
-        </div>
-        <div class="admin-action-list">
-          <div class="admin-action-row">
-            <div class="activity-dot" style="background:#7C3AED"></div>
-            <span class="action-name">Suresh Naidu — ML Engineer</span>
-            <button class="admin-action-btn approve-btn">Approve</button>
-            <button class="admin-action-btn reject-btn">Reject</button>
-          </div>
-          <div class="admin-action-row">
-            <div class="activity-dot" style="background:#7C3AED"></div>
-            <span class="action-name">Kavita Rao — HR Director</span>
-            <button class="admin-action-btn approve-btn">Approve</button>
-            <button class="admin-action-btn reject-btn">Reject</button>
-          </div>
-          <div class="admin-action-row">
-            <div class="activity-dot" style="background:#7C3AED"></div>
-            <span class="action-name">Arun Mehta — Finance Expert</span>
-            <button class="admin-action-btn approve-btn">Approve</button>
-            <button class="admin-action-btn reject-btn">Reject</button>
-          </div>
-        </div>
-      </div>
-      <div class="admin-card">
-        <div class="admin-card-head">
-          <div class="admin-card-title">Review Moderation</div>
-          <span class="status-chip status-low" style="font-size:11px">2 flagged</span>
-        </div>
-        <div class="admin-action-list">
-          <div class="admin-action-row">
-            <div class="activity-dot" style="background:#EF4444"></div>
-            <span class="action-name">Review flagged — NIIT course</span>
-            <button class="admin-action-btn approve-btn">Keep</button>
-            <button class="admin-action-btn reject-btn">Remove</button>
-          </div>
-          <div class="admin-action-row">
-            <div class="activity-dot" style="background:#EF4444"></div>
-            <span class="action-name">Review flagged — Mentor session</span>
-            <button class="admin-action-btn approve-btn">Keep</button>
-            <button class="admin-action-btn reject-btn">Remove</button>
-          </div>
-        </div>
-      </div>
-      <div class="admin-card">
-        <div class="admin-card-head">
-          <div class="admin-card-title">Platform Health</div>
-          <span style="font-size:11px;color:#22c55e;font-weight:500">● All systems live</span>
-        </div>
-        <div style="display:flex;flex-direction:column;gap:10px">
-          <div class="progress-section" style="margin:0">
-            <div class="progress-label" style="font-size:12px"><span>AI Roadmap API</span><span style="color:#22c55e">99.8%</span></div>
-            <div class="progress-bar"><div class="progress-fill" style="width:99.8%;background:#22c55e"></div></div>
-          </div>
-          <div class="progress-section" style="margin:0">
-            <div class="progress-label" style="font-size:12px"><span>Email / Reminders</span><span style="color:#22c55e">99.1%</span></div>
-            <div class="progress-bar"><div class="progress-fill" style="width:99.1%;background:#22c55e"></div></div>
-          </div>
-          <div class="progress-section" style="margin:0">
-            <div class="progress-label" style="font-size:12px"><span>Payment Gateway</span><span style="color:#F59E0B">97.4%</span></div>
-            <div class="progress-bar"><div class="progress-fill" style="width:97.4%;background:#F59E0B"></div></div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- AUTH -->
-<section id="auth">
-  <div class="auth-wrap">
-    <div class="auth-left">
-      <div class="sec-tag">Join CareerPlanner AI</div>
-      <h2>Start your career<br>journey today</h2>
-      <p>Join 50,000+ students who are no longer confused about their career path.</p>
-      <div class="auth-feature">
-        <div class="auth-feature-icon"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
-        AI-generated 20-year personalised roadmap
-      </div>
-      <div class="auth-feature">
-        <div class="auth-feature-icon"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
-        Download as PDF or receive via email
-      </div>
-      <div class="auth-feature">
-        <div class="auth-feature-icon"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
-        Access to mentors and institutions
-      </div>
-      <div class="auth-feature">
-        <div class="auth-feature-icon"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
-        Daily progress tracking and streak system
-      </div>
-    </div>
-    <div class="auth-card">
-      <div class="auth-tabs">
-        <button class="auth-tab active" onclick="switchTab(this,'signup')">Sign Up</button>
-        <button class="auth-tab" onclick="switchTab(this,'login')">Log In</button>
-      </div>
-      <div id="signup-form">
-        <div class="form-group">
-          <label class="form-label">Full Name</label>
-          <input class="form-input" type="text" placeholder="Arjun Sharma">
-        </div>
-        <div class="form-group">
-          <label class="form-label">Email Address</label>
-          <input class="form-input" type="email" placeholder="arjun@example.com">
-        </div>
-        <div class="form-group">
-          <label class="form-label">Password</label>
-          <input class="form-input" type="password" placeholder="Create a strong password">
-        </div>
-        <div class="form-label" style="margin-bottom:8px">I am a...</div>
-        <div class="role-grid" id="role-grid">
-          <div class="role-chip selected" onclick="selectRole(this)">Student</div>
-          <div class="role-chip" onclick="selectRole(this)">Mentor</div>
-          <div class="role-chip" onclick="selectRole(this)">Institution</div>
-          <div class="role-chip" onclick="selectRole(this)">Admin</div>
-        </div>
-        <button class="form-submit" onclick="show('dashboard')">Create Account →</button>
-        <div class="divider">or</div>
-        <button class="google-btn">
-          <svg width="16" height="16" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
-          Continue with Google
-        </button>
-      </div>
-      <div id="login-form" style="display:none">
-        <div class="form-group">
-          <label class="form-label">Email Address</label>
-          <input class="form-input" type="email" placeholder="arjun@example.com">
-        </div>
-        <div class="form-group">
-          <label class="form-label">Password</label>
-          <input class="form-input" type="password" placeholder="Your password">
-        </div>
-        <div style="text-align:right;margin-bottom:16px;font-size:12px;color:var(--blue);cursor:pointer">Forgot password?</div>
-        <button class="form-submit" onclick="show('dashboard')">Log In →</button>
-        <div class="divider">or</div>
-        <button class="google-btn">
-          <svg width="16" height="16" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
-          Continue with Google
-        </button>
-      </div>
-    </div>
-  </div>
-</section>
-
-<script src="app.js"></script>
 </body>
 </html>

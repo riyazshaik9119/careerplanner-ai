@@ -1,0 +1,100 @@
+import { useState } from "react";
+
+export default function App() {
+  const [page, setPage] = useState("home");
+
+  return (
+    <div className="min-h-screen bg-slate-50 p-6">
+
+      {page === "home" && (
+        <div className="flex flex-col items-center justify-center h-screen">
+          <h1 className="text-3xl font-bold mb-4 text-center">
+            Stop guessing your future.
+          </h1>
+          <h2 className="text-2xl text-sky-500 mb-4">
+            Start designing it.
+          </h2>
+
+          <p className="text-gray-500 mb-6">
+            Design your career with the help of AI.
+          </p>
+
+          <div className="flex gap-4">
+            <button
+              onClick={() => setPage("dashboard")}
+              className="bg-sky-400 text-white px-6 py-3 rounded-xl"
+            >
+              Sign Up
+            </button>
+
+            <button
+              onClick={() => setPage("dashboard")}
+              className="border px-6 py-3 rounded-xl"
+            >
+              Log In
+            </button>
+          </div>
+        </div>
+      )}
+
+      {page === "dashboard" && (
+        <div className="flex flex-col items-center mt-20 gap-6">
+          <h1 className="text-2xl font-semibold">Welcome</h1>
+
+          <button
+            onClick={() => setPage("career")}
+            className="bg-sky-400 text-white px-6 py-3 rounded-xl w-60"
+          >
+            Career
+          </button>
+
+          <button className="border px-6 py-3 rounded-xl w-60">
+            Mentor (Coming Soon)
+          </button>
+
+          <button className="border px-6 py-3 rounded-xl w-60">
+            Institution (Coming Soon)
+          </button>
+        </div>
+      )}
+
+      {page === "career" && (
+        <div className="max-w-md mx-auto mt-10">
+          <h2 className="text-xl font-semibold mb-4">
+            Tell us about your background
+          </h2>
+
+          <select className="w-full p-3 border rounded mb-4">
+            <option>Select your stage</option>
+            <option>10th</option>
+            <option>Intermediate</option>
+            <option>Graduate</option>
+            <option>Working Professional</option>
+          </select>
+
+          <select className="w-full p-3 border rounded mb-4">
+            <option>Select path</option>
+            <option>B.Tech</option>
+            <option>MBBS</option>
+            <option>Degree</option>
+            <option>Diploma</option>
+          </select>
+
+          <select className="w-full p-3 border rounded mb-4">
+            <option>Select stream</option>
+            <option>CSE</option>
+            <option>ECE</option>
+            <option>Mechanical</option>
+          </select>
+
+          <button
+            onClick={() => alert("Next: Psychometric Test")}
+            className="bg-sky-400 text-white px-6 py-3 rounded-xl w-full"
+          >
+            Continue
+          </button>
+        </div>
+      )}
+    </div>
+  );
+}
