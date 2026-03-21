@@ -5,14 +5,33 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Aspira</title>
 
-<style>
-body {
-  margin:0;
-  font-family: 'Segoe UI', sans-serif;
-  background:#f8fafc;
-  color:#0f172a;
+.card {
+  background:white;
+  border-radius:16px;
+  padding:20px;
+  margin-bottom:20px;
+  box-shadow:0 10px 30px rgba(0,0,0,0.08);
+  transition: all 0.2s ease;
 }
 
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow:0 15px 40px rgba(0,0,0,0.12);
+}
+body {
+  background:#f1f5f9;
+}
+
+.button {
+  background: linear-gradient(135deg,#3b82f6,#2563eb);
+  border-radius:10px;
+  font-weight:600;
+  transition:0.2s;
+}
+
+.button:hover {
+  transform: scale(1.03);
+}
 .container {
   display:flex;
   height:100vh;
@@ -170,22 +189,77 @@ function finishAssessment(){
   navigate("dashboard");
 }
 
-/* DASHBOARD */
 function dashboard(){
   return layout(`
-    <div class="card">
-      <h2>Hello ${AppState.user.name}</h2>
-      <p>You are on: ${AppState.user.goal} path</p>
+    
+    <!-- HERO -->
+    <div class="card" style="
+      background: linear-gradient(135deg,#2563eb,#1d4ed8);
+      color:white;
+      padding:24px;
+    ">
+      <h2 style="margin:0">Good Afternoon, ${AppState.user.name}</h2>
+      <p style="opacity:0.8">Your journey starts today</p>
+
+      <div style="display:flex; gap:16px; margin-top:20px;">
+        ${statCard("🔥", "1", "Day Streak")}
+        ${statCard("✅", "1/7", "Tasks Done")}
+        ${statCard("📊", "75%", "Match Score")}
+        ${statCard("🚀", "12%", "Job Ready")}
+      </div>
     </div>
 
+    <!-- PROGRESS CARD -->
     <div class="card">
-      <h3>Today's Task</h3>
-      <p>Learn basics</p>
-      <button class="button">Mark Complete</button>
+      <h3>Getting Started</h3>
+
+      ${progressItem("Complete your assessment", "Start")}
+      ${progressItem("Read your career analysis", "View")}
+      ${progressItem("Explore learning path", "Browse")}
+      ${progressItem("Share parent report", "Share")}
     </div>
+
+    <!-- TODAY TASK -->
+    <div class="card" style="border:2px solid #22c55e;">
+      <h3>⚡ Completed Today</h3>
+      <h4>Complete your assessment first</h4>
+      <p>Take the 8-minute career assessment to unlock your roadmap.</p>
+
+      <button class="button">Action</button>
+    </div>
+
   `);
 }
 
+function statCard(icon, value, label){
+  return `
+    <div style="
+      background:rgba(255,255,255,0.15);
+      padding:16px;
+      border-radius:12px;
+      flex:1;
+      text-align:center;
+    ">
+      <div style="font-size:20px">${icon}</div>
+      <div style="font-size:20px;font-weight:bold">${value}</div>
+      <div style="font-size:12px">${label}</div>
+    </div>
+  `;
+}
+
+function progressItem(title, action){
+  return `
+    <div style="
+      display:flex;
+      justify-content:space-between;
+      padding:10px 0;
+      border-bottom:1px solid #e5e7eb;
+    ">
+      <span>${title}</span>
+      <span style="color:#2563eb; cursor:pointer">${action} →</span>
+    </div>
+  `;
+}
 /* LAYOUT */
 function layout(content){
   return `
