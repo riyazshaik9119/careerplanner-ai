@@ -1,37 +1,18 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Aspira</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-.card {
-  background:white;
-  border-radius:16px;
-  padding:20px;
-  margin-bottom:20px;
-  box-shadow:0 10px 30px rgba(0,0,0,0.08);
-  transition: all 0.2s ease;
-}
-
-.card:hover {
-  transform: translateY(-2px);
-  box-shadow:0 15px 40px rgba(0,0,0,0.12);
-}
+<style>
 body {
+  margin:0;
+  font-family: 'Segoe UI', sans-serif;
   background:#f1f5f9;
+  color:#0f172a;
 }
 
-.button {
-  background: linear-gradient(135deg,#3b82f6,#2563eb);
-  border-radius:10px;
-  font-weight:600;
-  transition:0.2s;
-}
-
-.button:hover {
-  transform: scale(1.03);
-}
+/* Layout */
 .container {
   display:flex;
   height:100vh;
@@ -41,17 +22,13 @@ body {
 .sidebar {
   width:220px;
   background:white;
+  padding:20px;
   border-right:1px solid #e5e7eb;
-  padding:16px;
-}
-
-.sidebar h2 {
-  margin-bottom:20px;
 }
 
 .nav-item {
   padding:10px;
-  margin-bottom:8px;
+  margin-bottom:10px;
   cursor:pointer;
   border-radius:8px;
 }
@@ -67,41 +44,51 @@ body {
   overflow-y:auto;
 }
 
-/* Right panel */
+/* Right */
 .right {
   width:260px;
-  background:white;
+  padding:20px;
   border-left:1px solid #e5e7eb;
-  padding:16px;
+  background:white;
 }
 
 /* Cards */
 .card {
   background:white;
-  border-radius:14px;
-  padding:16px;
-  margin-bottom:16px;
-  box-shadow:0 4px 12px rgba(0,0,0,0.05);
+  border-radius:16px;
+  padding:20px;
+  margin-bottom:20px;
+  box-shadow:0 10px 30px rgba(0,0,0,0.08);
+  transition:0.2s;
 }
 
+.card:hover {
+  transform:translateY(-2px);
+}
+
+/* Button */
 .button {
-  padding:10px 16px;
+  padding:10px 15px;
   border:none;
-  border-radius:8px;
+  border-radius:10px;
   background:linear-gradient(135deg,#3b82f6,#2563eb);
   color:white;
   cursor:pointer;
 }
 
+.button:hover {
+  transform:scale(1.03);
+}
+
 .input {
   width:100%;
   padding:10px;
-  margin-bottom:12px;
+  margin-bottom:10px;
   border-radius:8px;
   border:1px solid #e5e7eb;
 }
 
-/* Center landing */
+/* Landing */
 .center {
   display:flex;
   align-items:center;
@@ -109,8 +96,14 @@ body {
   height:100vh;
 }
 
-.hidden {
-  display:none;
+/* Stats */
+.stat {
+  flex:1;
+  background:rgba(255,255,255,0.2);
+  padding:15px;
+  border-radius:12px;
+  text-align:center;
+  color:white;
 }
 </style>
 </head>
@@ -120,39 +113,41 @@ body {
 <div id="app"></div>
 
 <script>
+
 let AppState = JSON.parse(localStorage.getItem("aspira")) || {
-  user: {},
-  currentPage: "landing"
+  user:{},
+  page:"landing",
+  posts:[],
+  streak:1,
+  readiness:20
 };
 
-function save() {
+function save(){
   localStorage.setItem("aspira", JSON.stringify(AppState));
 }
 
-/* ROUTER */
-function navigate(page) {
-  AppState.currentPage = page;
+function go(page){
+  AppState.page = page;
   save();
   render();
 }
 
 /* LANDING */
-function landing() {
+function landing(){
   return `
   <div class="center">
     <div class="card" style="width:400px;text-align:center">
       <h2>Aspira</h2>
-      <p>We help you find your path</p>
-      <input class="input" placeholder="Name" id="name"/>
+      <p>Design your career path</p>
+      <input class="input" id="name" placeholder="Enter your name"/>
       <button class="button" onclick="start()">Get Started</button>
     </div>
-  </div>
-  `;
+  </div>`;
 }
 
 function start(){
   AppState.user.name = document.getElementById("name").value;
-  navigate("profile");
+  go("profile");
 }
 
 /* PROFILE */
@@ -160,106 +155,120 @@ function profile(){
   return layout(`
     <div class="card">
       <h3>Build Profile</h3>
-      <input class="input" placeholder="Education" id="edu"/>
-      <input class="input" placeholder="Goal (e.g Data Analyst)" id="goal"/>
+      <input class="input" id="goal" placeholder="Your goal (Data Analyst)"/>
       <button class="button" onclick="saveProfile()">Continue</button>
     </div>
   `);
 }
 
 function saveProfile(){
-  AppState.user.education = document.getElementById("edu").value;
   AppState.user.goal = document.getElementById("goal").value;
-  navigate("assessment");
+  go("assessment");
 }
 
 /* ASSESSMENT */
 function assessment(){
   return layout(`
     <div class="card">
-      <h3>Quick Assessment</h3>
+      <h3>Assessment</h3>
       <p>Do you enjoy solving problems?</p>
-      <button class="button" onclick="finishAssessment()">Yes</button>
+      <button class="button" onclick="finish()">Yes</button>
     </div>
   `);
 }
 
-function finishAssessment(){
-  AppState.user.ready = true;
-  navigate("dashboard");
+function finish(){
+  go("dashboard");
 }
 
+/* DASHBOARD */
 function dashboard(){
   return layout(`
     
-    <!-- HERO -->
-    <div class="card" style="
-      background: linear-gradient(135deg,#2563eb,#1d4ed8);
-      color:white;
-      padding:24px;
-    ">
-      <h2 style="margin:0">Good Afternoon, ${AppState.user.name}</h2>
-      <p style="opacity:0.8">Your journey starts today</p>
+    <div class="card" style="background:linear-gradient(135deg,#2563eb,#1d4ed8);color:white;">
+      <h2>Hello ${AppState.user.name}</h2>
+      <p>${AppState.user.goal} Journey</p>
 
-      <div style="display:flex; gap:16px; margin-top:20px;">
-        ${statCard("🔥", "1", "Day Streak")}
-        ${statCard("✅", "1/7", "Tasks Done")}
-        ${statCard("📊", "75%", "Match Score")}
-        ${statCard("🚀", "12%", "Job Ready")}
+      <div style="display:flex;gap:10px;margin-top:15px;">
+        <div class="stat">🔥 ${AppState.streak}<br/>Streak</div>
+        <div class="stat">📊 ${AppState.readiness}%<br/>Ready</div>
+        <div class="stat">✅ 1<br/>Tasks</div>
       </div>
     </div>
 
-    <!-- PROGRESS CARD -->
     <div class="card">
-      <h3>Getting Started</h3>
-
-      ${progressItem("Complete your assessment", "Start")}
-      ${progressItem("Read your career analysis", "View")}
-      ${progressItem("Explore learning path", "Browse")}
-      ${progressItem("Share parent report", "Share")}
+      <h3>Today's Task</h3>
+      <p>Learn basics of ${AppState.user.goal}</p>
+      <button class="button" onclick="completeTask()">Mark Complete</button>
     </div>
 
-    <!-- TODAY TASK -->
-    <div class="card" style="border:2px solid #22c55e;">
-      <h3>⚡ Completed Today</h3>
-      <h4>Complete your assessment first</h4>
-      <p>Take the 8-minute career assessment to unlock your roadmap.</p>
-
-      <button class="button">Action</button>
+    <div class="card">
+      <h3>Community Updates</h3>
+      <button class="button" onclick="go('home')">Go to Feed</button>
     </div>
 
   `);
 }
 
-function statCard(icon, value, label){
-  return `
-    <div style="
-      background:rgba(255,255,255,0.15);
-      padding:16px;
-      border-radius:12px;
-      flex:1;
-      text-align:center;
-    ">
-      <div style="font-size:20px">${icon}</div>
-      <div style="font-size:20px;font-weight:bold">${value}</div>
-      <div style="font-size:12px">${label}</div>
-    </div>
-  `;
+function completeTask(){
+  AppState.streak++;
+  AppState.readiness += 5;
+
+  AppState.posts.unshift({
+    text: AppState.user.name + " completed today's task",
+    likes:0
+  });
+
+  save();
+  render();
 }
 
-function progressItem(title, action){
-  return `
-    <div style="
-      display:flex;
-      justify-content:space-between;
-      padding:10px 0;
-      border-bottom:1px solid #e5e7eb;
-    ">
-      <span>${title}</span>
-      <span style="color:#2563eb; cursor:pointer">${action} →</span>
+/* COMMUNITY */
+function home(){
+
+  if(AppState.posts.length === 0){
+    AppState.posts = [
+      {text:"Someone completed Day 1",likes:2},
+      {text:"Someone reached 40% readiness",likes:5}
+    ];
+  }
+
+  return layout(`
+    
+    <div class="card">
+      <h3>Ask AI</h3>
+      <input class="input" id="q" placeholder="Ask your doubt"/>
+      <button class="button" onclick="post()">Ask</button>
     </div>
-  `;
+
+    ${AppState.posts.map(p=>postCard(p)).join("")}
+
+  `);
 }
+
+function post(){
+  let text = document.getElementById("q").value;
+  if(!text) return;
+
+  AppState.posts.unshift({text:text,likes:0});
+  save();
+  render();
+}
+
+function postCard(p){
+  return `
+  <div class="card">
+    <strong>${AppState.user.goal || "Career"}</strong>
+    <p>${p.text}</p>
+
+    <div style="background:#eef2ff;padding:10px;border-radius:8px;">
+      <b>AI:</b> Stay consistent and focus on fundamentals.
+    </div>
+
+    <button class="button">👍 ${p.likes}</button>
+  </div>`;
+}
+
 /* LAYOUT */
 function layout(content){
   return `
@@ -267,8 +276,9 @@ function layout(content){
 
     <div class="sidebar">
       <h2>Aspira</h2>
-      <div class="nav-item" onclick="navigate('dashboard')">Home</div>
-      <div class="nav-item" onclick="navigate('assessment')">Assessment</div>
+      <div class="nav-item" onclick="go('dashboard')">Dashboard</div>
+      <div class="nav-item" onclick="go('home')">Community</div>
+      <div class="nav-item" onclick="go('assessment')">Assessment</div>
     </div>
 
     <div class="main">
@@ -278,30 +288,36 @@ function layout(content){
     <div class="right">
       <div class="card">
         <h4>Next Step</h4>
-        <p>Complete task</p>
+        <p>Complete today's task</p>
+      </div>
+
+      <div class="card">
+        <h4>Your Goal</h4>
+        <p>${AppState.user.goal || "Not set"}</p>
       </div>
 
       <div class="card">
         <h4>Motivation</h4>
-        <p>Stay consistent</p>
+        <p>Consistency beats talent</p>
       </div>
     </div>
 
-  </div>
-  `;
+  </div>`;
 }
 
 /* RENDER */
 function render(){
   const app = document.getElementById("app");
 
-  if(AppState.currentPage === "landing") app.innerHTML = landing();
-  if(AppState.currentPage === "profile") app.innerHTML = profile();
-  if(AppState.currentPage === "assessment") app.innerHTML = assessment();
-  if(AppState.currentPage === "dashboard") app.innerHTML = dashboard();
+  if(AppState.page==="landing") app.innerHTML = landing();
+  if(AppState.page==="profile") app.innerHTML = profile();
+  if(AppState.page==="assessment") app.innerHTML = assessment();
+  if(AppState.page==="dashboard") app.innerHTML = dashboard();
+  if(AppState.page==="home") app.innerHTML = home();
 }
 
 render();
+
 </script>
 
 </body>
